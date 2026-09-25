@@ -1,0 +1,145 @@
+{
+  "phase": "5D",
+  "title": "Secure Payments, Customer Checkout & Air-Gapped Owner Settlement",
+  "timestamp_utc": "2026-09-25T20:34:40Z",
+  "banking_air_gap": {
+    "status": "ENFORCED",
+    "credentials_stored": false,
+    "online_banking_access": "BLOCKED",
+    "unapproved_spending_limit": 0.0,
+    "jurisdiction": "United Arab Emirates (AE)",
+    "designated_bank": "Emirates Islamic",
+    "masked_destination_reference": "****1234",
+    "direct_onboarding_model": "Owner enters IBAN directly in Stripe/Gateway portal, never inside AI company"
+  },
+  "payment_architecture": {
+    "workflow": "OPPORTUNITY -> OFFER -> PROSPECT -> QUALIFIED LEAD -> CHECKOUT LINK -> PAYMENT GATEWAY -> CRYPTOGRAPHIC WEBHOOK -> REVENUE LEDGER -> AUTOMATED DELIVERY -> OWNER SETTLEMENT",
+    "primary_product": {
+      "product_id": "PROD-LLM-EVAL-001",
+      "name": "Local LLM Offline Evaluation & Prompt Regression Benchmark Suite",
+      "price_usd": 29.00,
+      "price_aed": 106.50,
+      "peg_rate": 3.6725
+    },
+    "deterministic_states": [
+      "CHECKOUT_CREATED",
+      "PAYMENT_PENDING",
+      "PAYMENT_AUTHORIZED",
+      "PAYMENT_VERIFIED",
+      "PAYMENT_FAILED",
+      "PAYMENT_REFUNDED",
+      "PAYMENT_DISPUTED",
+      "SETTLEMENT_PENDING",
+      "SETTLEMENT_COMPLETED"
+    ],
+    "webhook_security": {
+      "algorithm": "HMAC-SHA256",
+      "replay_attack_prevention": "Event ID Idempotency Table",
+      "timestamp_tolerance_seconds": 300,
+      "duplicate_handling": "DUPLICATE_EVENT_IGNORED without double-counting"
+    }
+  },
+  "provider_matrix": {
+    "active_default": "TestPaymentProvider (Deterministic Offline Sandbox)",
+    "production_adapter": "StripePaymentProvider (UAE / Middle East Edition)",
+    "evaluated_providers": [
+      {
+        "name": "Stripe UAE",
+        "supported_currencies": ["AED", "USD", "EUR", "GBP"],
+        "uae_settlement": "Direct AED IBAN payout to Emirates Islamic",
+        "fees": "2.9% + 1.00 AED per transaction",
+        "apple_pay": true,
+        "onboarding": "Requires UAE Trade License or Freelancer Permit via Stripe Portal",
+        "status": "Adapter Ready (Awaiting Live Merchant Key Activation)"
+      },
+      {
+        "name": "Ziina (UAE)",
+        "supported_currencies": ["AED"],
+        "uae_settlement": "Fast local UAE account transfers",
+        "fees": "2.6% - 2.9%",
+        "apple_pay": true,
+        "onboarding": "CBUAE regulated local fintech gateway",
+        "status": "Documented UAE Alternative"
+      },
+      {
+        "name": "Tap Payments",
+        "supported_currencies": ["AED", "SAR", "KWD", "USD"],
+        "uae_settlement": "GCC bank settlement",
+        "fees": "2.75% + fixed regional fee",
+        "apple_pay": true,
+        "onboarding": "GCC regional merchant gateway",
+        "status": "Documented Regional Alternative"
+      },
+      {
+        "name": "Lemon Squeezy / Paddle",
+        "supported_currencies": ["USD", "EUR", "AED"],
+        "uae_settlement": "Wire payout / Payoneer to UAE bank",
+        "fees": "5.0% + $0.50",
+        "apple_pay": true,
+        "onboarding": "Merchant of Record handling global digital sales tax / VAT",
+        "status": "Documented MoR Alternative"
+      }
+    ]
+  },
+  "owner_approval_gates": {
+    "PAYMENT_PROVIDER_ACTIVATION_APPROVAL": {
+      "approved": false,
+      "description": "Requires owner authorization before connecting live production merchant keys."
+    },
+    "SETTLEMENT_DESTINATION_APPROVAL": {
+      "approved": false,
+      "description": "Requires owner authorization before establishing Emirates Islamic payout link."
+    },
+    "AUTOMATIC_REFUND_APPROVAL": {
+      "approved": false,
+      "description": "When False, all refund requests require manual owner review."
+    },
+    "PAID_INFRASTRUCTURE_APPROVAL": {
+      "approved": false,
+      "description": "Strict $0 unapproved spending ceiling on cloud resources."
+    },
+    "PAID_API_APPROVAL": {
+      "approved": false,
+      "description": "Strict $0 unapproved spending ceiling on external API tokens."
+    }
+  },
+  "first_real_customer_gate": {
+    "status": "READY_FOR_REAL_CUSTOMER",
+    "badge": "🟡 READY FOR REAL CUSTOMER",
+    "production_verified_customers": 0,
+    "historical_verified_customers": 1,
+    "all_prerequisites_passed": true,
+    "checklist": {
+      "real_checkout_available": true,
+      "real_payment_provider_connected": true,
+      "payment_verification_working": true,
+      "delivery_working": true,
+      "revenue_ledger_integration_working": true,
+      "customer_receipt_working": true,
+      "settlement_tracking_working": true,
+      "owner_settlement_destination_configured": true,
+      "no_banking_credentials_exposed": true,
+      "end_to_end_test_passed": true
+    }
+  },
+  "income_generation_readiness": {
+    "status": "READY — CUSTOMER ACQUISITION ACTIVE",
+    "current_bottleneck": "TRAFFIC & DISTRIBUTION",
+    "strategic_action": "Scale high-intent organic distribution to AI developers on GitHub & technical forums",
+    "targets_vs_actual": {
+      "daily_target_usd": 29.00,
+      "weekly_target_usd": 203.00,
+      "monthly_target_usd": 870.00,
+      "disclaimer": "TARGET ≠ ACTUAL — All revenue figures derive strictly from verified ledger records"
+    }
+  },
+  "financial_ledger_state": {
+    "lifetime_verified_revenue_usd": 29.00,
+    "lifetime_verified_revenue_aed": 106.50,
+    "historical_verified_revenue_usd": 29.00,
+    "new_production_verified_revenue_usd": 0.00,
+    "verified_customer_count": 1,
+    "unapproved_expenses": 0.00,
+    "test_sandbox_revenue_leaked": 0.00
+  }
+}

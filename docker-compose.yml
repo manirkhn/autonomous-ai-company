@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  autonomous-ai-company:
+    build: .
+    container_name: autonomous-ai-company-247
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - REPORT_TIMEZONE=Asia/Dubai
+      - REPORT_RECIPIENT=manirkhn@gmail.com
+    volumes:
+      # Persistent corporate memory, revenue ledger, and audit logs
+      - ./data:/app/data
+      # Archived Daily CEO Reports (.md and .json snapshots)
+      - ./reports:/app/reports
+      # Generated audio, video, and social media media assets
+      - ./assets:/app/assets
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/cloud/heartbeat"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

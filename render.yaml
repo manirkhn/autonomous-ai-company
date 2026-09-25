@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: autonomous-ai-company
+    env: docker
+    plan: free
+    region: frankfurt # or oregon
+    healthCheckPath: /api/cloud/heartbeat
+    disk:
+      name: company-data
+      mountPath: /app/data
+      sizeGB: 1
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: REPORT_RECIPIENT
+        value: manirkhn@gmail.com
+      - key: REPORT_TIMEZONE
+        value: Asia/Dubai

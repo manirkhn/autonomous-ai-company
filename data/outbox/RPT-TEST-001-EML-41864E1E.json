@@ -1,0 +1,11 @@
+{
+  "delivery_id": "EML-41864E1E",
+  "report_id": "RPT-TEST-001",
+  "recipient": "manirkhn@gmail.com",
+  "subject": "\ud83c\udfe2 AI Company \u2014 Daily CEO Progress Report \u2014 Test",
+  "body_text": "Test Content",
+  "body_html": null,
+  "created_at": "2026-09-25T15:20:01.290621+00:00",
+  "status": "QUEUED_LOCAL_OUTBOX",
+  "note": "Awaiting SMTP configuration (SMTP_HOST, SMTP_USER, SMTP_PASSWORD)"
+}

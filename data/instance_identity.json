@@ -1,0 +1,12 @@
+{
+  "instance_id": "INST-DE1314A66617",
+  "created_at": "2026-09-25T15:32:53.095925+00:00",
+  "instance_type": "LOCAL_WORKSTATION",
+  "is_remote_cloud": false,
+  "environment_name": "Local Machine (Windows 11)",
+  "hostname": "MANIRS-DELL",
+  "platform": "Windows-11-10.0.22631-SP0",
+  "python_version": "3.14.7",
+  "boot_timestamp": "2026-09-25T17:34:38.929601+00:00",
+  "app_version": "5.3.0-phase5c"
+}

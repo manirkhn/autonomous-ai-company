@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autonomous AI Company | Owner Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- Top Global Header -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-icon">Δ</div>
+      <div class="brand-text">
+        <h1>Autonomous AI Enterprise</h1>
+        <p>Human Ownership • Self-Growing AI Workforce • Zero-Trust Financial Firewall</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div id="companyGrowthBadge" style="font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 9999px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.4); color: var(--accent-indigo);">
+        LEVEL 1: BOOTSTRAP (FREE-FIRST MODE)
+      </div>
+      <div id="firewallIndicator" class="firewall-indicator">
+        <span class="dot">●</span> FINANCIAL FIREWALL: $0 UNAPPROVED LIMIT
+      </div>
+      <button id="btnKillswitch" class="btn-killswitch" onclick="toggleEmergencyStop()">
+        🛑 EMERGENCY STOP
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs" style="overflow-x: auto; white-space: nowrap;">
+    <button class="nav-tab active" onclick="switchTab('marketing-command-center')" style="color: #f59e0b; font-weight:800; font-size: 0.88rem;">🎯 Sales & Marketing Hub (Phase 5E)</button>
+    <button class="nav-tab" onclick="switchTab('ai-office')" style="color: var(--accent-cyan); font-weight:800; font-size: 0.88rem;">🏢 AI Office</button>
+    <button class="nav-tab" onclick="switchTab('payments-revenue')" style="color: #10b981; font-weight:800; font-size: 0.88rem;">💳 Payments & Settlement</button>
+    <button class="nav-tab" onclick="switchTab('cloud-247')" style="color: var(--accent-indigo); font-weight:800; font-size: 0.88rem;">☁️ 24/7 Cloud & Reports</button>
+    <button class="nav-tab" onclick="switchTab('employee-timeline')" style="color: #38bdf8; font-weight:700;">👥 Employee Activity</button>
+    <button class="nav-tab" onclick="switchTab('overview')">Overview</button>
+    <button class="nav-tab" onclick="switchTab('phase4-revenue')" style="color: var(--accent-emerald); font-weight:700;">🔥 First Revenue Engine</button>
+    <button class="nav-tab" onclick="switchTab('approvals')">
+      Approvals <span id="navApprovalBadge" class="badge">0</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('opportunities')">Opportunities</button>
+    <button class="nav-tab" onclick="switchTab('first-experiment')">Experiments</button>
+    <button class="nav-tab" onclick="switchTab('products')">Product Factory</button>
+    <button class="nav-tab" onclick="switchTab('sales-pipeline')">Sales & Deliveries</button>
+    <button class="nav-tab" onclick="switchTab('tasks')">Tasks</button>
+    <button class="nav-tab" onclick="switchTab('owner-metrics')">Owner Time</button>
+    <button class="nav-tab" onclick="switchTab('skills-registry')">Skills Registry</button>
+    <button class="nav-tab" onclick="switchTab('employee-factory')">Employee Factory</button>
+    <button class="nav-tab" onclick="switchTab('treasury-view')">Treasury & Reinvestment</button>
+    <button class="nav-tab" onclick="switchTab('marketplace-view')">Marketplace</button>
+    <button class="nav-tab" onclick="switchTab('self-growth')">Self-Growth Loop</button>
+    <button class="nav-tab" onclick="switchTab('employees')">AI Workforce (12+)</button>
+    <button class="nav-tab" onclick="switchTab('ceo-report')">Weekly Report</button>
+    <button class="nav-tab" onclick="switchTab('firewall-settings')">Firewall</button>
+  </nav>
+
+  <!-- Main View Container -->
+  <main class="container">
+
+    <!-- Phase 5E: Sales, Marketing & Customer Acquisition Command Center -->
+    <section id="tab-marketing-command-center" class="tab-content active">
+      
+      <!-- TOP: AI VIRTUAL OFFICE COMPANY STATUS -->
+      <div class="company-status-bar glass" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
+          <div class="status-indicator-badge running">
+            <span class="status-pulse-dot green"></span>
+            <span style="font-weight: 800; color: #fff;">CUSTOMER ACQUISITION MODE</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+            <strong>Mode:</strong> <span class="badge" style="background: rgba(99, 102, 241, 0.2); color: var(--accent-indigo);">Free-First Bootstrap</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+            <strong>Current Product:</strong> <span style="color: var(--text-primary); font-weight: 700;" id="topSellingProductName">Local LLM Benchmark Suite</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+            <strong>Verified Revenue:</strong> <span style="color: var(--accent-emerald); font-weight: 800;" id="topSellingRevenue">$29.00 USD</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+            <strong>Verified Customers:</strong> <span style="color: var(--accent-cyan); font-weight: 800;" id="topSellingCustomers">1 Lifetime</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+            <strong>Current Bottleneck:</strong> <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber);" id="topSellingBottleneck">TRAFFIC & OUTREACH</span>
+          </div>
+        </div>
+        <button class="btn btn-secondary" onclick="fetchMarketingCommandCenter()">🔄 Refresh Hub</button>
+      </div>
+
+      <!-- PHASE 5F: CLOUD RUNTIME, PUBLIC ACCESS & LAPTOP INDEPENDENCE -->
+      <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+        
+        <!-- 🌐 COMPANY RUNTIME CARD (Section 20) -->
+        <div class="panel glass" style="border-top: 3px solid #3b82f6;">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="font-size: 1.15rem; color: #60a5fa;">🌐 COMPANY RUNTIME & PUBLIC ACCESS</h2>
+            <span id="runtimeModeBadge" class="badge" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd; font-weight: 700;">RUNTIME: LOCAL</span>
+          </div>
+          <div style="padding: 1.25rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+              <div class="stat-card" style="padding: 0.6rem;">
+                <div class="stat-label" style="font-size: 0.7rem;">RUNTIME</div>
+                <div class="stat-value" id="rtRuntimeType" style="font-size: 0.85rem; color: #f3f4f6;">LOCAL</div>
+              </div>
+              <div class="stat-card" style="padding: 0.6rem;">
+                <div class="stat-label" style="font-size: 0.7rem;">PUBLIC ACCESS</div>
+                <div class="stat-value" id="rtPublicAccess" style="font-size: 0.85rem; color: #f59e0b;">NOT PUBLIC</div>
+              </div>
+              <div class="stat-card" style="padding: 0.6rem;">
+                <div class="stat-label" style="font-size: 0.7rem;">WEB SERVER</div>
+                <div class="stat-value" id="rtWebServer" style="font-size: 0.85rem; color: var(--accent-emerald);">HEALTHY</div>
+              </div>
+              <div class="stat-card" style="padding: 0.6rem;">
+                <div class="stat-label" style="font-size: 0.7rem;">WORKER</div>
+                <div class="stat-value" id="rtWorker" style="font-size: 0.85rem; color: var(--accent-emerald);">HEALTHY</div>
+              </div>
+              <div class="stat-card" style="padding: 0.6rem;">
+                <div class="stat-label" style="font-size: 0.7rem;">SCHEDULER</div>
+                <div class="stat-value" id="rtScheduler" style="font-size: 0.85rem; color: var(--accent-emerald);">HEALTHY</div>
+              </div>
+              <div class="stat-card" style="padding: 0.6rem;">
+                <div class="stat-label" style="font-size: 0.7rem;">DATABASE</div>
+                <div class="stat-value" id="rtDatabase" style="font-size: 0.85rem; color: var(--accent-emerald);">HEALTHY</div>
+              </div>
+              <div class="stat-card" style="padding: 0.6rem;">
+                <div class="stat-label" style="font-size: 0.7rem;">PAYMENTS</div>
+                <div class="stat-value" id="rtPayments" style="font-size: 0.85rem; color: #60a5fa;">SANDBOX</div>
+              </div>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); padding: 0.8rem; border-radius: var(--radius-sm); margin-bottom: 1rem; font-size: 0.82rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                <span style="color: var(--text-muted);">Verified Public URL:</span>
+                <code id="rtPublicUrl" style="color: var(--accent-cyan); font-weight: 600;">http://127.0.0.1:8000 (LOCAL)</code>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Last Verified Heartbeat:</span>
+                <span id="rtLastHeartbeat" style="color: var(--text-secondary); font-family: monospace;">Just now</span>
+              </div>
+            </div>
+
+            <!-- Customer Purchase Link (Section 27) -->
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+              <div style="font-size: 0.82rem; color: var(--text-secondary);">
+                <strong>Customer Store:</strong> <span id="customerStoreStatusText">Accessible locally. Deploy container for external customers.</span>
+              </div>
+              <div style="display: flex; gap: 0.75rem;">
+                <a id="btnCustomerStore" href="/product" target="_blank" class="btn btn-primary" style="background: var(--accent-cyan); color: #000; font-weight: 700; font-size: 0.85rem;">
+                  🛒 [OPEN CUSTOMER STORE] →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CAN I CLOSE MY LAPTOP? (Section 21) & OWNER ACTION REQUIRED (Section 28) -->
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          
+          <!-- Laptop Panel -->
+          <div class="panel glass" id="laptopIndependencePanel" style="border-top: 3px solid #ef4444; flex: 1;">
+            <div class="panel-header" style="padding: 0.75rem 1rem;">
+              <h3 style="font-size: 0.95rem; color: #fff;">💻 CAN I CLOSE MY LAPTOP?</h3>
+            </div>
+            <div style="padding: 1rem;">
+              <div id="laptopBadge" class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 800; font-size: 0.85rem; margin-bottom: 0.75rem; display: block; text-align: center;">
+                🔴 NO — COMPANY STILL DEPENDS ON THIS COMPUTER
+              </div>
+              <p id="laptopReason" style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.5rem;">
+                The company is executing on this local workstation. If you close your laptop, all AI employee tasks and servers pause.
+              </p>
+              <div id="laptopConditionsList" style="font-size: 0.75rem; color: #fca5a5; line-height: 1.4;">
+                • Web server running locally on workstation<br>
+                • Background worker is a local process
+              </div>
+            </div>
+          </div>
+
+          <!-- Owner Action Center -->
+          <div class="panel glass" style="border-top: 3px solid var(--accent-amber); padding: 1rem;">
+            <h4 style="font-size: 0.88rem; color: var(--accent-amber); margin-bottom: 0.5rem;">👤 OWNER ACTION REQUIRED</h4>
+            <div id="ownerActionsBox" style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">
+              <strong>Deploy to Render or Fly.io</strong> using pre-packaged <code>render.yaml</code> or <code>fly.toml</code> to achieve 24/7 laptop independence.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SECTION 1: WHAT ARE WE SELLING? -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid var(--accent-cyan);">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="font-size: 1.15rem; color: var(--accent-cyan);">📦 SECTION 1 — WHAT ARE WE SELLING?</h2>
+          <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); font-weight: 700;">CHECKOUT: ACTIVE</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <h3 id="mktProdName" style="font-size: 1.4rem; color: #fff; margin-bottom: 0.25rem;">Local LLM Offline Evaluation & Prompt Regression Benchmark Suite</h3>
+              <div style="font-size: 0.8rem; color: var(--text-muted); font-family: monospace;" id="mktProdId">PROD-LLM-EVAL-001</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 1.6rem; font-weight: 800; color: var(--accent-emerald);" id="mktProdPrice">$29.00 USD</div>
+              <div style="font-size: 0.85rem; color: var(--text-secondary);" id="mktProdPriceAed">AED 106.50</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; background: rgba(0,0,0,0.25); padding: 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+            <div>
+              <strong style="color: var(--accent-cyan); font-size: 0.82rem; text-transform: uppercase;">Problem It Solves:</strong>
+              <p style="font-size: 0.88rem; color: var(--text-primary); margin-top: 0.25rem;" id="mktProdProblem">Evaluation of local LLM models against prompts without cloud dependencies or leaking proprietary prompt regression data.</p>
+            </div>
+            <div>
+              <strong style="color: var(--accent-cyan); font-size: 0.82rem; text-transform: uppercase;">Target Customer:</strong>
+              <p style="font-size: 0.88rem; color: var(--text-primary); margin-top: 0.25rem;" id="mktProdTarget">AI application developers, local LLM engineers, prompt engineers, and AI research teams.</p>
+            </div>
+            <div>
+              <strong style="color: var(--accent-cyan); font-size: 0.82rem; text-transform: uppercase;">What Customer Receives:</strong>
+              <p style="font-size: 0.88rem; color: var(--text-primary); margin-top: 0.25rem;" id="mktProdDelivers">Python offline evaluation harness, 100+ prompt test suites, CLI runner, HTML report generator, SHA-256 verified package.</p>
+            </div>
+            <div>
+              <strong style="color: var(--accent-cyan); font-size: 0.82rem; text-transform: uppercase;">Delivery Method:</strong>
+              <p style="font-size: 0.88rem; color: var(--text-primary); margin-top: 0.25rem;">Instant secure signed download with cryptographic SHA-256 package verification.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; align-items: center; justify-content: flex-end;">
+            <a href="/api/payments/checkout/session?product_id=PROD-LLM-EVAL-001" target="_blank" class="btn btn-primary" style="font-weight: 700; background: var(--accent-emerald); color: #000;">
+              💳 Open Customer Checkout →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: SEPARATE HISTORICAL REVENUE FROM NEW PRODUCTION REVENUE -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid var(--accent-emerald);">
+        <div class="panel-header">
+          <h2 style="font-size: 1.15rem; color: var(--accent-emerald);">💰 SECTION 2 — CUSTOMERS & REVENUE (HISTORICAL VS PRODUCTION)</h2>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Strict Separation Enforced • Zero Fabricated Metrics</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div class="separated-results-grid">
+            
+            <!-- Historical Verified Results -->
+            <div class="result-card-historical">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: var(--accent-cyan); font-weight: 800;">HISTORICAL VERIFIED RESULTS</span>
+                <span style="font-size: 0.72rem; color: var(--text-muted);">Phase 4 Benchmark</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.75rem;">
+                <div>
+                  <div style="font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase;">Verified Historical Customers</div>
+                  <div style="font-size: 1.8rem; font-weight: 800; color: #fff;" id="histCustCount">1</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase;">Historical Revenue</div>
+                  <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-cyan);" id="histRevAmount">$29.00 USD</div>
+                </div>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.6rem; margin: 0;">
+                ✅ Order `ORD-P4-61706692` processor receipt verified. Customer delivered.
+              </p>
+            </div>
+
+            <!-- Current Production Results -->
+            <div class="result-card-production">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); font-weight: 800;">CURRENT PRODUCTION RESULTS</span>
+                <span style="font-size: 0.72rem; color: var(--text-muted);">Live Inbound</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.75rem;">
+                <div>
+                  <div style="font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase;">New Verified Customers</div>
+                  <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-emerald);" id="prodCustCount">0 VERIFIED</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase;">New Production Revenue</div>
+                  <div style="font-size: 1.8rem; font-weight: 800; color: var(--accent-emerald);" id="prodRevAmount">$0.00 USD</div>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.6rem; font-size: 0.75rem;">
+                <div>Checkouts: <strong id="prodCheckoutsCount">0</strong></div>
+                <div>Payments: <strong id="prodPaymentsCount">0</strong></div>
+                <div>Deliveries: <strong id="prodDeliveriesCount">0</strong></div>
+                <div>Refunds: <strong id="prodRefundsCount">0</strong></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: WHERE WE MARKETED -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid var(--accent-purple);">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="font-size: 1.15rem; color: var(--accent-purple);">📢 SECTION 3 — WHERE DID WE MARKET?</h2>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Only displays channels with real, verified recorded activity</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div id="mktWhereSummaryTags" style="margin-bottom: 1rem;">
+            <!-- Rendered by app.js -->
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="table" style="width: 100%; font-size: 0.82rem;">
+              <thead>
+                <tr>
+                  <th>Date/Time</th>
+                  <th>Employee</th>
+                  <th>Platform/Channel</th>
+                  <th>Campaign</th>
+                  <th>Target Audience</th>
+                  <th>Activity</th>
+                  <th>Status</th>
+                  <th>Result</th>
+                  <th>Evidence</th>
+                </tr>
+              </thead>
+              <tbody id="mktWhereTableBody">
+                <tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Loading verified marketing activities...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: CUSTOMER ACQUISITION FUNNEL (12 STAGES) -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid var(--accent-indigo);">
+        <div class="panel-header">
+          <h2 style="font-size: 1.15rem; color: var(--accent-indigo);">📊 SECTION 4 — CUSTOMER ACQUISITION FUNNEL (12 STAGES)</h2>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Every number traced to real system records • Zero estimated counts</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div class="funnel-container" id="mktFunnelContainer">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5: MARKETING EMPLOYEE DESKS -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid var(--accent-amber);">
+        <div class="panel-header">
+          <h2 style="font-size: 1.15rem; color: var(--accent-amber);">👥 SECTION 5 — AI EMPLOYEES WORKING (ACQUISITION DESKS)</h2>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Real Task Grounding • No Fake Working Animations</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div class="employee-desks-grid" id="mktEmployeeDesksGrid">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6: MARKETING ACTIVITY LOG ("WHAT DID THE AI DO TODAY?") -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid var(--accent-cyan);">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="font-size: 1.15rem; color: var(--accent-cyan);">📅 SECTION 6 — WHAT DID THE AI DO TODAY? (ACTIVITY LOG)</h2>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Chronological Execution Timeline</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div id="mktTodayTimelineList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 7: CAMPAIGN PERFORMANCE -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid var(--accent-rose);">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="font-size: 1.15rem; color: var(--accent-rose);">🎯 SECTION 7 — CAMPAIGN PERFORMANCE & EXPERIMENTS</h2>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Zero-Cost Customer Acquisition Campaigns</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div style="overflow-x: auto;">
+            <table class="table" style="width: 100%; font-size: 0.82rem;">
+              <thead>
+                <tr>
+                  <th>Campaign ID</th>
+                  <th>Name</th>
+                  <th>Objective</th>
+                  <th>Target Persona</th>
+                  <th>Channel</th>
+                  <th>Budget / Spend</th>
+                  <th>Status</th>
+                  <th>Result</th>
+                  <th>Next Action</th>
+                </tr>
+              </thead>
+              <tbody id="mktCampaignsTableBody">
+                <tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 1rem;">Loading campaigns...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 8: WHAT IS BLOCKING MORE SALES? -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid var(--accent-amber);">
+        <div class="panel-header">
+          <h2 style="font-size: 1.15rem; color: var(--accent-amber);">🔍 SECTION 8 — WHAT IS BLOCKING MORE SALES? ("WHY HAVEN'T WE MADE MORE MONEY?")</h2>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Empirical Money Pipeline Diagnostics</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div class="bottleneck-highlight-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.85rem; font-weight: 800; color: var(--accent-amber); text-transform: uppercase;">
+                IDENTIFIED BOTTLENECK: <span id="mktBottleneckTitle">TRAFFIC & OUTREACH</span>
+              </span>
+              <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber);" id="mktBottleneckStage">STAGE: OUTREACH</span>
+            </div>
+            <p style="font-size: 0.95rem; color: #fff; margin-bottom: 0.75rem;" id="mktBottleneckDiagnosis">
+              The product is verified and checkout is ready, but insufficient organic developer traffic has arrived at checkout.
+            </p>
+            <div style="font-size: 0.82rem; color: var(--text-secondary); background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: var(--radius-sm); margin-bottom: 0.75rem;">
+              <strong>Empirical Evidence:</strong> <span id="mktBottleneckEvidence">Calculated from 0 checkout visits recorded.</span>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--accent-cyan);">
+              <strong>Recommended Autonomous Action:</strong> <span id="mktBottleneckRemedy">Execute zero-cost educational content syndication and prompt regression testing guides.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 9: NEXT 24 HOURS -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid var(--accent-cyan);">
+        <div class="panel-header">
+          <h2 style="font-size: 1.15rem; color: var(--accent-cyan);">🔮 SECTION 9 — NEXT 24 HOURS (MEASURABLE ACTIONS)</h2>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">Autonomous Acquisition Plan</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <ul id="mktNext24HoursList" style="list-style: none; display: flex; flex-direction: column; gap: 0.65rem; padding: 0;">
+            <li style="background: rgba(22, 30, 46, 0.6); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-cyan); font-size: 0.85rem;">
+              <strong>[Marketing AI]</strong> Draft and publish educational comparison: "Why offline prompt regression beats ad-hoc evaluation".
+            </li>
+            <li style="background: rgba(22, 30, 46, 0.6); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-emerald); font-size: 0.85rem;">
+              <strong>[Research AI]</strong> Monitor developer threads for recurring prompt evaluation pain points without spamming.
+            </li>
+            <li style="background: rgba(22, 30, 46, 0.6); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-indigo); font-size: 0.85rem;">
+              <strong>[Sales AI]</strong> Maintain active checkout gate readiness for organic developer conversions.
+            </li>
+            <li style="background: rgba(22, 30, 46, 0.6); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-purple); font-size: 0.85rem;">
+              <strong>[CEO AI]</strong> Execute daily 23:00 Asia/Dubai CEO report snapshot with ground truth verification.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SECTION 10: OWNER APPROVALS -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid var(--accent-rose);">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="font-size: 1.15rem; color: var(--accent-rose);">👤 SECTION 10 — OWNER APPROVALS & FINANCIAL SAFETY</h2>
+          <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); font-weight: 700;">$0.00 SPENDING CEILING ENFORCED</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); padding: 1rem 1.25rem; border-radius: var(--radius-sm);">
+            <div>
+              <div style="font-weight: 700; color: var(--accent-emerald); font-size: 0.95rem;">✅ ZERO CAPITAL EXPENDITURE REQUIRED</div>
+              <div style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.2rem;">All marketing and acquisition initiatives operate strictly in Free-First Mode. Personal banking is 100% air-gapped.</div>
+            </div>
+            <button class="btn btn-secondary" onclick="switchTab('approvals')">Open Approval Center →</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Tab 0: AI Virtual Office (Phase 5A Primary View) -->
+    <section id="tab-ai-office" class="tab-content">
+      
+      <!-- Top Company Status Bar -->
+      <div id="officeStatusBar" class="company-status-bar glass">
+        <div style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
+          <div class="status-indicator-badge running" id="officeCompanyRunningBadge">
+            <span class="status-pulse-dot green" id="officePulseDot"></span>
+            <span id="officeStatusText">Company Running</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+            <strong>Cloud 24/7:</strong> <span id="officeCloudBadge" class="badge" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald);">🟢 Laptop Independent</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+            <strong>Gemini AI:</strong> <span id="officeGeminiBadge" class="badge" style="background: rgba(99, 102, 241, 0.2); color: var(--accent-indigo);">🟢 Connected</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+            <strong>Daily Report:</strong> <span id="officeReportSchedBadge" style="color: #fff; font-size: 0.78rem;">⏰ 23:00 Dubai</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+            <strong>Current Bottleneck:</strong> 
+            <span id="officeBottleneckBadge" class="badge" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber);">QUALIFICATION</span>
+            <button class="btn btn-secondary" style="font-size: 0.65rem; padding: 0.15rem 0.45rem; margin-left: 0.35rem;" onclick="openGlossaryModal('qualification')">ⓘ Explain</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <div id="officeOwnerActionBadge" class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); font-weight: 700; padding: 0.4rem 0.8rem;">
+            🟢 No Owner Action Required
+          </div>
+          <button class="btn btn-secondary" style="font-size: 0.78rem;" onclick="refreshOfficeState()">🔄 Refresh Office</button>
+        </div>
+      </div>
+
+      <!-- Owner Action Alert Banner (if action needed) -->
+      <div id="officeOwnerAlertBox" class="owner-action-alert-box" style="display: none;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 1.25rem;">🟠</span>
+          <div>
+            <strong style="color: var(--accent-amber); font-size: 0.88rem;">OWNER ACTION REQUIRED</strong>
+            <p id="officeOwnerAlertText" style="font-size: 0.8rem; color: var(--text-primary); margin-top: 0.15rem;"></p>
+          </div>
+        </div>
+        <button class="btn btn-approve" style="font-size: 0.78rem;" onclick="switchTab('approvals')">Review in Approval Center →</button>
+      </div>
+
+      <!-- Real Money KPI Summary Strip -->
+      <div class="financial-truth-strip">
+        <div class="stat-card glass financial-card financial-card-verified">
+          <span class="verified-tag">VERIFIED REAL</span>
+          <span class="stat-label">Real Revenue</span>
+          <div id="officeVerifiedRevenue" class="stat-value" style="color: var(--accent-emerald); font-size: 1.8rem;">$29.00</div>
+          <span class="stat-subtext">Processor-confirmed cash only</span>
+        </div>
+        <div class="stat-card glass financial-card">
+          <span class="stat-label">Real Expenses</span>
+          <div id="officeRealExpenses" class="stat-value" style="color: var(--accent-rose); font-size: 1.8rem;">$0.00</div>
+          <span class="stat-subtext">Financial Firewall Enforced ($0 limit)</span>
+        </div>
+        <div class="stat-card glass financial-card">
+          <span class="stat-label">Real Profit</span>
+          <div id="officeRealProfit" class="stat-value" style="color: var(--accent-emerald); font-size: 1.8rem;">$29.00</div>
+          <span class="stat-subtext">100% Margin on digital products</span>
+        </div>
+        <div class="stat-card glass financial-card">
+          <span class="stat-label">Verified Customers</span>
+          <div id="officeVerifiedCustomers" class="stat-value" style="color: var(--accent-cyan); font-size: 1.8rem;">1</div>
+          <span class="stat-subtext">Legitimate paying users</span>
+        </div>
+      </div>
+
+      <!-- Quick Owner Controls & Safeguards Bar -->
+      <div class="panel glass" style="padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;">
+            <span>🛡️</span> <strong>Financial Protection:</strong>
+            <span style="color: var(--accent-emerald); font-weight: 700;">ACTIVE ($0 Unapproved Limit)</span>
+            <button class="btn btn-secondary" style="font-size: 0.65rem; padding: 0.15rem 0.4rem;" onclick="openGlossaryModal('financial_firewall')">ⓘ Explain</button>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;">
+            <span>🔒</span> <strong>Banking Air-Gap:</strong>
+            <span style="color: var(--accent-cyan); font-weight: 700;">100% ISOLATED (Zero Credentials)</span>
+            <button class="btn btn-secondary" style="font-size: 0.65rem; padding: 0.15rem 0.4rem;" onclick="openGlossaryModal('banking_air_gap')">ⓘ Explain</button>
+          </div>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <button class="btn btn-secondary" style="font-size: 0.8rem;" onclick="switchTab('approvals')">
+            ✅ Pending Approvals (<span id="officePendingApprovalsCount">0</span>)
+          </button>
+          <button class="btn-killswitch" style="font-size: 0.8rem; padding: 0.45rem 0.85rem;" onclick="openEmergencyStopModal()">
+            🛑 EMERGENCY STOP
+          </button>
+        </div>
+      </div>
+
+      <!-- CEO Executive Suite Spotlight Card (Marcus Vance) -->
+      <div class="ceo-suite-card glass">
+        <div class="ceo-grid">
+          <div>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+              <div class="employee-avatar-wrapper" style="width: 60px; height: 60px;">
+                <div id="ceoAvatarSvg" class="employee-avatar-svg"></div>
+                <span class="ai-badge-pill">AI CEO</span>
+              </div>
+              <div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff;">Marcus Vance</h3>
+                <p style="font-size: 0.82rem; color: var(--accent-cyan);">AI CEO / Managing Director • Executive Leadership</p>
+                <div style="margin-top: 0.25rem;">
+                  <span class="desk-status-pill working" id="ceoStatusPill">🟢 OPERATIONAL & LEADING</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.82rem;">
+              <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 6px;">
+                <strong style="color: var(--accent-cyan); display: block; margin-bottom: 0.25rem;">🎯 Current Objective</strong>
+                <span id="ceoCurrentObjective" style="color: var(--text-primary);">Convert qualified developer traffic into verified customers while maintaining zero ad spend.</span>
+              </div>
+              <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 6px;">
+                <strong style="color: var(--accent-emerald); display: block; margin-bottom: 0.25rem;">⚖️ Current Decision</strong>
+                <span id="ceoCurrentDecision" style="color: var(--text-primary);">Execute Day 1 of Local LLM Offline Benchmark Suite under organic acquisition.</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.35); padding: 1rem; border-radius: 8px; font-size: 0.8rem; display: flex; flex-direction: column; gap: 0.65rem;">
+            <div>
+              <span style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase;">Company Priority</span>
+              <div id="ceoPriorityText" style="font-weight: 700; color: #fff; margin-top: 0.15rem;">First Customer Revenue Validation</div>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase;">Current Bottleneck</span>
+              <div id="ceoBottleneckText" style="font-weight: 700; color: var(--accent-amber); margin-top: 0.15rem;">Qualification</div>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase;">Pending Owner Decisions</span>
+              <div id="ceoPendingDecisionsText" style="font-weight: 700; color: var(--accent-cyan); margin-top: 0.15rem;">None</div>
+            </div>
+            <button class="btn btn-secondary" style="font-size: 0.75rem; margin-top: 0.25rem;" onclick="openEmployeeDetailModal('EMP-001-CEO')">
+              View CEO Workstation & Tasks →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employee Workstations Floor Plan -->
+      <div style="margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h2 style="font-size: 1.25rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+              <span>🏢</span> Virtual Office Floor Plan & AI Workstations
+            </h2>
+            <p style="font-size: 0.8rem; color: var(--text-secondary);">
+              Live status derived directly from actual system tasks. Zero simulated or fabricated activity.
+            </p>
+          </div>
+          <!-- Filter buttons -->
+          <div style="display: flex; gap: 0.35rem; align-items: center;" id="deskFilters">
+            <button class="btn btn-secondary active" style="font-size: 0.72rem; padding: 0.3rem 0.65rem;" onclick="filterOfficeDesks('ALL', this)">All</button>
+            <button class="btn btn-secondary" style="font-size: 0.72rem; padding: 0.3rem 0.65rem;" onclick="filterOfficeDesks('WORKING', this)">🟢 Working</button>
+            <button class="btn btn-secondary" style="font-size: 0.72rem; padding: 0.3rem 0.65rem;" onclick="filterOfficeDesks('WAITING', this)">🟡 Waiting</button>
+            <button class="btn btn-secondary" style="font-size: 0.72rem; padding: 0.3rem 0.65rem;" onclick="filterOfficeDesks('BLOCKED', this)">🔴 Blocked</button>
+          </div>
+        </div>
+
+        <div id="officeDepartmentsContainer" class="office-floor">
+          <!-- Dynamically populated departments and workstation cards -->
+        </div>
+      </div>
+
+      <!-- Communication & Task Handoff Flow Visualization -->
+      <div class="panel glass" style="margin-bottom: 2rem;">
+        <div class="panel-header">
+          <h3 class="panel-title">
+            <span>🔄</span> Inter-Department Communication & Work Handoff Flow
+          </h3>
+          <span style="font-size: 0.75rem; color: var(--accent-cyan);">Structured Task Pipeline</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+          Visual representation of genuine task handoffs and dependencies between specialized AI departments.
+        </p>
+        <div id="officeHandoffsFlow" class="handoff-flow-strip"></div>
+      </div>
+
+      <!-- Three Column Bottom Grid: Live Activity, Today, Next Actions -->
+      <div class="dashboard-grid" style="grid-template-columns: 1.3fr 1fr; margin-bottom: 2rem;">
+        
+        <!-- Live SSE Activity Stream -->
+        <div class="panel glass">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span>⚡</span> Live Office Activity Feed
+            </h3>
+            <span style="font-size: 0.72rem; color: var(--accent-emerald);">● Real Event Stream</span>
+          </div>
+          <div id="officeLiveActivityFeed" class="activity-feed" style="max-height: 380px;"></div>
+        </div>
+
+        <!-- Today Summary & Next Actions Stack -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <!-- What Happened Today -->
+          <div class="panel glass">
+            <div class="panel-header">
+              <h3 class="panel-title">
+                <span>📋</span> What Happened Today
+              </h3>
+              <span style="font-size: 0.72rem; color: var(--text-muted);" id="todayDateLabel">Today</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.82rem;">
+              <div style="background: rgba(0,0,0,0.3); padding: 0.65rem 0.85rem; border-radius: 6px;">
+                <span style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase;">Leads Discovered</span>
+                <div id="todayLeadsDiscovered" style="font-weight: 700; color: #fff; font-size: 1.15rem;">0</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.3); padding: 0.65rem 0.85rem; border-radius: 6px;">
+                <span style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase;">Leads Qualified</span>
+                <div id="todayLeadsQualified" style="font-weight: 700; color: var(--accent-emerald); font-size: 1.15rem;">0</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.3); padding: 0.65rem 0.85rem; border-radius: 6px;">
+                <span style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase;">Customer Purchases</span>
+                <div id="todayCustomerPurchases" style="font-weight: 700; color: var(--accent-cyan); font-size: 1.15rem;">0</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.3); padding: 0.65rem 0.85rem; border-radius: 6px;">
+                <span style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase;">Tasks Completed</span>
+                <div id="todayTasksCompleted" style="font-weight: 700; color: var(--accent-indigo); font-size: 1.15rem;">0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- What Happens Next -->
+          <div class="panel glass">
+            <div class="panel-header">
+              <h3 class="panel-title">
+                <span>🔮</span> What Happens Next
+              </h3>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Grounded Scheduled Tasks</span>
+            </div>
+            <div id="officeNextActionsList" style="display: flex; flex-direction: column; gap: 0.65rem;"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Tab 1: Enterprise Overview -->
+    <section id="tab-overview" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card glass">
+          <span class="stat-label">Actual Verified Revenue</span>
+          <div id="statActualRevenue" class="stat-value" style="color: var(--accent-emerald);">$0.00</div>
+          <span class="stat-subtext">Ground truth cash only</span>
+        </div>
+        <div class="stat-card glass">
+          <span class="stat-label">Estimated Projected Revenue</span>
+          <div id="statEstimatedRevenue" class="stat-value" style="color: var(--accent-cyan);">$0.00</div>
+          <span class="stat-subtext">Pipeline modeling (not actual)</span>
+        </div>
+        <div class="stat-card glass">
+          <span class="stat-label">Lifetime Expenses</span>
+          <div id="statTotalExpenses" class="stat-value" style="color: var(--accent-rose);">$0.00</div>
+          <span class="stat-subtext">Owner Approval Enforced ($0 limit)</span>
+        </div>
+        <div class="stat-card glass">
+          <span class="stat-label">Owner Time Invested</span>
+          <div id="statOwnerMinutes" class="stat-value" style="color: var(--accent-amber);">0 min</div>
+          <span class="stat-subtext">This week (Target: < 15 min/wk)</span>
+        </div>
+        <div class="stat-card glass">
+          <span class="stat-label">Active AI Employees</span>
+          <div id="statActiveEmployees" class="stat-value" style="color: var(--accent-indigo);">12 / 12</div>
+          <span class="stat-subtext">Operating autonomously</span>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel glass">
+          <div class="panel-header">
+            <h2 class="panel-title">
+              <span>⚡</span> Real-Time Company Activity Stream
+            </h2>
+            <span style="font-size: 0.75rem; color: var(--accent-emerald);">● Live SSE Connected</span>
+          </div>
+          <div id="activityFeed" class="activity-feed"></div>
+        </div>
+
+        <div class="panel glass">
+          <div class="panel-header">
+            <h2 class="panel-title">
+              <span>🛡️</span> Financial Governance & Safety
+            </h2>
+          </div>
+          <div style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="background: rgba(0,0,0,0.25); padding: 0.85rem; border-radius: 6px;">
+              <strong style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase;">Owner Banking Status</strong>
+              <div style="color: var(--accent-emerald); font-weight: 700; margin-top: 0.2rem;">
+                🔒 AIR-GAPPED & UNTOUCHABLE
+              </div>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">
+                AI agents have zero credentials, zero withdrawal permissions, and zero financial transfer access.
+              </p>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.25); padding: 0.85rem; border-radius: 6px;">
+              <strong style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase;">Real-Time Revenue Streams</strong>
+              <ul style="list-style: none; margin-top: 0.35rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                <li>Verified Actual Cash: <strong id="lblActualCash" style="color: var(--accent-emerald);">$0.00</strong></li>
+                <li>Estimated Revenue Forecast: <strong id="lblEstRevenue">$0.00</strong></li>
+                <li>Pending Settlement: <strong id="lblPendingRevenue">$0.00</strong></li>
+                <li>Refunded Revenue: <strong id="lblRefundedRevenue">$0.00</strong></li>
+              </ul>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.25); padding: 0.85rem; border-radius: 6px;">
+              <strong style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase;">Operating Mode</strong>
+              <div id="lblOperatingMode" style="color: var(--accent-cyan); font-weight: 700; margin-top: 0.2rem;">
+                FREE-FIRST MODE (Zero Capital / Organic Growth)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: Phase 4 Autonomous Revenue Engine -->
+    <section id="tab-phase4-revenue" class="tab-content">
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        
+        <!-- Live Truth Banner -->
+        <div class="panel glass" style="border-left: 4px solid var(--accent-emerald);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 style="font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 0.25rem;">
+                <span>🎯</span> Phase 4: First Revenue & Real-World Customer Acquisition
+              </h2>
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                Operating under <strong>Zero-Capital Architecture</strong>. All revenue figures reflect strictly <strong>VERIFIED</strong> processor transactions. Zero fabrication.
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+              <span id="p4OperatingModeBadge" class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); font-weight: 700; padding: 0.4rem 0.8rem;">
+                MODE: FIRST_REVENUE_MODE ($0 SPEND)
+              </span>
+              <button class="btn btn-secondary" onclick="runDailyRevenueLoopUI()">⚡ Run Daily Revenue Cycle</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4-Stat Grid for Truth Revenue -->
+        <div class="stat-grid">
+          <div class="stat-card glass">
+            <span class="stat-label">Verified Actual Cash</span>
+            <div id="p4VerifiedRevenue" class="stat-value" style="color: var(--accent-emerald);">$0.00</div>
+            <span class="stat-subtext">Real customer settlements only</span>
+          </div>
+          <div class="stat-card glass">
+            <span class="stat-label">Pending Settlements</span>
+            <div id="p4PendingRevenue" class="stat-value" style="color: var(--accent-amber);">$0.00</div>
+            <span class="stat-subtext">Awaiting payment processor receipt</span>
+          </div>
+          <div class="stat-card glass">
+            <span class="stat-label">Verified Customers</span>
+            <div id="p4VerifiedCustomers" class="stat-value" style="color: var(--accent-cyan);">0</div>
+            <span class="stat-subtext">Target: 1 paying customer</span>
+          </div>
+          <div class="stat-card glass">
+            <span class="stat-label">Current Constraint</span>
+            <div id="p4CurrentBottleneck" class="stat-value" style="color: var(--accent-rose); font-size: 1.25rem;">TRAFFIC</div>
+            <span id="p4BottleneckSubtext" class="stat-subtext">Zero customer leads captured</span>
+          </div>
+        </div>
+
+        <!-- Two Column: Ranked Candidates + Launch Gate -->
+        <div class="dashboard-grid">
+          <!-- 10 Researched Candidates -->
+          <div class="panel glass">
+            <div class="panel-header">
+              <h3 class="panel-title">
+                <span>🔍</span> 10 Researched Candidate Opportunities (Transparent Scoring)
+              </h3>
+              <button class="btn btn-secondary" style="font-size:0.75rem;" onclick="proposePrimaryCandidateUI()">+ Propose Primary for Approval</button>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+              Ranked by Demand, Willingness to Pay, 90%+ Automation Potential, $0 Startup Capital, and Risk Penalty.
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Score</th>
+                    <th>Opportunity</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Speed</th>
+                  </tr>
+                </thead>
+                <tbody id="p4CandidatesTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Real-World Launch Gate -->
+          <div class="panel glass">
+            <div class="panel-header">
+              <h3 class="panel-title">
+                <span>🚀</span> Real-World Launch Gate & Readiness
+              </h3>
+              <button class="btn btn-secondary" style="font-size:0.75rem;" onclick="generateLaunchReportUI()">Compile Report</button>
+            </div>
+            <div style="font-size: 0.82rem; display: flex; flex-direction: column; gap: 0.75rem;">
+              <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 6px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom: 0.35rem;">
+                  <strong style="color: var(--accent-cyan);">Product Readiness</strong>
+                  <span id="p4ProductReadinessBadge" class="badge" style="background: rgba(16,185,129,0.2); color: var(--accent-emerald);">READY</span>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.78rem;">
+                  Local LLM Offline Evaluation Harness passed all 10 automated QA vectors (functionality, privacy, zero-cloud egress, security).
+                </p>
+              </div>
+
+              <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 6px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom: 0.35rem;">
+                  <strong style="color: var(--accent-amber);">Owner Approval Status</strong>
+                  <span id="p4LaunchApprovalBadge" class="badge" style="background: rgba(245,158,11,0.2); color: var(--accent-amber);">PENDING_OWNER_APPROVAL</span>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.78rem;">
+                  Mandatory Stop Enforced: External launch remains permanently blocked until you explicitly approve the zero-cost experiment in the Approvals Center.
+                </p>
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                <button class="btn btn-approve" style="flex:1;" onclick="attemptLaunchUI()">Verify & Execute Launch Gate</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 13-Stage Pipeline Breakdown -->
+        <div class="panel glass">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <span>📊</span> 13-Stage Sales Pipeline & Conversion Telemetry
+            </h3>
+            <button class="btn btn-secondary" style="font-size:0.75rem;" onclick="createSimulatedLeadUI()">+ Register Test Inbound Lead</button>
+          </div>
+          <div id="p4PipelineStagesContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 0.5rem; text-align: center; font-size: 0.75rem;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Tab 2: Approvals Center -->
+    <section id="tab-approvals" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>⚖️</span> Human Owner Decision & Approval Center
+          </h2>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">
+            High-risk, financial, or legal tasks blocked until you decide.
+          </span>
+        </div>
+        <div id="approvalsList"></div>
+      </div>
+    </section>
+
+    <!-- Tab 3: Opportunity Discovery -->
+    <section id="tab-opportunities" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>🔍</span> Opportunity Discovery Engine (Evidence-First)
+          </h2>
+          <button class="btn btn-secondary" onclick="openNewOpportunityModal()">+ Register Opportunity</button>
+        </div>
+        <div id="opportunityCards" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.25rem;"></div>
+      </div>
+    </section>
+
+    <!-- Tab 4: Revenue Experiment -->
+    <section id="tab-first-experiment" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>🧪</span> Controlled Revenue Experiment Candidates
+          </h2>
+        </div>
+        <div id="experimentCandidatesContainer"></div>
+      </div>
+    </section>
+
+    <!-- Tab 5: Product Factory -->
+    <section id="tab-products" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>🏭</span> Product Factory (EMP-004-CREATION & EMP-011-QA)
+          </h2>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Asset Type</th>
+                <th>Stage</th>
+                <th>QA Verdict</th>
+                <th>Deliverable Path</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 6: Sales Pipeline & Customers -->
+    <section id="tab-sales-pipeline" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>🤝</span> Ethical Sales Pipeline & Customer Deliveries
+          </h2>
+        </div>
+        <div class="dashboard-grid">
+          <div>
+            <h3 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--accent-cyan);">Active Leads</h3>
+            <div style="overflow-x: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Lead ID</th>
+                    <th>Customer Type</th>
+                    <th>Source</th>
+                    <th>Stage</th>
+                    <th>Consent Basis</th>
+                  </tr>
+                </thead>
+                <tbody id="leadsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--accent-emerald);">Recent Deliveries</h3>
+            <div id="deliveriesList" style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 7: Central Task Pipeline -->
+    <section id="tab-tasks" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>📋</span> Central Task Registry & Evidence Ledger
+          </h2>
+          <button class="btn btn-secondary" onclick="openNewTaskModal()">+ New Task</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Task ID</th>
+                <th>Priority</th>
+                <th>Objective</th>
+                <th>Assigned Agent</th>
+                <th>Status</th>
+                <th>Evidence Status</th>
+              </tr>
+            </thead>
+            <tbody id="taskTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 8: Owner Time & Automation -->
+    <section id="tab-owner-metrics" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>⏱️</span> Owner Time Minimization & Automation Engine
+          </h2>
+        </div>
+        <div class="dashboard-grid">
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="stat-card glass">
+              <span class="stat-label">Owner Time Expended</span>
+              <div id="metricOwnerTimeTotal" class="stat-value" style="color: var(--accent-amber);">0 min</div>
+              <span class="stat-subtext">Minutes required this week</span>
+            </div>
+            <div class="stat-card glass">
+              <span class="stat-label">Automated Tasks Completed</span>
+              <div id="metricAutomatedTasks" class="stat-value" style="color: var(--accent-emerald);">0</div>
+              <span class="stat-subtext">Completed by AI without owner</span>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--accent-purple);">Automation Candidates</h3>
+            <div id="automationCandidatesList" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 9: Skills Registry (Phase 3) -->
+    <section id="tab-skills-registry" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>🧩</span> AI Skill Registry & Test Validation Pipeline
+          </h2>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Skill ID</th>
+                <th>Name</th>
+                <th>Version</th>
+                <th>Status</th>
+                <th>Allowed Tools</th>
+                <th>Permissions</th>
+                <th>Security Rules</th>
+              </tr>
+            </thead>
+            <tbody id="skillsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 10: Employee Factory (Phase 3) -->
+    <section id="tab-employee-factory" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>🏭</span> AI Employee Factory (Dynamic Workforce Spawning)
+          </h2>
+          <button class="btn btn-secondary" onclick="openSpawnEmployeeModal()">+ Spawn New AI Employee</button>
+        </div>
+        <div style="margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
+          Spawns specialized employees based on emerging capability gaps. All employees follow strict Least Privilege and start in <strong>TRAINING</strong>.
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Role</th>
+                <th>Lifecycle Status</th>
+                <th>Responsibilities</th>
+                <th>Permissions</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="factoryEmployeesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 11: Treasury & Reinvestment (Phase 3) -->
+    <section id="tab-treasury-view" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>💰</span> Virtual Company Treasury & Reinvestment Priorities
+          </h2>
+        </div>
+        <div class="dashboard-grid">
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="stat-card glass">
+              <span class="stat-label">Virtual Operating Funds</span>
+              <div id="treasuryVirtualFunds" class="stat-value" style="color: var(--accent-emerald);">$1,000.00</div>
+              <span class="stat-subtext">Isolated sandbox capital</span>
+            </div>
+            <div class="stat-card glass">
+              <span class="stat-label">Operating Reserve</span>
+              <div id="treasuryReserve" class="stat-value" style="color: var(--accent-cyan);">$500.00</div>
+              <span class="stat-subtext">Minimum safety buffer</span>
+            </div>
+            <div class="stat-card glass">
+              <span class="stat-label">Reinvestment Budget</span>
+              <div id="treasuryReinvestBudget" class="stat-value" style="color: var(--accent-amber);">$0.00</div>
+              <span class="stat-subtext">0% initial policy (Owner approval required)</span>
+            </div>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 1.25rem; border-radius: 8px;">
+            <h3 style="font-size: 0.95rem; color: var(--accent-cyan); margin-bottom: 0.5rem;">Reinvestment Priority Order</h3>
+            <ol style="margin-left: 1.25rem; font-size: 0.82rem; display: flex; flex-direction: column; gap: 0.35rem; color: var(--text-secondary);">
+              <li><strong>Security:</strong> Vulnerability scans, firewall enforcement</li>
+              <li><strong>Reliability:</strong> Failover, automated tests, uptime</li>
+              <li><strong>Revenue Bottlenecks:</strong> Removing customer friction</li>
+              <li><strong>Automation:</strong> Eliminating repetitive owner time</li>
+              <li><strong>Customer Experience:</strong> Faster delivery, better support</li>
+              <li><strong>Product Improvement:</strong> Higher value features</li>
+              <li><strong>Marketing Infrastructure:</strong> Organic SEO, listings</li>
+              <li><strong>New Revenue Opportunities:</strong> Expanding product lines</li>
+              <li><strong>Experimental Capabilities:</strong> Advanced R&D</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 12: Capability Marketplace (Phase 3) -->
+    <section id="tab-marketplace-view" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>🛒</span> Internal Capability Marketplace (Free-First Catalog)
+          </h2>
+        </div>
+        <div id="marketplaceCards" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.25rem;"></div>
+      </div>
+    </section>
+
+    <!-- Tab 13: Self-Growth Loop (Phase 3) -->
+    <section id="tab-self-growth" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>🌱</span> Autonomous Self-Growth Engine
+          </h2>
+          <button class="btn btn-secondary" onclick="openTriggerSelfGrowthModal()">+ Trigger Self-Growth Cycle</button>
+        </div>
+        <div style="margin-bottom: 1.25rem; font-size: 0.85rem; color: var(--text-secondary);">
+          Automatically resolves capability gaps by climbing the <strong>Free-First Ladder</strong>, evaluating ROI, and safely deploying new skills or employees.
+        </div>
+        <div id="capabilityGapsList" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+      </div>
+    </section>
+
+    <!-- Tab 14: AI Workforce Roster -->
+    <section id="tab-employees" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>🤖</span> Full Autonomous AI Workforce Roster
+          </h2>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Permissions</th>
+                <th>Tools</th>
+                <th>Escalation Boundary</th>
+              </tr>
+            </thead>
+            <tbody id="employeeTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 15: Weekly CEO Report -->
+    <section id="tab-ceo-report" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>📑</span> Weekly CEO Executive Brief
+          </h2>
+          <button class="btn btn-secondary" onclick="loadCEOReport()">Refresh Report</button>
+        </div>
+        <div id="ceoReportContent"></div>
+      </div>
+    </section>
+
+    <!-- Tab 16: Financial Firewall Settings -->
+    <section id="tab-firewall-settings" class="tab-content">
+      <div class="panel glass">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>🔒</span> Financial Firewall & Safety Governance
+          </h2>
+        </div>
+        <div style="max-width: 650px; display: flex; flex-direction: column; gap: 1.25rem;">
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.35rem;">
+              Maximum Single Unapproved Expense ($USD)
+            </label>
+            <input type="number" id="cfgSingleLimit" value="0.00" step="1.00" 
+              style="width: 100%; padding: 0.6rem; border-radius: 6px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); color: #fff;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.35rem;">
+              Maximum Daily Expense Cap ($USD)
+            </label>
+            <input type="number" id="cfgDailyLimit" value="0.00" step="5.00" 
+              style="width: 100%; padding: 0.6rem; border-radius: 6px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); color: #fff;">
+          </div>
+          <button class="btn btn-approve" onclick="saveFirewallSettings()">Save Policy</button>
+        </div>
+      </div>
+    <!-- Tab 17: 24/7 Cloud & Daily CEO Report (Phase 5B & 5C) -->
+    <section id="tab-cloud-247" class="tab-content">
+      
+      <!-- Primary Owner Question Banner: "CAN I CLOSE MY LAPTOP?" (Requirements 18, 27) -->
+      <div id="canCloseLaptopBanner" class="panel glass" style="margin-bottom: 1.5rem; border-left: 6px solid var(--accent-rose); background: rgba(30, 41, 59, 0.85);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div style="flex: 1; min-width: 280px;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.35rem;">
+              <span style="font-size: 1.3rem;">💻</span>
+              <h2 style="font-size: 1.15rem; font-weight: 800; color: #fff; margin: 0; text-transform: uppercase;">
+                Can I Close My Laptop?
+              </h2>
+              <span id="canCloseLaptopBadge" class="badge" style="background: rgba(244, 63, 94, 0.2); color: var(--accent-rose); font-weight: 800; font-size: 0.85rem;">
+                🔴 NO — CLOUD INDEPENDENCE NOT VERIFIED
+              </span>
+            </div>
+            <p id="canCloseLaptopDesc" style="font-size: 0.84rem; color: var(--text-secondary); margin: 0 0 0.35rem 0; line-height: 1.4;">
+              Checking runtime environment...
+            </p>
+            <div id="canCloseLaptopAction" style="font-size: 0.78rem; color: var(--accent-amber);"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem;">
+            <button class="btn btn-secondary" onclick="runLaptopVerificationCheck()" style="font-size: 0.8rem;">
+              🔍 Re-Verify Independence
+            </button>
+            <span style="font-size: 0.72rem; color: var(--text-muted);" id="lblLastVerifiedTime">Checked: Just now</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cloud Architecture Diagram: Laptop as Monitor vs Remote Cloud as Worker (Requirement 19) -->
+      <div class="panel glass" style="margin-bottom: 1.5rem;">
+        <div class="panel-header">
+          <h3 class="panel-title" style="font-size: 0.95rem; color: #fff;">
+            <span>🌐</span> Enterprise Execution Topology (Phase 5C Architecture)
+          </h3>
+          <span id="cloudDeploymentStateBadge" class="badge" style="background: rgba(99, 102, 241, 0.2); color: var(--accent-indigo);">LOCAL_WORKSTATION</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr auto 1.5fr; gap: 1rem; align-items: center; padding: 0.75rem; background: rgba(0,0,0,0.25); border-radius: 8px;">
+          
+          <!-- Left: Owner Laptop -->
+          <div style="text-align: center; padding: 1rem; background: rgba(30, 41, 59, 0.6); border: 1px solid var(--border-subtle); border-radius: 6px;">
+            <div style="font-size: 2rem; margin-bottom: 0.35rem;">💻</div>
+            <strong style="color: #fff; display: block; font-size: 0.88rem;">OWNER DEVICE</strong>
+            <span style="font-size: 0.74rem; color: var(--accent-cyan); display: block; margin-top: 0.2rem;">Executive Console Only</span>
+            <span style="font-size: 0.7rem; color: var(--text-muted); display: block;">Browser • Approvals • Monitoring</span>
+          </div>
+
+          <!-- Center: Arrow -->
+          <div style="text-align: center; color: var(--accent-indigo); font-size: 1.5rem; font-weight: bold;">
+            ── HTTPS ──▶
+          </div>
+
+          <!-- Right: Remote Cloud Runtime -->
+          <div style="padding: 1rem; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-subtle); border-radius: 6px;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
+              <span style="font-size: 1.4rem;">☁️</span>
+              <div>
+                <strong style="color: #fff; font-size: 0.88rem;">REMOTE 24/7 CLOUD ENTERPRISE</strong>
+                <span style="font-size: 0.7rem; color: var(--accent-emerald); display: block;">Autonomous Business Runtime</span>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; font-size: 0.74rem; color: var(--text-secondary); margin-top: 0.5rem;">
+              <div>• 12+ AI Employees</div>
+              <div>• Background Task Worker</div>
+              <div>• 23:00 Dubai Scheduler</div>
+              <div>• Persistent SQLite Ledger</div>
+              <div>• Gemini Reasoning Engine</div>
+              <div>• Automated CEO Report</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Cloud Reality & Remote Proof Suite (Requirements 8, 9, 10, 20) -->
+      <div class="panel glass" style="margin-bottom: 1.5rem;">
+        <div class="panel-header" style="flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 class="panel-title" style="font-size: 1rem; color: #fff;">
+              <span>🧪</span> Empirical Cloud Verification & Independence Gate
+            </h3>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
+              Zero-Fake Success Rule: Tests real execution, database persistence, and security hygiene.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span id="independenceGateBadge" class="badge" style="font-weight: 800; font-size: 0.82rem; padding: 0.35rem 0.75rem; background: rgba(244, 63, 94, 0.2); color: var(--accent-rose);">
+              GATE: FAILED (LOCAL_HOST)
+            </span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; margin-bottom: 1rem;">
+          <button class="btn btn-secondary" onclick="runProofTask()" style="font-size: 0.8rem;">
+            ▶️ Run Proof Task (CLOUD_PROOF_TASK)
+          </button>
+          <button class="btn btn-secondary" onclick="runPersistenceTest()" style="font-size: 0.8rem;">
+            💾 Test Persistence
+          </button>
+          <button class="btn btn-secondary" onclick="runWorkerRecoveryTest()" style="font-size: 0.8rem;">
+            🔄 Test Worker Recovery
+          </button>
+          <button class="btn btn-secondary" onclick="runSecurityScan()" style="font-size: 0.8rem;">
+            🛡 Run Security & Credential Scan
+          </button>
+        </div>
+
+        <!-- Verification Output Terminal -->
+        <div id="proofOutputBox" style="display: none; background: rgba(0,0,0,0.5); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.85rem; font-family: monospace; font-size: 0.78rem; color: #38bdf8; max-height: 200px; overflow-y: auto;">
+          <!-- Real-time proof test logs -->
+        </div>
+      </div>
+
+      <!-- Two Column Layout: Heartbeat & Gemini Status -->
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+        
+        <!-- Component Heartbeat Grid (9 Components) -->
+        <div class="panel glass">
+          <div class="panel-header">
+            <h3 class="panel-title" style="font-size: 1rem; color: #fff;">
+              <span>💓</span> 9-Point Continuous Company Heartbeat
+            </h3>
+            <span id="heartbeatOverallStatus" class="badge" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald);">HEALTHY</span>
+          </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Automated health probes verifying runtime resilience, database persistence, and self-healing across all cloud subsystems.
+          </p>
+          <div id="heartbeatGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Google Gemini Provider Card -->
+        <div class="panel glass">
+          <div class="panel-header">
+            <h3 class="panel-title" style="font-size: 1rem; color: #fff;">
+              <span>🤖</span> Gemini AI Provider
+            </h3>
+            <span id="geminiHealthBadge" class="badge" style="background: rgba(99, 102, 241, 0.2); color: var(--accent-indigo);">🟢 Connected</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.82rem;">
+            <div style="background: rgba(0,0,0,0.25); padding: 0.75rem; border-radius: 6px;">
+              <span style="color: var(--text-muted); display: block; font-size: 0.72rem; text-transform: uppercase;">Configured Model</span>
+              <strong id="geminiModelName" style="color: #fff; font-size: 0.95rem;">gemini-2.5-flash</strong>
+            </div>
+            <div style="background: rgba(0,0,0,0.25); padding: 0.75rem; border-radius: 6px;">
+              <span style="color: var(--text-muted); display: block; font-size: 0.72rem; text-transform: uppercase;">Subscription & Tier</span>
+              <div style="color: var(--accent-emerald); font-weight: 600;">Gemini Pro (Free-First API Mode)</div>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">$0 unapproved spending ceiling strictly enforced.</span>
+            </div>
+            <div style="background: rgba(0,0,0,0.25); padding: 0.75rem; border-radius: 6px;">
+              <span style="color: var(--text-muted); display: block; font-size: 0.72rem; text-transform: uppercase;">Fallback Resilience</span>
+              <div style="color: var(--text-secondary);" id="geminiFallbackProvider">Deterministic System Synthesizer</div>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">Company operates reliably even if external API is offline.</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;">
+              🔒 <strong>Security Policy:</strong> API credentials are encrypted in environment variables and never exposed to logs or UI.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Daily CEO Report Section -->
+      <div class="panel glass">
+        <div class="panel-header" style="flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 class="panel-title" style="font-size: 1.05rem; color: #fff;">
+              <span>📬</span> Daily CEO Progress Report Automation
+            </h3>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
+              Compiled automatically every day at <strong>23:00 Asia/Dubai</strong> and delivered to <strong style="color: var(--accent-cyan);">manirkhn@gmail.com</strong> with automated Truth Check validation.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <button class="btn btn-approve" id="btnManualDailyReport" onclick="triggerManualDailyReport()" style="font-size: 0.82rem;">
+              🚀 Generate & Email Report Now
+            </button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+          <!-- Archived Daily Reports -->
+          <div>
+            <h4 style="font-size: 0.85rem; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 0.65rem;">
+              📁 Archived Daily CEO Reports
+            </h4>
+            <div id="dailyReportsList" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 380px; overflow-y: auto;">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Email Delivery Log -->
+          <div>
+            <h4 style="font-size: 0.85rem; color: var(--accent-emerald); text-transform: uppercase; margin-bottom: 0.65rem;">
+              ✉️ Email Deliveries to manirkhn@gmail.com
+            </h4>
+            <div id="emailDeliveriesList" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 380px; overflow-y: auto;">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Tab 18: Employee Activity Timeline (Phase 5B, Requirements 14, 15, 21, 29) -->
+    <section id="tab-employee-timeline" class="tab-content">
+      
+      <!-- Top Activity Filter Bar -->
+      <div class="panel glass" style="margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 style="font-size: 1.15rem; font-weight: 700; color: #fff; margin: 0 0 0.25rem 0;">
+              <span>👥</span> AI Employee Work Activity & Historical Timeline
+            </h2>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">
+              Audit-verified log of actual tasks, experiments, and projects executed by each AI employee. No fabricated external platform activity.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <label style="font-size: 0.8rem; color: var(--text-muted);">Timeframe:</label>
+            <div class="btn-group" style="display: flex; gap: 0.25rem;">
+              <button class="btn btn-secondary active-timeframe" id="btnTimeframeToday" onclick="setTimeframe('today')">Today</button>
+              <button class="btn btn-secondary" id="btnTimeframe7Days" onclick="setTimeframe('7days')">Last 7 Days</button>
+              <button class="btn btn-secondary" id="btnTimeframeAll" onclick="setTimeframe('all')">All History</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employee Activity Summary Table (Requirement 21) -->
+      <div class="panel glass" style="margin-bottom: 1.5rem;">
+        <div class="panel-header">
+          <h3 class="panel-title" style="font-size: 0.95rem; color: #fff;">
+            <span>📊</span> Employee Task Performance Table
+          </h3>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Employee ID</th>
+                <th>Role</th>
+                <th>Tasks Handled</th>
+                <th>Completed</th>
+                <th>Failed</th>
+                <th>Blocked</th>
+                <th>Current Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="employeeActivitySummaryTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Detailed Activity Feed -->
+      <div class="panel glass">
+        <div class="panel-header">
+          <h3 class="panel-title" style="font-size: 0.95rem; color: #fff;">
+            <span>📜</span> Detailed Activity Log & Context
+          </h3>
+          <span id="activityCountBadge" class="badge" style="background: rgba(99, 102, 241, 0.2); color: var(--accent-indigo);">0 Events</span>
+        </div>
+        <div id="employeeActivityFeed" style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Tab 18: Payments, Checkout & Owner Settlement (Phase 5D) -->
+    <section id="tab-payments-revenue" class="tab-content">
+      
+      <!-- Banking Air-Gap Banner -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-left: 6px solid #10b981; background: rgba(16, 185, 129, 0.08);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="font-size: 1.4rem;">🔒</span>
+              <div>
+                <h2 style="font-size: 1.15rem; font-weight: 800; color: #fff; margin: 0;">
+                  OWNER BANKING AIR-GAP ENFORCED
+                </h2>
+                <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0.2rem 0 0 0;">
+                  The AI company is strictly prohibited from holding Emirates Islamic online banking credentials, passwords, OTPs, or debit cards. Payouts are configured directly in the payment provider portal.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981; font-weight: 800; font-size: 0.85rem;">
+              🔒 AIR-GAP 100% INTACT
+            </span>
+            <button class="btn btn-secondary" onclick="loadPaymentsDashboard()" style="font-size: 0.8rem;">🔄 Refresh Ledger</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- First Real Customer Gate & Income Generation Readiness (Sections 24 & 27) -->
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+        
+        <!-- First Customer Gate -->
+        <div class="panel glass">
+          <div class="panel-header">
+            <h3 class="panel-title" style="font-size: 0.95rem; color: #fff;">
+              <span>🚪</span> First Real Customer Gate
+            </h3>
+            <span id="firstCustomerGateBadge" class="badge" style="background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); font-weight: 800;">
+              🟡 READY FOR REAL CUSTOMER
+            </span>
+          </div>
+          <p id="firstCustomerGateDesc" style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Evaluating live verification prerequisites...
+          </p>
+          <div id="firstCustomerChecklist" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.78rem;">
+            <!-- Dynamically populated checklist -->
+          </div>
+        </div>
+
+        <!-- Income Generation Readiness & Bottleneck -->
+        <div class="panel glass">
+          <div class="panel-header">
+            <h3 class="panel-title" style="font-size: 0.95rem; color: #fff;">
+              <span>📈</span> "When Will I Make Money?" Readiness
+            </h3>
+            <span id="incomeReadinessBadge" class="badge" style="background: rgba(99, 102, 241, 0.2); color: var(--accent-indigo); font-weight: 700;">
+              🟡 READY — FUNNEL ACTIVE
+            </span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.84rem;">
+            <div style="background: rgba(0,0,0,0.3); padding: 0.75rem 1rem; border-radius: 6px;">
+              <span style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase;">Current Operational Bottleneck</span>
+              <div id="incomeBottleneckBadge" style="font-size: 1.1rem; font-weight: 800; color: var(--accent-amber); margin-top: 0.15rem;">
+                TRAFFIC & DISTRIBUTION
+              </div>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); padding: 0.75rem 1rem; border-radius: 6px;">
+              <span style="color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase;">CEO Strategic Guidance</span>
+              <div id="incomeBottleneckGuidance" style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 0.2rem; line-height: 1.4;">
+                Checkout and digital delivery are validated. Expand qualified outreach to developers.
+              </div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-align: right;">
+              <em>Target ≠ Actual: Estimates are goals, never fabricated revenue.</em>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Financial Truth KPI Strip -->
+      <div class="financial-truth-strip" style="margin-bottom: 1.5rem;">
+        <div class="stat-card glass financial-card financial-card-verified">
+          <span class="verified-tag">IMMUTABLE LEDGER</span>
+          <span class="stat-label">Lifetime Verified Revenue</span>
+          <div id="payLifetimeRevenue" class="stat-value" style="color: var(--accent-emerald); font-size: 1.8rem;">$29.00</div>
+          <span id="payLifetimeAed" class="stat-subtext" style="color: var(--text-secondary);">AED 106.50 (Peg: 3.6725)</span>
+        </div>
+        <div class="stat-card glass financial-card">
+          <span class="stat-label">Today's Verified Revenue</span>
+          <div id="payTodayRevenue" class="stat-value" style="color: var(--accent-cyan); font-size: 1.8rem;">$0.00</div>
+          <span id="payTodayAed" class="stat-subtext">AED 0.00</span>
+        </div>
+        <div class="stat-card glass financial-card">
+          <span class="stat-label">Verified Customers</span>
+          <div id="payCustomerCount" class="stat-value" style="color: #fff; font-size: 1.8rem;">1</div>
+          <span class="stat-subtext">Confirmed product deliveries</span>
+        </div>
+        <div class="stat-card glass financial-card">
+          <span class="stat-label">Settlement Status</span>
+          <div id="paySettlementStatus" class="stat-value" style="color: var(--accent-amber); font-size: 1.4rem;">🟡 PENDING</div>
+          <span class="stat-subtext">Emirates Islamic (****1234)</span>
+        </div>
+        <div class="stat-card glass financial-card">
+          <span class="stat-label">Sandbox Test Volume</span>
+          <div id="payTestVolume" class="stat-value" style="color: var(--text-muted); font-size: 1.8rem;">$0.00</div>
+          <span class="stat-subtext" style="color: var(--accent-rose);">Excluded from actual revenue</span>
+        </div>
+      </div>
+
+      <!-- "Where Did The Money Go?" Flow Pipeline (Section 17) -->
+      <div class="panel glass" style="margin-bottom: 1.5rem;">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title" style="font-size: 1rem; color: #fff;">
+              <span>💸</span> "Where Did The Money Go?" Transparent Audit Pipeline
+            </h3>
+            <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 0.2rem 0 0 0;">
+              Every dollar and dirham tracked from customer payment to your designated bank account.
+            </p>
+          </div>
+          <span id="moneyFlowSampleBadge" class="badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">
+            Live Ledger Trace
+          </span>
+        </div>
+        <div id="whereDidMoneyGoPipeline" style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.5rem;">
+          <!-- Dynamically populated pipeline steps -->
+        </div>
+      </div>
+
+      <!-- UAE Configuration & Owner Approval Gates (Sections 15 & 19) -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+        
+        <!-- UAE Settlement Profile -->
+        <div class="panel glass">
+          <div class="panel-header">
+            <h3 class="panel-title" style="font-size: 0.95rem; color: #fff;">
+              <span>🇦🇪</span> UAE Settlement Profile (Emirates Islamic)
+            </h3>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">Configured</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.82rem;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">
+              <span style="color: var(--text-muted);">Jurisdiction / Country:</span>
+              <strong style="color: #fff;">United Arab Emirates (AE)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">
+              <span style="color: var(--text-muted);">Primary Bank:</span>
+              <strong style="color: #fff;">Emirates Islamic</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">
+              <span style="color: var(--text-muted);">Settlement Currency:</span>
+              <strong style="color: var(--accent-emerald);">AED (Dirhams) & USD</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">
+              <span style="color: var(--text-muted);">Payment Gateway:</span>
+              <strong style="color: #fff;">Stripe UAE / Gateway Adapter</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.4rem;">
+              <span style="color: var(--text-muted);">Masked Destination Ref:</span>
+              <code style="color: var(--accent-cyan);">****1234 (Air-gapped)</code>
+            </div>
+            <div style="margin-top: 0.5rem; background: rgba(0,0,0,0.25); padding: 0.75rem; border-radius: 6px; font-size: 0.76rem; color: var(--text-secondary); line-height: 1.4;">
+              💡 <strong>Owner Payout Setup:</strong> Payout details are entered inside your official Stripe UAE / Gateway Dashboard. The AI never stores or requests bank passwords or IBANs.
+            </div>
+          </div>
+        </div>
+
+        <!-- Owner Approval Gates -->
+        <div class="panel glass">
+          <div class="panel-header">
+            <h3 class="panel-title" style="font-size: 0.95rem; color: #fff;">
+              <span>🛡️</span> Owner Payment Governance Gates
+            </h3>
+            <span style="font-size: 0.72rem; color: var(--text-muted);">Owner Override Controls</span>
+          </div>
+          <div id="paymentGatesList" style="display: flex; flex-direction: column; gap: 0.65rem;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sandbox Test Runner & Webhook Simulator -->
+      <div class="panel glass" style="margin-bottom: 1.5rem;">
+        <div class="panel-header" style="flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 class="panel-title" style="font-size: 1rem; color: #fff;">
+              <span>🧪</span> Sandbox Payment & Delivery Simulator (Zero Capital Risk)
+            </h3>
+            <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 0.2rem 0 0 0;">
+              Simulates real customer checkout, signed cryptographic webhook, delivery trigger, and verifies $0 enters production ledger.
+            </p>
+          </div>
+          <button class="btn btn-approve" id="btnRunSandboxTest" onclick="runSandboxPaymentTest()" style="font-size: 0.82rem;">
+            ▶ Execute Sandbox Checkout & Webhook Test
+          </button>
+        </div>
+        <div id="sandboxTerminalOutput" style="display: none; margin-top: 1rem; background: #000; border: 1px solid var(--border-subtle); border-radius: 6px; padding: 1rem; font-family: monospace; font-size: 0.78rem; color: #38bdf8; max-height: 280px; overflow-y: auto;">
+        </div>
+      </div>
+
+      <!-- Recent Transactions Table -->
+      <div class="panel glass">
+        <div class="panel-header">
+          <h3 class="panel-title" style="font-size: 0.95rem; color: #fff;">
+            <span>🧾</span> Transaction Log & Verifiable Customer Receipts
+          </h3>
+          <span style="font-size: 0.72rem; color: var(--text-muted);">Deterministic Ledger Events</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Amount</th>
+                <th>Mode</th>
+                <th>Payment Status</th>
+                <th>Delivery</th>
+                <th>Receipt</th>
+              </tr>
+            </thead>
+            <tbody id="paymentTransactionsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Employee Detail Modal ("What are they doing?") -->
+  <div id="employeeDetailModal" class="office-modal-overlay" style="display: none;">
+    <div class="office-modal-window">
+      <div class="office-modal-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="employee-avatar-wrapper" style="width: 58px; height: 58px;">
+            <div id="modalEmpAvatarSvg" class="employee-avatar-svg"></div>
+            <span class="ai-badge-pill">AI</span>
+          </div>
+          <div>
+            <h3 id="modalEmpName" style="font-size: 1.25rem; font-weight: 700; color: #fff;">Employee Name</h3>
+            <p id="modalEmpTitle" style="font-size: 0.82rem; color: var(--accent-cyan);">Role Title</p>
+            <div style="margin-top: 0.35rem;">
+              <span id="modalEmpStatusBadge" class="desk-status-pill working">🟢 WORKING</span>
+              <span id="modalEmpRoleBadge" class="badge" style="background: rgba(99, 102, 241, 0.2); color: var(--accent-indigo); margin-left: 0.35rem;">Executive</span>
+            </div>
+          </div>
+        </div>
+        <button class="office-modal-close" onclick="closeEmployeeModal()">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        
+        <!-- Current Work Section -->
+        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px;">
+          <h4 style="font-size: 0.85rem; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 0.5rem;">
+            📌 Current Active Work
+          </h4>
+          <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.82rem;">
+            <div><strong>Task:</strong> <span id="modalCurrentTask">Building landing page deliverable</span></div>
+            <div><strong>Status:</strong> <span id="modalCurrentTaskStatus">Working</span></div>
+            <div><strong>Task ID:</strong> <code id="modalCurrentTaskId" style="color: var(--accent-cyan);">TSK-001</code></div>
+            <div><strong>Started At:</strong> <span id="modalCurrentTaskStarted">2026-09-24 16:30 UTC</span></div>
+            <div><strong>Next Expected Action:</strong> <span id="modalCurrentTaskNext">Self-testing code before QA submission</span></div>
+          </div>
+        </div>
+
+        <!-- Recent Work (Last 5 completed) -->
+        <div>
+          <h4 style="font-size: 0.85rem; color: var(--accent-emerald); text-transform: uppercase; margin-bottom: 0.5rem;">
+            ✅ Recent Completed Work
+          </h4>
+          <div id="modalRecentWorkList" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
+        </div>
+
+        <!-- Performance Summary -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center;">
+          <div style="background: rgba(0,0,0,0.25); padding: 0.65rem; border-radius: 6px;">
+            <div id="modalPerfCompleted" style="font-weight: 700; color: #fff; font-size: 1.1rem;">0</div>
+            <span style="font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase;">Completed</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 0.65rem; border-radius: 6px;">
+            <div id="modalPerfFailed" style="font-weight: 700; color: var(--accent-rose); font-size: 1.1rem;">0</div>
+            <span style="font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase;">Failed</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 0.65rem; border-radius: 6px;">
+            <div id="modalPerfSuccessRate" style="font-weight: 700; color: var(--accent-emerald); font-size: 1.1rem;">100%</div>
+            <span style="font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase;">Success Rate</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.25); padding: 0.65rem; border-radius: 6px;">
+            <div id="modalPerfRevenue" style="font-weight: 700; color: var(--accent-cyan); font-size: 1.1rem;">$0.00</div>
+            <span style="font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase;">Attributed Rev</span>
+          </div>
+        </div>
+
+        <!-- Human-Readable Permissions Summary -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.8rem;">
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); padding: 0.85rem; border-radius: 6px;">
+            <strong style="color: var(--accent-emerald); display: block; margin-bottom: 0.4rem;">Allowed Capabilities (CAN)</strong>
+            <ul id="modalCanList" style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.25rem; color: var(--text-secondary);"></ul>
+          </div>
+          <div style="background: rgba(244, 63, 94, 0.08); border: 1px solid rgba(244, 63, 94, 0.25); padding: 0.85rem; border-radius: 6px;">
+            <strong style="color: var(--accent-rose); display: block; margin-bottom: 0.4rem;">Security Guardrails (CANNOT)</strong>
+            <ul id="modalCannotList" style="padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.25rem; color: var(--text-secondary);"></ul>
+          </div>
+        </div>
+
+        <!-- Technical Details Drawer (Collapsible) -->
+        <div class="tech-details-drawer">
+          <div class="tech-details-toggle" onclick="toggleTechDetails()">
+            <span>🔧 Technical Details & Metadata</span>
+            <span id="techToggleArrow">▼</span>
+          </div>
+          <div id="modalTechDetailsContent" class="tech-details-content" style="display: none;"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Glossary Modal ("Explain This") -->
+  <div id="glossaryModal" class="office-modal-overlay" style="display: none;">
+    <div class="office-modal-window" style="max-width: 500px;">
+      <div class="office-modal-header">
+        <h3 id="glossaryTitle" style="font-size: 1.15rem; font-weight: 700; color: #fff;">Explanatory Glossary</h3>
+        <button class="office-modal-close" onclick="closeGlossaryModal()">✕</button>
+      </div>
+      <div style="padding: 0.5rem 0;">
+        <p id="glossaryContent" style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;"></p>
+      </div>
+      <div style="text-align: right; margin-top: 1rem;">
+        <button class="btn btn-secondary" onclick="closeGlossaryModal()">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emergency Stop Confirmation Modal -->
+  <div id="emergencyStopConfirmModal" class="office-modal-overlay" style="display: none;">
+    <div class="office-modal-window" style="max-width: 480px; border-color: var(--accent-rose);">
+      <div class="office-modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--accent-rose); display: flex; align-items: center; gap: 0.5rem;">
+          <span>🛑</span> Emergency Stop Confirmation
+        </h3>
+        <button class="office-modal-close" onclick="closeEmergencyStopModal()">✕</button>
+      </div>
+      <div style="padding: 0.5rem 0; font-size: 0.88rem; color: var(--text-primary); line-height: 1.5;">
+        <p style="margin-bottom: 0.75rem;">
+          <strong>Are you sure?</strong> This will immediately pause all autonomous AI company operations and freeze background workers.
+        </p>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">
+          No AI employee will execute any tasks or tools until you explicitly resume operations.
+        </p>
+      </div>
+      <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.25rem;">
+        <button class="btn btn-secondary" onclick="closeEmergencyStopModal()">Cancel</button>
+        <button class="btn-killswitch" onclick="confirmEmergencyStopToggle()">Confirm & Halt Operations</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
