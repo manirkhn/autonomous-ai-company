@@ -4,11 +4,13 @@ services:
     env: docker
     plan: free
     region: frankfurt # or oregon
-    healthCheckPath: /api/cloud/heartbeat
-    disk:
-      name: company-data
-      mountPath: /app/data
-      sizeGB: 1
+    healthCheckPath: /health
+    # Note: On Render, persistent disks require a paid Starter plan ($7/mo).
+    # For 100% Free plan deployment ($0.00), disk is commented out.
+    # disk:
+    #   name: company-data
+    #   mountPath: /app/data
+    #   sizeGB: 1
     envVars:
       - key: PORT
         value: 10000
