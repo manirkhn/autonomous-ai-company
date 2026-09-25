@@ -132,9 +132,11 @@ class TestPhase5FCloudDeployment(unittest.TestCase):
             self.assertEqual(res.status_code, 200)
             self.assertIn("Local LLM Offline Evaluation", res.text)
             self.assertIn("$29", res.text)
-            self.assertIn("PROD-LLM-EVAL-001", res.text)
             # Verify no fake testimonials
             self.assertNotIn("John D. from Google says", res.text)
+        # Verify product ID retained in product checkout payload
+        prod_res = self.client.get("/product")
+        self.assertIn("PROD-LLM-EVAL-001", prod_res.text)
 
     def test_06_dynamic_checkout_url_generation(self):
         """Verify checkout URLs dynamically adapt to PUBLIC_BASE_URL configuration."""

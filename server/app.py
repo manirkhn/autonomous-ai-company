@@ -1482,17 +1482,41 @@ def get_public_health():
     """
     return CloudHeartbeatService.get_safe_health_status()
 
-@app.get("/product", response_class=HTMLResponse)
 @app.get("/store", response_class=HTMLResponse)
+def serve_store_page():
+    """
+    Public customer-facing storefront for Nexora AI Labs (Phase 5G).
+    """
+    store_path = os.path.join(UI_DIR, "store.html")
+    if os.path.exists(store_path):
+        with open(store_path, "r", encoding="utf-8") as f:
+            return f.read()
+    return "<h1>Store Loading...</h1>"
+
+@app.get("/product", response_class=HTMLResponse)
 def serve_product_page():
     """
-    Public customer-facing product landing page for PROD-LLM-EVAL-001 (Phase 5F, Section 14).
+    Public customer-facing product landing page for Nexora AI Labs (Phase 5G).
     """
     product_path = os.path.join(UI_DIR, "product.html")
     if os.path.exists(product_path):
         with open(product_path, "r", encoding="utf-8") as f:
             return f.read()
     return "<h1>Product Page Loading...</h1>"
+
+@app.get("/checkout", response_class=HTMLResponse)
+@app.get("/checkout/{session_id}", response_class=HTMLResponse)
+@app.get("/success", response_class=HTMLResponse)
+@app.get("/delivery", response_class=HTMLResponse)
+def serve_checkout_page(session_id: Optional[str] = None):
+    """
+    Public customer-facing secure checkout & delivery page for Nexora AI Labs (Phase 5G).
+    """
+    checkout_path = os.path.join(UI_DIR, "checkout.html")
+    if os.path.exists(checkout_path):
+        with open(checkout_path, "r", encoding="utf-8") as f:
+            return f.read()
+    return "<h1>Checkout Loading...</h1>"
 
 @app.get("/api/cloud/deployment-audit")
 def get_deployment_audit():

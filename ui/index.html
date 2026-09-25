@@ -35,30 +35,31 @@
 
   <!-- Navigation Tabs -->
   <nav class="nav-tabs" style="overflow-x: auto; white-space: nowrap;">
-    <button class="nav-tab active" onclick="switchTab('marketing-command-center')" style="color: #f59e0b; font-weight:800; font-size: 0.88rem;">🎯 Sales & Marketing Hub (Phase 5E)</button>
-    <button class="nav-tab" onclick="switchTab('ai-office')" style="color: var(--accent-cyan); font-weight:800; font-size: 0.88rem;">🏢 AI Office</button>
-    <button class="nav-tab" onclick="switchTab('payments-revenue')" style="color: #10b981; font-weight:800; font-size: 0.88rem;">💳 Payments & Settlement</button>
-    <button class="nav-tab" onclick="switchTab('cloud-247')" style="color: var(--accent-indigo); font-weight:800; font-size: 0.88rem;">☁️ 24/7 Cloud & Reports</button>
-    <button class="nav-tab" onclick="switchTab('employee-timeline')" style="color: #38bdf8; font-weight:700;">👥 Employee Activity</button>
-    <button class="nav-tab" onclick="switchTab('overview')">Overview</button>
-    <button class="nav-tab" onclick="switchTab('phase4-revenue')" style="color: var(--accent-emerald); font-weight:700;">🔥 First Revenue Engine</button>
-    <button class="nav-tab" onclick="switchTab('approvals')">
+    <button class="nav-tab active" data-tab="marketing-command-center" onclick="switchTab('marketing-command-center')" style="color: #f59e0b; font-weight:800; font-size: 0.88rem;">🎯 Sales & Marketing Hub</button>
+    <button class="nav-tab" data-tab="governance" onclick="switchTab('governance')" style="color: #ef4444; font-weight:800; font-size: 0.88rem;">🛡️ Governance & Controls</button>
+    <button class="nav-tab" data-tab="ai-office" onclick="switchTab('ai-office')" style="color: var(--accent-cyan); font-weight:800; font-size: 0.88rem;">🏢 AI Office</button>
+    <button class="nav-tab" data-tab="payments-revenue" onclick="switchTab('payments-revenue')" style="color: #10b981; font-weight:800; font-size: 0.88rem;">💳 Payments & Settlement</button>
+    <button class="nav-tab" data-tab="cloud-247" onclick="switchTab('cloud-247')" style="color: var(--accent-indigo); font-weight:800; font-size: 0.88rem;">☁️ 24/7 Cloud & Reports</button>
+    <button class="nav-tab" data-tab="employee-timeline" onclick="switchTab('employee-timeline')" style="color: #38bdf8; font-weight:700;">👥 Employee Activity</button>
+    <button class="nav-tab" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+    <button class="nav-tab" data-tab="phase4-revenue" onclick="switchTab('phase4-revenue')" style="color: var(--accent-emerald); font-weight:700;">🔥 First Revenue Engine</button>
+    <button class="nav-tab" data-tab="approvals" onclick="switchTab('approvals')">
       Approvals <span id="navApprovalBadge" class="badge">0</span>
     </button>
-    <button class="nav-tab" onclick="switchTab('opportunities')">Opportunities</button>
-    <button class="nav-tab" onclick="switchTab('first-experiment')">Experiments</button>
-    <button class="nav-tab" onclick="switchTab('products')">Product Factory</button>
-    <button class="nav-tab" onclick="switchTab('sales-pipeline')">Sales & Deliveries</button>
-    <button class="nav-tab" onclick="switchTab('tasks')">Tasks</button>
-    <button class="nav-tab" onclick="switchTab('owner-metrics')">Owner Time</button>
-    <button class="nav-tab" onclick="switchTab('skills-registry')">Skills Registry</button>
-    <button class="nav-tab" onclick="switchTab('employee-factory')">Employee Factory</button>
-    <button class="nav-tab" onclick="switchTab('treasury-view')">Treasury & Reinvestment</button>
-    <button class="nav-tab" onclick="switchTab('marketplace-view')">Marketplace</button>
-    <button class="nav-tab" onclick="switchTab('self-growth')">Self-Growth Loop</button>
-    <button class="nav-tab" onclick="switchTab('employees')">AI Workforce (12+)</button>
-    <button class="nav-tab" onclick="switchTab('ceo-report')">Weekly Report</button>
-    <button class="nav-tab" onclick="switchTab('firewall-settings')">Firewall</button>
+    <button class="nav-tab" data-tab="opportunities" onclick="switchTab('opportunities')">Opportunities</button>
+    <button class="nav-tab" data-tab="first-experiment" onclick="switchTab('first-experiment')">Experiments</button>
+    <button class="nav-tab" data-tab="products" onclick="switchTab('products')">Product Factory</button>
+    <button class="nav-tab" data-tab="sales-pipeline" onclick="switchTab('sales-pipeline')">Sales & Deliveries</button>
+    <button class="nav-tab" data-tab="tasks" onclick="switchTab('tasks')">Tasks</button>
+    <button class="nav-tab" data-tab="owner-metrics" onclick="switchTab('owner-metrics')">Owner Time</button>
+    <button class="nav-tab" data-tab="skills-registry" onclick="switchTab('skills-registry')">Skills Registry</button>
+    <button class="nav-tab" data-tab="employee-factory" onclick="switchTab('employee-factory')">Employee Factory</button>
+    <button class="nav-tab" data-tab="treasury-view" onclick="switchTab('treasury-view')">Treasury & Reinvestment</button>
+    <button class="nav-tab" data-tab="marketplace-view" onclick="switchTab('marketplace-view')">Marketplace</button>
+    <button class="nav-tab" data-tab="self-growth" onclick="switchTab('self-growth')">Self-Growth Loop</button>
+    <button class="nav-tab" data-tab="employees" onclick="switchTab('employees')">AI Workforce (12+)</button>
+    <button class="nav-tab" data-tab="ceo-report" onclick="switchTab('ceo-report')">Weekly Report</button>
+    <button class="nav-tab" data-tab="firewall-settings" onclick="switchTab('firewall-settings')">Firewall</button>
   </nav>
 
   <!-- Main View Container -->
@@ -151,7 +152,7 @@
                 <strong>Customer Store:</strong> <span id="customerStoreStatusText">Accessible locally. Deploy container for external customers.</span>
               </div>
               <div style="display: flex; gap: 0.75rem;">
-                <a id="btnCustomerStore" href="/product" target="_blank" class="btn btn-primary" style="background: var(--accent-cyan); color: #000; font-weight: 700; font-size: 0.85rem;">
+                <a id="btnCustomerStore" href="/store" target="_blank" class="btn btn-primary" style="background: var(--accent-cyan); color: #000; font-weight: 700; font-size: 0.85rem;">
                   🛒 [OPEN CUSTOMER STORE] →
                 </a>
               </div>
@@ -1273,6 +1274,114 @@
           <button class="btn btn-approve" onclick="saveFirewallSettings()">Save Policy</button>
         </div>
       </div>
+    </section>
+
+    <!-- Tab: Governance & Owner Controls (Phase 5G, Section 7) -->
+    <section id="tab-governance" class="tab-content">
+      <div class="panel glass" style="border-top: 3px solid #ef4444; margin-bottom: 1.5rem;">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <h2 class="panel-title" style="color: #f87171;">
+            <span>🛡️</span> GOVERNANCE & OWNER CONTROLS
+          </h2>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span id="govEmergencyBadge" class="badge" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); font-weight: 700;">SYSTEM OPERATIONAL</span>
+            <button class="btn btn-secondary" onclick="fetchGovernanceData()" style="font-size: 0.8rem;">🔄 Refresh Governance</button>
+          </div>
+        </div>
+
+        <div style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <!-- Quick Status Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div class="stat-card" style="border-left: 3px solid var(--accent-emerald);">
+              <div class="stat-label">FINANCIAL FIREWALL</div>
+              <div class="stat-value" id="govFirewallLimit" style="color: var(--accent-emerald); font-size: 1.15rem;">$0.00 CEILING</div>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Unapproved spending strictly forbidden</span>
+            </div>
+            <div class="stat-card" style="border-left: 3px solid #06b6d4;">
+              <div class="stat-label">BANKING AIR-GAP</div>
+              <div class="stat-value" id="govAirGapStatus" style="color: #06b6d4; font-size: 1.15rem;">100% AIR-GAPPED</div>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">0 credentials or IBANs in database</span>
+            </div>
+            <div class="stat-card" style="border-left: 3px solid #f59e0b;">
+              <div class="stat-label">SPENDING APPROVALS</div>
+              <div class="stat-value" id="govPendingApprovals" style="color: #f59e0b; font-size: 1.15rem;">0 PENDING</div>
+              <span style="font-size: 0.72rem; color: var(--text-muted);"><a href="javascript:void(0)" onclick="switchTab('approvals')" style="color: var(--accent-cyan); text-decoration: underline;">View Approvals →</a></span>
+            </div>
+            <div class="stat-card" style="border-left: 3px solid #3b82f6;">
+              <div class="stat-label">RUNTIME ENVIRONMENT</div>
+              <div class="stat-value" id="govRuntimeType" style="color: #60a5fa; font-size: 1.15rem;">LOCAL</div>
+              <span style="font-size: 0.72rem; color: var(--text-muted);" id="govPublicAccess">NOT PUBLIC</span>
+            </div>
+          </div>
+
+          <!-- Section: Financial Firewall Settings -->
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1.25rem;">
+            <h3 style="font-size: 0.98rem; font-weight: 700; color: #fff; margin-bottom: 0.75rem;">
+              🔒 Spending Limits & Firewall Configuration
+            </h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 600px; margin-bottom: 1rem;">
+              <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">
+                  Maximum Single Expense ($USD)
+                </label>
+                <input type="number" id="govSingleLimit" value="0.00" step="1.00" 
+                  style="width: 100%; padding: 0.6rem; border-radius: 6px; background: #07090e; border: 1px solid var(--border-subtle); color: #fff;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--text-secondary);">
+                  Maximum Daily Expense Cap ($USD)
+                </label>
+                <input type="number" id="govDailyLimit" value="0.00" step="5.00" 
+                  style="width: 100%; padding: 0.6rem; border-radius: 6px; background: #07090e; border: 1px solid var(--border-subtle); color: #fff;">
+              </div>
+            </div>
+            <button class="btn btn-approve" onclick="saveGovernanceFirewallSettings()">💾 Save Firewall Policy</button>
+          </div>
+
+          <!-- Section: Emergency Killswitch -->
+          <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h3 style="font-size: 0.98rem; font-weight: 700; color: #f87171; margin-bottom: 0.25rem;">
+                🛑 Emergency System Killswitch
+              </h3>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">
+                Immediately freezes all AI employee tasks, automated tools, and background cycles.
+              </p>
+            </div>
+            <button id="govKillswitchBtn" class="btn-killswitch" onclick="toggleEmergencyStop()">
+              🛑 ACTIVATE EMERGENCY STOP
+            </button>
+          </div>
+
+          <!-- Section: Subsystem Health & Diagnostics -->
+          <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1.25rem;">
+            <h3 style="font-size: 0.98rem; font-weight: 700; color: #fff; margin-bottom: 0.75rem;">
+              ⚡ Subsystem Health Matrix
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; text-align: center;">
+              <div style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 6px;">
+                <div style="font-size: 0.72rem; color: var(--text-muted);">WEB SERVER</div>
+                <strong id="govHealthWeb" style="color: var(--accent-emerald);">HEALTHY</strong>
+              </div>
+              <div style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 6px;">
+                <div style="font-size: 0.72rem; color: var(--text-muted);">AUTONOMOUS WORKER</div>
+                <strong id="govHealthWorker" style="color: var(--accent-emerald);">HEALTHY</strong>
+              </div>
+              <div style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 6px;">
+                <div style="font-size: 0.72rem; color: var(--text-muted);">SCHEDULER (24/7)</div>
+                <strong id="govHealthScheduler" style="color: var(--accent-emerald);">HEALTHY</strong>
+              </div>
+              <div style="background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 6px;">
+                <div style="font-size: 0.72rem; color: var(--text-muted);">DATABASE</div>
+                <strong id="govHealthDb" style="color: var(--accent-emerald);">CONNECTED</strong>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
     <!-- Tab 17: 24/7 Cloud & Daily CEO Report (Phase 5B & 5C) -->
     <section id="tab-cloud-247" class="tab-content">
       

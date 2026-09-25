@@ -64,6 +64,14 @@ class CloudConfig:
         return f"http://{host}:{port}"
 
     @classmethod
+    def get_customer_store_url(cls) -> str:
+        """
+        Returns the public customer-facing storefront URL (Nexora AI Labs).
+        """
+        base = cls.get_effective_base_url()
+        return f"{base}/store"
+
+    @classmethod
     def get_customer_product_url(cls) -> str:
         """
         Returns the public customer-facing URL for the product page.

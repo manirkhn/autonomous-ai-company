@@ -1,10 +1,12 @@
-// Owner Command Center Client Controller (Phase 5A)
+// Owner Command Center Client Controller (Phase 5G)
 
 let isEmergencyStop = false;
 let currentOfficeData = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchMarketingCommandCenter();
+  fetchCloudRuntimeStatus();
+  fetchGovernanceData();
   fetchOfficeState();
   fetchCloudStatus();
   fetchStatus();
@@ -24,38 +26,87 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchPhase4Dashboard();
   initEventStream();
 
+  // Restore active tab from URL hash (e.g. #tab-governance, #governance, #ai-office)
+  const initialHash = window.location.hash.replace("#tab-", "").replace("#", "").trim();
+  if (initialHash) {
+    switchTab(initialHash);
+  }
+
+  // Support browser back/forward buttons
+  window.addEventListener("hashchange", () => {
+    const newHash = window.location.hash.replace("#tab-", "").replace("#", "").trim();
+    if (newHash) switchTab(newHash);
+  });
+
   setInterval(fetchMarketingCommandCenter, 8000);
+  setInterval(fetchCloudRuntimeStatus, 10000);
+  setInterval(fetchGovernanceData, 12000);
   setInterval(fetchOfficeState, 8000);
   setInterval(fetchCloudStatus, 15000);
   setInterval(fetchStatus, 8000);
 });
 
-// Tab Switcher
+// Robust Tab Switcher with Route Persistence & Highlight
 function switchTab(tabId) {
-  document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+  if (!tabId) tabId = "marketing-command-center";
+
+  // 1. Highlight matching nav button
+  let buttonFound = false;
+  document.querySelectorAll(".nav-tab").forEach(t => {
+    const target = t.getAttribute("data-tab") || (t.getAttribute("onclick") || "").match(/switchTab\(['"]([^'"]+)['"]\)/)?.[1];
+    if (target === tabId) {
+      t.classList.add("active");
+      buttonFound = true;
+      try { t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } catch(e) {}
+    } else {
+      t.classList.remove("active");
+    }
+  });
+
+  // 2. Activate matching section
+  let targetSection = document.getElementById(`tab-${tabId}`);
+  if (!targetSection && tabId === "firewall-settings") targetSection = document.getElementById("tab-governance");
+  if (!targetSection && tabId === "governance") targetSection = document.getElementById("tab-firewall-settings");
+
   document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-
-  if (window.event && window.event.currentTarget) {
-    window.event.currentTarget.classList.add("active");
+  if (targetSection) {
+    targetSection.classList.add("active");
+  } else {
+    console.warn(`Tab section for '${tabId}' not found in DOM.`);
   }
-  const target = document.getElementById(`tab-${tabId}`);
-  if (target) target.classList.add("active");
 
-  if (tabId === "marketing-command-center") fetchMarketingCommandCenter();
+  // 3. Update URL hash for refresh preservation
+  if (window.location.hash !== `#tab-${tabId}` && window.location.hash !== `#${tabId}`) {
+    try {
+      history.replaceState(null, "", `#tab-${tabId}`);
+    } catch (e) {
+      window.location.hash = `tab-${tabId}`;
+    }
+  }
+
+  // 4. Trigger section-specific data loaders
+  if (tabId === "marketing-command-center") { fetchMarketingCommandCenter(); fetchCloudRuntimeStatus(); }
+  if (tabId === "governance") { fetchGovernanceData(); fetchCloudRuntimeStatus(); fetchStatus(); }
   if (tabId === "ai-office") fetchOfficeState();
-  if (tabId === "cloud-247") { fetchCloudStatus(); fetchDailyReports(); fetchEmailDeliveries(); }
+  if (tabId === "cloud-247") { fetchCloudStatus(); fetchCloudRuntimeStatus(); fetchDailyReports(); fetchEmailDeliveries(); }
   if (tabId === "employee-timeline") { fetchEmployeeActivities(currentTimeframe); }
+  if (tabId === "overview") { fetchStatus(); fetchTasks(); }
   if (tabId === "phase4-revenue") fetchPhase4Dashboard();
-  if (tabId === "ceo-report") loadCEOReport();
+  if (tabId === "approvals") fetchApprovals();
+  if (tabId === "opportunities") fetchOpportunities();
+  if (tabId === "first-experiment") renderExperimentCandidates();
   if (tabId === "products") fetchProducts();
   if (tabId === "sales-pipeline") { fetchLeads(); fetchDeliveries(); }
+  if (tabId === "tasks") fetchTasks();
   if (tabId === "owner-metrics") fetchOwnerMetrics();
-  if (tabId === "first-experiment") renderExperimentCandidates();
-  if (tabId === "skills") fetchSkills();
+  if (tabId === "skills-registry" || tabId === "skills") fetchSkills();
   if (tabId === "employee-factory") fetchFactoryEmployees();
   if (tabId === "treasury-view") fetchTreasury();
   if (tabId === "marketplace-view") fetchMarketplace();
   if (tabId === "self-growth") fetchCapabilityGaps();
+  if (tabId === "employees") fetchEmployees();
+  if (tabId === "ceo-report") loadCEOReport();
+  if (tabId === "firewall-settings") { fetchFirewall(); fetchGovernanceData(); }
   if (tabId === "payments-revenue") loadPaymentsDashboard();
 }
 
@@ -2503,12 +2554,12 @@ async function fetchCloudRuntimeStatus() {
     const storeBtn = document.getElementById("btnCustomerStore");
     if (storeStatus && storeBtn) {
       if (audit.is_public_accessible) {
-        storeStatus.innerHTML = `✅ <strong>Publicly Verified:</strong> Customer store live at <a href="${audit.public_url}/product" target="_blank" style="color:var(--accent-cyan);">${audit.public_url}/product</a>`;
-        storeBtn.href = `${audit.public_url}/product`;
+        storeStatus.innerHTML = `✅ <strong>Publicly Verified:</strong> Customer store live at <a href="${audit.public_url}/store" target="_blank" style="color:var(--accent-cyan);">${audit.public_url}/store</a>`;
+        storeBtn.href = `${audit.public_url}/store`;
         storeBtn.innerHTML = "🛒 [OPEN CUSTOMER STORE] →";
       } else {
-        storeStatus.innerHTML = `🔒 <strong>Local Workstation:</strong> Running at <code>http://127.0.0.1:8000/product</code>. Deploy container for external customers.`;
-        storeBtn.href = "/product";
+        storeStatus.innerHTML = `🔒 <strong>Local Workstation:</strong> Running at <code>http://127.0.0.1:8000/store</code>. Deploy container for external customers.`;
+        storeBtn.href = "/store";
         storeBtn.innerHTML = "🛒 [OPEN LOCAL CUSTOMER STORE] →";
       }
     }
@@ -2558,12 +2609,140 @@ async function fetchCloudRuntimeStatus() {
         `).join("");
       }
     }
-
   } catch (err) {
     console.error("Error fetching cloud runtime status:", err);
   }
 }
 
+// ----------------- Phase 5G: Governance & Owner Controls -----------------
 
+async function fetchGovernanceData() {
+  try {
+    const [statusRes, auditRes] = await Promise.all([
+      fetch("/api/status").then(r => r.json()).catch(() => null),
+      fetch("/api/cloud/deployment-audit").then(r => r.json()).catch(() => null)
+    ]);
 
+    if (statusRes) {
+      const finances = statusRes.finances || {};
+      const firewall = finances.firewall_limits || {};
+      const isEmergency = statusRes.emergency_stop || false;
+      
+      const govEmBadge = document.getElementById("govEmergencyBadge");
+      if (govEmBadge) {
+        govEmBadge.textContent = isEmergency ? "🛑 EMERGENCY STOP ACTIVE" : "🟢 SYSTEM OPERATIONAL";
+        govEmBadge.style.background = isEmergency ? "rgba(239, 68, 68, 0.2)" : "rgba(16, 185, 129, 0.2)";
+        govEmBadge.style.color = isEmergency ? "#f87171" : "var(--accent-emerald)";
+      }
 
+      const govKillBtn = document.getElementById("govKillswitchBtn");
+      if (govKillBtn) {
+        govKillBtn.textContent = isEmergency ? "▶️ RESUME OPERATIONS" : "🛑 ACTIVATE EMERGENCY STOP";
+        govKillBtn.style.background = isEmergency ? "linear-gradient(135deg, #10b981, #059669)" : "linear-gradient(135deg, #ef4444, #b91c1c)";
+      }
+
+      const govFw = document.getElementById("govFirewallLimit");
+      if (govFw) {
+        const single = firewall.max_single_expense || 0.0;
+        govFw.textContent = `$${single.toFixed(2)} CEILING`;
+      }
+
+      const singleInput = document.getElementById("govSingleLimit");
+      if (singleInput && !document.activeElement.isSameNode(singleInput)) {
+        singleInput.value = (firewall.max_single_expense || 0.0).toFixed(2);
+      }
+
+      const dailyInput = document.getElementById("govDailyLimit");
+      if (dailyInput && !document.activeElement.isSameNode(dailyInput)) {
+        dailyInput.value = (firewall.max_daily_expense || 0.0).toFixed(2);
+      }
+
+      const cfgSingle = document.getElementById("cfgSingleLimit");
+      if (cfgSingle && !document.activeElement.isSameNode(cfgSingle)) {
+        cfgSingle.value = (firewall.max_single_expense || 0.0).toFixed(2);
+      }
+
+      const cfgDaily = document.getElementById("cfgDailyLimit");
+      if (cfgDaily && !document.activeElement.isSameNode(cfgDaily)) {
+        cfgDaily.value = (firewall.max_daily_expense || 0.0).toFixed(2);
+      }
+
+      const govPending = document.getElementById("govPendingApprovals");
+      if (govPending) {
+        govPending.textContent = `${statusRes.pending_approvals_count || 0} PENDING`;
+      }
+    }
+
+    if (auditRes) {
+      const govRt = document.getElementById("govRuntimeType");
+      if (govRt) {
+        govRt.textContent = (auditRes.runtime || "LOCAL").replace("_", " ");
+      }
+
+      const govPub = document.getElementById("govPublicAccess");
+      if (govPub) {
+        govPub.textContent = auditRes.is_public_accessible ? "PUBLIC (ONLINE)" : "NOT PUBLIC (LOCAL)";
+        govPub.style.color = auditRes.is_public_accessible ? "var(--accent-emerald)" : "#f59e0b";
+      }
+
+      const govWeb = document.getElementById("govHealthWeb");
+      if (govWeb) govWeb.textContent = auditRes.web_server || "HEALTHY";
+
+      const govWork = document.getElementById("govHealthWorker");
+      if (govWork) govWork.textContent = auditRes.worker || "HEALTHY";
+
+      const govSched = document.getElementById("govHealthScheduler");
+      if (govSched) govSched.textContent = auditRes.scheduler || "HEALTHY";
+
+      const govDb = document.getElementById("govHealthDb");
+      if (govDb) govDb.textContent = auditRes.database || "HEALTHY";
+    }
+  } catch (err) {
+    console.error("Error fetching governance data:", err);
+  }
+}
+
+async function saveGovernanceFirewallSettings() {
+  const single = parseFloat(document.getElementById("govSingleLimit").value) || 0.0;
+  const daily = parseFloat(document.getElementById("govDailyLimit").value) || 0.0;
+  
+  try {
+    await fetch("/api/firewall/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "max_single_expense", value: single })
+    });
+    await fetch("/api/firewall/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "max_daily_expense", value: daily })
+    });
+    alert("Governance policy updated successfully.");
+    fetchGovernanceData();
+  } catch (err) {
+    alert("Error saving governance settings: " + err.message);
+  }
+}
+
+async function saveFirewallSettings() {
+  const single = parseFloat(document.getElementById("cfgSingleLimit").value) || 0.0;
+  const daily = parseFloat(document.getElementById("cfgDailyLimit").value) || 0.0;
+  
+  try {
+    await fetch("/api/firewall/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "max_single_expense", value: single })
+    });
+    await fetch("/api/firewall/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "max_daily_expense", value: daily })
+    });
+    alert("Firewall settings saved successfully.");
+    fetchFirewall();
+    fetchGovernanceData();
+  } catch (err) {
+    alert("Error saving firewall settings: " + err.message);
+  }
+}

@@ -3,142 +3,214 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Local LLM Offline Evaluation & Prompt Regression Benchmark Suite</title>
+  <title>Nexora AI Labs | Local LLM Offline Evaluation & Prompt Regression Benchmark Suite</title>
+  <meta name="description" content="A rigorous, deterministic benchmarking and regression testing toolkit for AI engineers deploying local LLMs.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: #111827;
-      --card-border: #1f2937;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
+      --bg-dark: #07090e;
+      --card-bg: #0e131f;
+      --card-border: #1f293d;
+      --text-main: #f3f4f6;
+      --text-muted: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
       --accent-emerald: #10b981;
-      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --mono: 'JetBrains Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       line-height: 1.6;
-      padding: 0 1rem;
+      padding-bottom: 4rem;
     }
+
+    /* Top Nav */
+    header.site-header {
+      background: rgba(7, 9, 14, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      margin-bottom: 2.5rem;
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-title span { color: var(--accent-cyan); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover { color: #fff; }
 
     .container {
       max-width: 900px;
       margin: 0 auto;
-      padding: 3rem 0;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 3.5rem;
+      padding: 0 1.5rem;
     }
 
     .badge {
       display: inline-block;
-      padding: 0.35rem 0.85rem;
+      padding: 0.3rem 0.75rem;
       border-radius: 9999px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      background: rgba(59, 130, 246, 0.15);
-      color: #60a5fa;
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
       margin-bottom: 1.25rem;
     }
 
-    h1 {
-      font-size: 2.5rem;
+    .page-header h1 {
+      font-size: 2.35rem;
       font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 1.25rem;
+      line-height: 1.25;
       letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      background: linear-gradient(180deg, #ffffff 40%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .subtitle {
       font-size: 1.15rem;
       color: var(--text-muted);
-      max-width: 700px;
-      margin: 0 auto;
+      margin-bottom: 2rem;
+      line-height: 1.6;
     }
 
     .pricing-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 16px;
-      padding: 2.5rem;
+      padding: 2.25rem;
       margin-bottom: 3rem;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .price-tag {
       display: flex;
       align-items: baseline;
-      gap: 0.5rem;
-      margin: 1.5rem 0;
+      gap: 0.75rem;
+      margin: 0.5rem 0;
     }
 
     .price-amount {
-      font-size: 3.5rem;
+      font-size: 3rem;
       font-weight: 800;
       color: #fff;
     }
 
     .price-currency {
-      font-size: 1.2rem;
-      color: var(--text-muted);
+      font-size: 1.1rem;
+      color: #cbd5e1;
       font-weight: 600;
     }
 
     .price-sub {
-      font-size: 0.95rem;
       color: var(--accent-emerald);
-      margin-top: -0.5rem;
-      margin-bottom: 2rem;
-      font-weight: 500;
+      font-size: 0.9rem;
+      font-weight: 600;
     }
 
     .btn-buy {
-      display: block;
       width: 100%;
-      background: var(--accent-emerald);
-      color: #064e3b;
-      font-size: 1.15rem;
-      font-weight: 800;
-      text-align: center;
-      padding: 1.1rem 2rem;
-      border-radius: 10px;
-      text-decoration: none;
-      cursor: pointer;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
       border: none;
+      padding: 1.1rem 1.5rem;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
       transition: all 0.2s ease;
-      box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
 
     .btn-buy:hover {
-      background: #34d399;
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
       transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+    }
+
+    .btn-buy:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    section {
+      margin-bottom: 2.75rem;
     }
 
     .section-title {
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       font-weight: 700;
-      margin: 2.5rem 0 1rem;
+      margin-bottom: 1.25rem;
       border-bottom: 1px solid var(--card-border);
-      padding-bottom: 0.5rem;
+      padding-bottom: 0.6rem;
+      color: #fff;
     }
 
     .features-list {
-      list-style: none;
       display: grid;
       grid-template-columns: 1fr;
       gap: 1rem;
@@ -151,7 +223,7 @@
 
     .feature-item {
       background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       padding: 1.25rem;
       border-radius: 10px;
     }
@@ -202,7 +274,7 @@
     footer {
       text-align: center;
       margin-top: 4rem;
-      padding: 2rem 0;
+      padding: 2.5rem 0;
       border-top: 1px solid var(--card-border);
       font-size: 0.85rem;
       color: var(--text-muted);
@@ -210,14 +282,32 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="badge">OFFLINE LOCAL LLM TOOLING • PRODUCT ID: PROD-LLM-EVAL-001</div>
-      <h1>Local LLM Offline Evaluation & Prompt Regression Benchmark Suite</h1>
-      <p class="subtitle">A rigorous, deterministic benchmarking and regression testing toolkit for AI engineers deploying local LLMs (LLaMA, Mistral, Qwen, DeepSeek, Gemma) with Ollama, vLLM, and llama.cpp.</p>
-    </header>
 
-    <div class="pricing-card">
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="/store" class="brand-logo">
+          <div class="brand-mark">N</div>
+          <div class="brand-title">Nexora <span>AI Labs</span></div>
+        </a>
+
+        <div class="nav-links">
+          <a href="/store">← Back to Store</a>
+          <a href="#purchase">Buy Benchmark Suite</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <div class="badge">OFFLINE LOCAL LLM TOOLING • BENCHMARK SUITE</div>
+      <h1>Local LLM Offline Evaluation &amp; Prompt Regression Benchmark Suite</h1>
+      <p class="subtitle">A rigorous, deterministic benchmarking and regression testing toolkit for AI engineers deploying local LLMs (LLaMA, Mistral, Qwen, DeepSeek, Gemma) with Ollama, vLLM, and llama.cpp.</p>
+    </div>
+
+    <div id="purchase" class="pricing-card">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
           <span style="font-size: 0.85rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">One-Time Purchase • Instant Digital Download</span>
@@ -235,7 +325,7 @@
       </div>
 
       <button id="buyBtn" class="btn-buy" onclick="startCustomerCheckout()">
-        💳 Purchase & Download Benchmark Suite ($29 USD) →
+        💳 Purchase &amp; Download Benchmark Suite ($29 USD) →
       </button>
 
       <div id="checkoutNotice" style="margin-top: 1rem; font-size: 0.85rem; color: #9ca3af; text-align: center;">
@@ -261,11 +351,11 @@
           <p>Curated evaluation scenarios covering structured JSON extraction, instruction following, deterministic math reasoning, and multi-turn context retention.</p>
         </div>
         <div class="feature-item">
-          <h3>📊 Latency & Perplexity Harness</h3>
+          <h3>📊 Latency &amp; Perplexity Harness</h3>
           <p>Accurate time-to-first-token (TTFT) and token-per-second throughput profiling compatible with Ollama, vLLM, and llama.cpp HTTP backends.</p>
         </div>
         <div class="feature-item">
-          <h3>🛡️ Strict Schema & Drift Verifier</h3>
+          <h3>🛡️ Strict Schema &amp; Drift Verifier</h3>
           <p>Automated validation script comparing output schemas against baseline snapshots, flagging regression scorecards as PASS or FAIL.</p>
         </div>
         <div class="feature-item">
@@ -278,8 +368,8 @@
     <section>
       <h2 class="section-title">Quick Start Verification</h2>
       <div class="mono-box">
-# Run the local benchmark against your local LLM in 10 seconds:
-$ python run_eval.py --endpoint http://localhost:11434 --model llama3.2:latest --baseline default_suite.json
+# Run the local benchmark against your inference runner:
+$ python run_eval.py --endpoint http://model-server:11434 --model llama3.2:latest --baseline default_suite.json
 
 Output:
 [✓] Schema Conformance: 100% (45/45 tests passed)
@@ -295,8 +385,8 @@ Status: PASS — Model is certified regression-free.
     </div>
 
     <footer>
-      <p>© 2026 Autonomous AI Digital Enterprise. Operating under autonomous corporate governance.</p>
-      <p style="margin-top: 0.5rem; font-size: 0.78rem; color: #6b7280;">Owner Banking Air-Gap Active • Zero-Trust Spending Ceiling Enforced • Product ID: PROD-LLM-EVAL-001</p>
+      <p>© 2026 Nexora AI Labs. All rights reserved.</p>
+      <p style="margin-top: 0.5rem; font-size: 0.78rem; color: #6b7280;">Nexora AI Labs • Digital products for AI developers</p>
     </footer>
   </div>
 
@@ -330,13 +420,13 @@ Status: PASS — Model is certified regression-free.
 
         const data = await res.json();
         if (data.checkout_url) {
-          notice.innerHTML = `✅ Checkout session ready. Redirecting... (Order ID: ${data.order_id})`;
+          notice.innerHTML = `✅ Checkout session ready. Redirecting...`;
           window.location.href = data.checkout_url;
         } else if (data.session_id) {
           notice.innerHTML = `✅ Session created: ${data.session_id}`;
           window.location.href = `/checkout/${data.session_id}`;
         } else {
-          notice.innerHTML = `⚠️ Notice: Checkout session created: ${data.order_id || "Order Initialized"}`;
+          notice.innerHTML = `⚠️ Checkout initialized.`;
           buyBtn.innerText = "Checkout Initialized";
         }
       } catch (err) {
