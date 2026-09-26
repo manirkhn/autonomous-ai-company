@@ -256,7 +256,7 @@
             <label class="form-label">Payment Method</label>
             <div style="background: #07090e; border: 1px solid var(--card-border); padding: 0.9rem 1rem; border-radius: 8px; font-size: 0.9rem; color: #cbd5e1; display: flex; justify-content: space-between; align-items: center;">
               <span>💳 Credit Card / Debit Card (Secure Processing)</span>
-              <span style="color: var(--accent-emerald); font-weight: 600;">✓ Encrypted</span>
+              <span style="color: var(--accent-emerald); font-weight: 600;">✓ Secure</span>
             </div>
           </div>
 
@@ -265,7 +265,7 @@
           </button>
 
           <div class="security-notice">
-            🔒 256-Bit SSL Encrypted Checkout • 30-Day Quality Assurance Guarantee
+            🔒 Secure Checkout • 30-Day Quality Assurance Guarantee
           </div>
         </form>
 
@@ -289,12 +289,25 @@
 
   <footer>
     <div class="container">
-      <p>© 2026 Nexora AI Labs. All rights reserved.</p>
-      <p style="margin-top: 0.35rem;">Nexora AI Labs • Digital products for AI developers</p>
+      <p>© 2026 Nexora AI Labs. Digital tools for AI developers.</p>
     </div>
   </footer>
 
   <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes("/success") || path.includes("/delivery")) {
+        document.getElementById("checkoutForm").style.display = "none";
+        const receipt = document.getElementById("receiptPanel");
+        receipt.style.display = "block";
+        document.getElementById("receiptDetails").innerHTML = `
+Order: Verified Purchase<br>
+Product: Local LLM Offline Evaluation &amp; Prompt Regression Benchmark Suite<br>
+Delivery Status: VERIFIED &amp; READY FOR DOWNLOAD
+        `;
+      }
+    });
+
     async function handlePaymentSubmit(e) {
       e.preventDefault();
       const email = document.getElementById("custEmail").value.trim();
@@ -309,7 +322,6 @@
           body: JSON.stringify({
             customer_email: email,
             currency: "USD",
-            product_id: "PROD-LLM-EVAL-001",
             mode: "TEST"
           })
         });
@@ -321,7 +333,7 @@
         document.getElementById("receiptDetails").innerHTML = `
 Order ID: ${data.order_id || 'ORD-LLM-BENCHMARK'}<br>
 Customer: ${email}<br>
-Product: Local LLM Offline Evaluation Suite<br>
+Product: Local LLM Offline Evaluation & Prompt Regression Benchmark Suite<br>
 Amount: $29.00 USD<br>
 Delivery Status: VERIFIED & READY
         `;

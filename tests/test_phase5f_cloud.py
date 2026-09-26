@@ -134,9 +134,9 @@ class TestPhase5FCloudDeployment(unittest.TestCase):
             self.assertIn("$29", res.text)
             # Verify no fake testimonials
             self.assertNotIn("John D. from Google says", res.text)
-        # Verify product ID retained in product checkout payload
+        # Verify internal product ID is NOT exposed on public product route (Phase 5G.1)
         prod_res = self.client.get("/product")
-        self.assertIn("PROD-LLM-EVAL-001", prod_res.text)
+        self.assertNotIn("PROD-LLM-EVAL-001", prod_res.text)
 
     def test_06_dynamic_checkout_url_generation(self):
         """Verify checkout URLs dynamically adapt to PUBLIC_BASE_URL configuration."""

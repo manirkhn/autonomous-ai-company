@@ -27,43 +27,51 @@ class TestPhase5GCustomerBrandAndStore(unittest.TestCase):
         cls.client = TestClient(app)
 
     def test_a_customer_branding(self):
-        """Test A: Brand is 'Nexora AI Labs' with official tagline on public pages."""
+        """Test A: Brand is 'Nexora AI Labs' on all public customer-facing pages."""
         # Test /store
         resp = self.client.get("/store")
         self.assertEqual(resp.status_code, 200)
         self.assertIn("Nexora AI Labs", resp.text)
-        self.assertIn("Practical AI tools for developers and modern teams.", resp.text)
-        self.assertIn("© 2026 Nexora AI Labs. All rights reserved.", resp.text)
+        self.assertIn("© 2026 Nexora AI Labs. Digital tools for AI developers.", resp.text)
         self.assertNotIn("Autonomous AI Enterprise", resp.text)
+        self.assertNotIn("Autonomous AI Digital Enterprise", resp.text)
 
         # Test /product
         resp_prod = self.client.get("/product")
         self.assertEqual(resp_prod.status_code, 200)
         self.assertIn("Nexora AI Labs", resp_prod.text)
-        self.assertIn("© 2026 Nexora AI Labs. All rights reserved.", resp_prod.text)
-        self.assertIn("Nexora AI Labs • Digital products for AI developers", resp_prod.text)
-        self.assertNotIn("© 2026 Autonomous AI Digital Enterprise. Operating under autonomous corporate governance.", resp_prod.text)
+        self.assertIn("© 2026 Nexora AI Labs. Digital tools for AI developers.", resp_prod.text)
+        self.assertNotIn("Autonomous AI Digital Enterprise", resp_prod.text)
 
         # Test /checkout
         resp_chk = self.client.get("/checkout")
         self.assertEqual(resp_chk.status_code, 200)
         self.assertIn("Nexora AI Labs", resp_chk.text)
+        self.assertIn("© 2026 Nexora AI Labs. Digital tools for AI developers.", resp_chk.text)
 
     def test_b_internal_information_leakage(self):
-        """Test B: Verify that NO internal operational terms appear on public customer pages."""
+        """Test B: Verify that NO internal operational or governance terms appear on public customer pages."""
         forbidden_terms = [
+            "OFFLINE LOCAL LLM TOOLING",
+            "PROD-LLM-EVAL-001",
+            "Autonomous AI Digital Enterprise",
+            "Autonomous AI Enterprise",
+            "autonomous corporate governance",
             "Owner Banking Air-Gap",
-            "Financial Firewall",
             "Zero-Trust",
+            "Financial Firewall",
             "127.0.0.1",
             "localhost",
-            "Autonomous Corporate Governance",
             "RENDER_CLOUD",
+            "RENDER_CLOUD_CONTAINER",
             "RUNTIME: LOCAL",
-            "Sandbox"
+            "certified payment gateway",
+            "256-bit SSL encryption",
+            "256-bit SSL",
+            "certified regression-free"
         ]
 
-        customer_routes = ["/store", "/product", "/checkout", "/checkout/cs_test_sample_123"]
+        customer_routes = ["/store", "/product", "/checkout", "/checkout/cs_test_sample_123", "/success", "/delivery"]
 
         for route in customer_routes:
             resp = self.client.get(route)
@@ -77,35 +85,48 @@ class TestPhase5GCustomerBrandAndStore(unittest.TestCase):
                 )
 
     def test_c_store_accessibility_and_design(self):
-        """Test C: Customer store /store is accessible and matches design specifications."""
+        """Test C: Customer store /store matches required Phase 5G.1 structure and design."""
         resp = self.client.get("/store")
         self.assertEqual(resp.status_code, 200)
         html = resp.text
 
-        # Navigation
-        self.assertIn("Products", html)
-        self.assertIn("How It Works", html)
-        self.assertIn("Support", html)
-        self.assertIn("View Product", html)
-
-        # Hero
-        self.assertIn("Developer tools for reliable AI systems.", html)
-        self.assertIn("Practical evaluation, testing and automation tools designed for teams running modern AI infrastructure.", html)
-
-        # Product Card
+        # 1. Brand/header
+        self.assertIn("Nexora AI Labs", html)
+        # 2. Product title
         self.assertIn("Local LLM Offline Evaluation &amp; Prompt Regression Benchmark Suite", html)
+        # 3. Short one-sentence value proposition
+        self.assertIn("A deterministic offline benchmarking and regression testing toolkit", html)
+        # 4. Price
         self.assertIn("$29", html)
         self.assertIn("USD", html)
-        self.assertIn("AED 106.50", html)
-        self.assertIn("Buy &amp; Download", html)
-
-        # Trust messaging
-        self.assertIn("One-time purchase", html)
-        self.assertIn("Instant digital delivery", html)
-        self.assertIn("30-day quality assurance guarantee", html)
+        # 5. One-time purchase • Lifetime baseline updates
+        self.assertIn("One-Time Purchase", html)
+        self.assertIn("Lifetime baseline updates", html)
+        # 6. Primary CTA
+        self.assertIn("Buy &amp; Download — $29", html)
+        # 7. Product overview
+        self.assertIn("Product Overview", html)
+        # 8. What is included
+        self.assertIn("What Is Included", html)
+        # 9. Supported environments
+        self.assertIn("Ollama", html)
+        self.assertIn("vLLM", html)
+        self.assertIn("llama.cpp", html)
+        self.assertIn("OpenAI-Compatible", html)
+        # 10. How it works
+        self.assertIn("How It Works", html)
+        # 11. Example benchmark output explicitly labeled as example
+        self.assertIn("Example Benchmark Output", html)
+        self.assertIn("Example output", html)
+        # 12. 30-Day Quality Assurance Guarantee
+        self.assertIn("30-Day Quality Assurance Guarantee", html)
+        # 13. FAQ
+        self.assertIn("Frequently Asked Questions", html)
+        # 14. Professional footer
+        self.assertIn("© 2026 Nexora AI Labs. Digital tools for AI developers.", html)
 
     def test_d_product_accessibility(self):
-        """Test D: Product page /product contains technical specs without internal badges."""
+        """Test D: Product page /product contains technical specs without internal leakage."""
         resp = self.client.get("/product")
         self.assertEqual(resp.status_code, 200)
         html = resp.text
@@ -117,15 +138,18 @@ class TestPhase5GCustomerBrandAndStore(unittest.TestCase):
         self.assertIn("30-Day Quality Assurance Guarantee", html)
 
         # Confirm clean badge (no internal product ID exposed)
-        self.assertNotIn("PRODUCT ID: PROD-LLM-EVAL-001", html)
+        self.assertNotIn("PROD-LLM-EVAL-001", html)
+        self.assertNotIn("OFFLINE LOCAL LLM TOOLING", html)
 
     def test_e_checkout_accessibility(self):
-        """Test E: Checkout pages /checkout and /checkout/{id} load clean checkout experience."""
+        """Test E: Checkout pages /checkout, /success, /delivery render clean experience."""
         for path in ["/checkout", "/checkout/cs_live_test_123", "/success", "/delivery"]:
             resp = self.client.get(path)
             self.assertEqual(resp.status_code, 200)
             self.assertIn("Nexora AI Labs", resp.text)
             self.assertIn("Secure Checkout", resp.text)
+            self.assertNotIn("PROD-LLM-EVAL-001", resp.text)
+            self.assertNotIn("256-bit", resp.text.lower())
 
     def test_f_dashboard_tab_navigation(self):
         """Test F: Audit that EVERY visible dashboard nav tab has a corresponding section."""
@@ -216,6 +240,67 @@ class TestPhase5GCustomerBrandAndStore(unittest.TestCase):
 
         self.assertIn("history.replaceState", app_js)
         self.assertIn("data-tab", app_js)
+
+    def test_k_phase5g1_comprehensive_checklist(self):
+        """Test K: Validate all 16 checklist items of Phase 5G.1."""
+        # 1-5. Verify /store, /product, /checkout, /success, /delivery all return 200
+        public_routes = ["/store", "/product", "/checkout", "/success", "/delivery"]
+        for route in public_routes:
+            res = self.client.get(route)
+            self.assertEqual(res.status_code, 200, f"Route {route} did not return 200")
+
+        # 6. 'Nexora AI Labs' appears on /store
+        store_res = self.client.get("/store")
+        self.assertIn("Nexora AI Labs", store_res.text)
+
+        # 7. $29 appears on /store
+        self.assertIn("$29", store_res.text)
+
+        # 8. Buy/checkout CTA exists
+        self.assertIn("Buy &amp; Download — $29", store_res.text)
+
+        # 9. CTA points to the real checkout flow
+        self.assertIn("/api/payments/checkout", store_res.text)
+
+        # 10. Internal banking/governance terminology is absent from public routes
+        # 11. localhost/127.0.0.1 is absent from public routes
+        # 12. RENDER_CLOUD_CONTAINER is absent from public routes
+        # 13. internal Product ID is absent from public routes
+        # 14. fabricated payment certification language is absent
+        # 15. internal footer text is absent
+        forbidden_terms = [
+            "Owner Banking Air-Gap",
+            "Zero-Trust Spending Ceiling",
+            "Zero-Trust",
+            "Financial Firewall",
+            "autonomous corporate governance",
+            "Autonomous AI Digital Enterprise",
+            "Autonomous AI Enterprise",
+            "127.0.0.1",
+            "localhost",
+            "RENDER_CLOUD",
+            "RENDER_CLOUD_CONTAINER",
+            "PROD-LLM-EVAL-001",
+            "OFFLINE LOCAL LLM TOOLING",
+            "certified payment gateway",
+            "256-bit SSL encryption",
+            "256-bit SSL",
+            "Operating under autonomous corporate governance"
+        ]
+
+        for route in public_routes:
+            html = self.client.get(route).text
+            for term in forbidden_terms:
+                self.assertNotIn(
+                    term.lower(),
+                    html.lower(),
+                    f"Forbidden term '{term}' leaked into public route {route}"
+                )
+
+        # 16. Example benchmark output is explicitly identified as an example
+        self.assertIn("Example output", store_res.text)
+        prod_res = self.client.get("/product")
+        self.assertIn("Example output", prod_res.text)
 
 if __name__ == "__main__":
     unittest.main()

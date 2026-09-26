@@ -302,7 +302,7 @@
 
   <div class="container">
     <div class="page-header">
-      <div class="badge">OFFLINE LOCAL LLM TOOLING • BENCHMARK SUITE</div>
+      <div class="badge">BENCHMARK SUITE • DEVELOPER TOOLKIT</div>
       <h1>Local LLM Offline Evaluation &amp; Prompt Regression Benchmark Suite</h1>
       <p class="subtitle">A rigorous, deterministic benchmarking and regression testing toolkit for AI engineers deploying local LLMs (LLaMA, Mistral, Qwen, DeepSeek, Gemma) with Ollama, vLLM, and llama.cpp.</p>
     </div>
@@ -329,7 +329,7 @@
       </button>
 
       <div id="checkoutNotice" style="margin-top: 1rem; font-size: 0.85rem; color: #9ca3af; text-align: center;">
-        🔒 Secure checkout processed via certified payment gateway with 256-bit SSL encryption.
+        🔒 Secure checkout processed through our payment provider.
       </div>
     </div>
 
@@ -366,16 +366,16 @@
     </section>
 
     <section>
-      <h2 class="section-title">Quick Start Verification</h2>
+      <h2 class="section-title">Example Benchmark Output</h2>
       <div class="mono-box">
-# Run the local benchmark against your inference runner:
+<span style="color: #94a3b8; font-size: 0.8rem; display: block; margin-bottom: 0.5rem;"># Example output (demonstration of local CLI execution):</span>
 $ python run_eval.py --endpoint http://model-server:11434 --model llama3.2:latest --baseline default_suite.json
 
-Output:
-[✓] Schema Conformance: 100% (45/45 tests passed)
-[✓] Regression Drift: 0.00% (Identical deterministic outputs)
+[Example Output Summary]
+[✓] Schema Conformance: 45/45 tests passed
+[✓] Regression Drift: Evaluated against baseline snapshot
 [✓] Avg TTFT: 142ms | Throughput: 48.2 tok/s
-Status: PASS — Model is certified regression-free.
+Status: COMPLETED — Benchmark run finished.
       </div>
     </section>
 
@@ -385,8 +385,7 @@ Status: PASS — Model is certified regression-free.
     </div>
 
     <footer>
-      <p>© 2026 Nexora AI Labs. All rights reserved.</p>
-      <p style="margin-top: 0.5rem; font-size: 0.78rem; color: #6b7280;">Nexora AI Labs • Digital products for AI developers</p>
+      <p>© 2026 Nexora AI Labs. Digital tools for AI developers.</p>
     </footer>
   </div>
 
@@ -413,7 +412,6 @@ Status: PASS — Model is certified regression-free.
           body: JSON.stringify({
             customer_email: email,
             currency: "USD",
-            product_id: "PROD-LLM-EVAL-001",
             mode: "TEST"
           })
         });
