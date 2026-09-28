@@ -2074,6 +2074,10 @@ async function fetchEmployeeActivities(timeframe = "today") {
         `).join("");
       }
     }
+  } catch (err) {
+    console.error("Error loading employee activities:", err);
+  }
+}
 
 // ----------------- Phase 5D: Payments, Checkout & Owner Settlement UI -----------------
 
