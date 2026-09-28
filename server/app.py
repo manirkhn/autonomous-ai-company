@@ -1620,9 +1620,11 @@ def get_acquisition_channels():
 @app.get("/api/acquisition/performance")
 def get_channel_performance(mode: str = Query("PRODUCTION")):
     """Returns Channel Performance view: CHANNEL | VISITORS | PRODUCT VIEWS | CHECKOUTS | SALES | REVENUE (Phase 5H, Section 9)."""
+    perf_data = ChannelRegistry.get_channel_performance(mode=mode.upper())
     return {
         "mode": mode.upper(),
-        "performance": ChannelRegistry.get_channel_performance(mode=mode.upper())
+        "performance": perf_data.get("performance", []),
+        "channels": perf_data.get("channels", [])
     }
 
 @app.get("/api/acquisition/funnel")
