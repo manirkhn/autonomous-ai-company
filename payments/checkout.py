@@ -280,6 +280,12 @@ class CheckoutManager:
             cursor.execute("UPDATE payment_transactions SET delivery_status = 'DELIVERED' WHERE order_id = ?", (order_id,))
             conn.commit()
 
+            try:
+                from acquisition.attribution import AttributionEngine
+                AttributionEngine.link_order_payment(order_id=order_id, revenue_usd=amount, fulfilled=1, mode=mode)
+            except Exception:
+                pass
+
         elif event_type in ["payment_intent.payment_failed", "PAYMENT_FAILED"]:
             CheckoutManager.transition_state(
                 order_id=order_id,

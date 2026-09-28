@@ -800,6 +800,131 @@ def init_db():
     );
     """)
 
+    # ----------------- Phase 5H: Multi-Channel Customer Acquisition & Marketplaces -----------------
+
+    # 39. Acquisition Channels Registry (Phase 5H, Section 1)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS acquisition_channels (
+        channel_id TEXT PRIMARY KEY,
+        channel_name TEXT NOT NULL UNIQUE,
+        channel_type TEXT NOT NULL,
+        url TEXT NOT NULL,
+        audience TEXT NOT NULL,
+        product_fit TEXT NOT NULL,
+        account_status TEXT NOT NULL,
+        listing_status TEXT NOT NULL,
+        publication_method TEXT NOT NULL,
+        approval_required INTEGER DEFAULT 1,
+        traffic_tracking TEXT NOT NULL,
+        sales_tracking TEXT NOT NULL,
+        revenue_tracking TEXT NOT NULL,
+        policy_status TEXT NOT NULL,
+        last_checked TEXT NOT NULL,
+        next_action TEXT NOT NULL,
+        evidence_notes TEXT,
+        visitors_count INTEGER DEFAULT 0,
+        product_views_count INTEGER DEFAULT 0,
+        checkouts_count INTEGER DEFAULT 0,
+        sales_count INTEGER DEFAULT 0,
+        revenue_usd REAL DEFAULT 0.0
+    );
+    """)
+
+    # 40. Developer Discussions & Outreach Opportunities (Phase 5H, Sections 5 & 6)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS acquisition_opportunities (
+        opportunity_id TEXT PRIMARY KEY,
+        source TEXT NOT NULL,
+        url TEXT NOT NULL,
+        discussion_title TEXT NOT NULL,
+        date TEXT NOT NULL,
+        customer_problem TEXT NOT NULL,
+        relevance TEXT NOT NULL,
+        recommended_response TEXT NOT NULL,
+        nexora_product_url TEXT NOT NULL,
+        channel TEXT NOT NULL,
+        approval_status TEXT NOT NULL DEFAULT 'PENDING_OWNER_APPROVAL',
+        anti_spam_status TEXT NOT NULL DEFAULT 'VERIFIED_EDUCATIONAL',
+        created_at TEXT NOT NULL,
+        resolved_at TEXT
+    );
+    """)
+
+    # 41. Technical SEO Articles Engine (Phase 5H, Section 7)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS seo_articles (
+        article_id TEXT PRIMARY KEY,
+        slug TEXT NOT NULL UNIQUE,
+        title TEXT NOT NULL,
+        topic TEXT NOT NULL,
+        problem_solved TEXT NOT NULL,
+        content_md TEXT NOT NULL,
+        target_keywords TEXT NOT NULL,
+        canonical_url TEXT NOT NULL,
+        nexora_product_link TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'DRAFT',
+        author TEXT NOT NULL DEFAULT 'Nexora Technical AI Staff',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    """)
+
+    # 42. Acquisition Attribution & UTM Journey Tracking (Phase 5H, Section 8)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS acquisition_attribution (
+        attribution_id TEXT PRIMARY KEY,
+        source TEXT NOT NULL,
+        medium TEXT DEFAULT '',
+        campaign TEXT DEFAULT '',
+        content TEXT DEFAULT '',
+        term TEXT DEFAULT '',
+        landing_page TEXT NOT NULL,
+        product_page_visited INTEGER DEFAULT 0,
+        checkout_started INTEGER DEFAULT 0,
+        order_id TEXT,
+        payment_verified INTEGER DEFAULT 0,
+        fulfilled INTEGER DEFAULT 0,
+        revenue_usd REAL DEFAULT 0.0,
+        mode TEXT NOT NULL DEFAULT 'PRODUCTION',
+        timestamp TEXT NOT NULL
+    );
+    """)
+
+    # 43. Product Expansion Opportunities Queue (Phase 5H, Section 11)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS product_expansion_opportunities (
+        product_opp_id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        product_family TEXT NOT NULL,
+        problem_observed TEXT NOT NULL,
+        evidence_source TEXT NOT NULL,
+        search_demand_score REAL DEFAULT 0.0,
+        discussion_frequency_score REAL DEFAULT 0.0,
+        competition_level TEXT NOT NULL DEFAULT 'LOW',
+        development_effort TEXT NOT NULL DEFAULT 'LOW',
+        compatibility_score REAL DEFAULT 1.0,
+        composite_rank REAL DEFAULT 0.0,
+        approval_threshold REAL DEFAULT 0.75,
+        status TEXT NOT NULL DEFAULT 'QUEUED',
+        created_at TEXT NOT NULL
+    );
+    """)
+
+    # 44. Owner Action Center (Phase 5H, Section 14)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS owner_actions (
+        action_id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        category TEXT NOT NULL,
+        urgency TEXT NOT NULL DEFAULT 'MEDIUM',
+        description TEXT NOT NULL,
+        channel TEXT,
+        status TEXT NOT NULL DEFAULT 'ACTION_REQUIRED',
+        created_at TEXT NOT NULL,
+        completed_at TEXT
+    );
+    """)
+
     # Column migrations if table existed previously without new columns
     try:
         cursor.execute("ALTER TABLE product_improvement_proposals ADD COLUMN actual_outcome TEXT")

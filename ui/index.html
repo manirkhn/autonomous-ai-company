@@ -36,6 +36,7 @@
   <!-- Navigation Tabs -->
   <nav class="nav-tabs" style="overflow-x: auto; white-space: nowrap;">
     <button class="nav-tab active" data-tab="marketing-command-center" onclick="switchTab('marketing-command-center')" style="color: #f59e0b; font-weight:800; font-size: 0.88rem;">🎯 Sales & Marketing Hub</button>
+    <button class="nav-tab" data-tab="acquisition-channels" onclick="switchTab('acquisition-channels')" style="color: #38bdf8; font-weight:800; font-size: 0.88rem;">🌐 Channels & Distribution</button>
     <button class="nav-tab" data-tab="governance" onclick="switchTab('governance')" style="color: #ef4444; font-weight:800; font-size: 0.88rem;">🛡️ Governance & Controls</button>
     <button class="nav-tab" data-tab="ai-office" onclick="switchTab('ai-office')" style="color: var(--accent-cyan); font-weight:800; font-size: 0.88rem;">🏢 AI Office</button>
     <button class="nav-tab" data-tab="payments-revenue" onclick="switchTab('payments-revenue')" style="color: #10b981; font-weight:800; font-size: 0.88rem;">💳 Payments & Settlement</button>
@@ -465,6 +466,263 @@
             <button class="btn btn-secondary" onclick="switchTab('approvals')">Open Approval Center →</button>
           </div>
         </div>
+      </div>
+
+    </section>
+
+    <!-- Phase 5H: Multi-Channel Customer Acquisition & Marketplace Sales Engine -->
+    <section id="tab-acquisition-channels" class="tab-content">
+      
+      <!-- Top Acquisition Status Bar -->
+      <div class="company-status-bar glass" style="margin-bottom: 1.5rem; border-top: 3px solid #38bdf8;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; width: 100%;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="status-pulse-dot blue"></span>
+              <h2 style="font-size: 1.25rem; font-weight: 800; color: #f8fafc; margin: 0;">🌐 MULTI-CHANNEL CUSTOMER ACQUISITION ENGINE</h2>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0.35rem 0 0 0;">
+              Real External Distribution • Marketplaces • Developer Communities • Organic Search • Strict Attribution
+            </p>
+          </div>
+
+          <!-- Environment Separation Controls -->
+          <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(15, 23, 42, 0.6); padding: 0.35rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; padding: 0 0.5rem;">MODE:</span>
+            <button id="btnAcqModeProd" class="btn btn-sm" style="background: #3b82f6; color: #fff; font-weight: 700; padding: 0.25rem 0.65rem;" onclick="setAcquisitionMode('PRODUCTION')">PRODUCTION</button>
+            <button id="btnAcqModeTest" class="btn btn-sm" style="background: transparent; color: var(--text-secondary); font-weight: 600; padding: 0.25rem 0.65rem;" onclick="setAcquisitionMode('TEST')">TEST</button>
+            <button id="btnAcqModeSandbox" class="btn btn-sm" style="background: transparent; color: var(--text-secondary); font-weight: 600; padding: 0.25rem 0.65rem;" onclick="setAcquisitionMode('SANDBOX')">SANDBOX</button>
+            <button class="btn btn-secondary btn-sm" style="margin-left: 0.5rem; padding: 0.25rem 0.65rem;" onclick="fetchAcquisitionData()">🔄 Refresh</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ZERO-DOLLAR ACQUISITION NOTICE -->
+      <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-sm); padding: 0.85rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 1.2rem;">🛡️</span>
+          <div>
+            <div style="font-weight: 700; color: var(--accent-emerald); font-size: 0.88rem;">ZERO-DOLLAR ACQUISITION MANDATE ENFORCED</div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary);">Zero paid ad spend ($0.00). All customer discovery is driven via organic search, developer forums, and marketplace discovery.</div>
+          </div>
+        </div>
+        <div class="badge" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); font-weight: 800;">BUDGET: $0.00 / NO PAID ADS</div>
+      </div>
+
+      <!-- PANEL 1: CHANNEL REGISTRY & REAL PERFORMANCE TABLE -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid #3b82f6;">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h3 style="font-size: 1.1rem; color: #60a5fa; margin: 0;">📊 CHANNEL REGISTRY & PERFORMANCE</h3>
+            <span style="font-size: 0.76rem; color: var(--text-muted);">Strict Ground Truth: 0 = verified zero • N/A = unavailable • Unknown = not measurable</span>
+          </div>
+          <span id="acqActiveModeBadge" class="badge" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd; font-weight: 700;">MODE: PRODUCTION</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div style="overflow-x: auto;">
+            <table class="table" style="width: 100%; font-size: 0.82rem;">
+              <thead>
+                <tr>
+                  <th>Channel</th>
+                  <th>Type</th>
+                  <th>Audience / Focus</th>
+                  <th>Listing Status</th>
+                  <th style="text-align: right;">Visitors</th>
+                  <th style="text-align: right;">Views</th>
+                  <th style="text-align: right;">Checkouts</th>
+                  <th style="text-align: right;">Sales</th>
+                  <th style="text-align: right;">Revenue</th>
+                  <th>Policy Status</th>
+                  <th>Next Action</th>
+                </tr>
+              </thead>
+              <tbody id="acqChannelsTableBody">
+                <tr><td colspan="11" style="text-align: center; color: var(--text-muted); padding: 1.2rem;">Loading channel registry...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 2: 7-STAGE BUSINESS CONVERSION FUNNEL -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid #8b5cf6;">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="font-size: 1.1rem; color: #a78bfa; margin: 0;">🎯 7-STAGE BUSINESS CONVERSION FUNNEL</h3>
+            <span style="font-size: 0.76rem; color: var(--text-muted);">Discovery → Visit → Product View → Checkout → Payment → Customer → Fulfillment</span>
+          </div>
+          <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd; font-weight: 700;">VERIFIED CONVERSION METRICS</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div id="acqFunnelContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem;">
+            <!-- Rendered by app.js -->
+          </div>
+          <div id="acqFunnelInsight" style="margin-top: 1rem; padding: 0.75rem 1rem; background: rgba(30, 41, 59, 0.5); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-secondary); border-left: 3px solid #8b5cf6;">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: MARKETPLACE STATUS & SPECIFICATION CARDS -->
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+        
+        <!-- Etsy Card -->
+        <div class="panel glass" style="border-top: 3px solid #f97316;">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1rem; color: #fb923c; margin: 0;">🧶 ETSY MARKETPLACE</h3>
+            <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 700;">NOT RECOMMENDED</span>
+          </div>
+          <div style="padding: 1.15rem; font-size: 0.82rem;">
+            <div style="margin-bottom: 0.75rem;">
+              <strong style="color: #f87171;">Audit Verdict:</strong>
+              <div style="color: var(--text-secondary); margin-top: 0.25rem;">
+                Etsy buyer intent is oriented towards crafts, digital planners, design templates, and handmade goods. Terminal CLI LLM benchmark harnesses lack category alignment and risk policy friction.
+              </div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.5); padding: 0.65rem 0.85rem; border-radius: 6px; font-family: monospace; font-size: 0.75rem; color: #fbbf24; margin-bottom: 0.75rem;">
+              ETSY_STATUS = NOT_RECOMMENDED_FOR_THIS_PRODUCT
+            </div>
+            <div style="font-size: 0.76rem; color: var(--text-muted);">
+              ✅ Compliant listing package, disclosure templates, and buyer instructions are fully prepared in engine if ever requested.
+            </div>
+          </div>
+        </div>
+
+        <!-- Gumroad Card -->
+        <div class="panel glass" style="border-top: 3px solid #ec4899;">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1rem; color: #f472b6; margin: 0;">📦 GUMROAD CHANNEL</h3>
+            <span class="badge" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd; font-weight: 700;">SPECIFIED / READY</span>
+          </div>
+          <div style="padding: 1.15rem; font-size: 0.82rem;">
+            <div style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Price:</span>
+              <strong style="color: #10b981;">$29.00 USD (One-Time)</strong>
+            </div>
+            <div style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Guarantee:</span>
+              <span>30-Day Money-Back</span>
+            </div>
+            <div style="margin-bottom: 0.75rem; display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Fulfillment:</span>
+              <span>Direct ZIP + License Key</span>
+            </div>
+            <div style="background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.25); padding: 0.65rem 0.85rem; border-radius: 6px; font-size: 0.76rem; color: #f472b6; margin-bottom: 0.75rem;">
+              ⚠️ ACTION REQUIRED: Owner must create and link live Gumroad seller account to activate external marketplace traffic.
+            </div>
+            <button class="btn btn-secondary btn-sm" style="width: 100%; font-size: 0.76rem;" onclick="viewGumroadSpec()">View Gumroad Package Spec</button>
+          </div>
+        </div>
+
+        <!-- Lemon Squeezy Card -->
+        <div class="panel glass" style="border-top: 3px solid #eab308;">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1rem; color: #facc15; margin: 0;">🍋 LEMON SQUEEZY</h3>
+            <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-weight: 700;">AWAITING OWNER KYB</span>
+          </div>
+          <div style="padding: 1.15rem; font-size: 0.82rem;">
+            <div style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Role:</span>
+              <strong>Merchant of Record (MoR)</strong>
+            </div>
+            <div style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Global Tax/VAT:</span>
+              <span style="color: #10b981;">Automated Remittance</span>
+            </div>
+            <div style="margin-bottom: 0.75rem; display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Checkout:</span>
+              <span>Hosted &amp; Overlay Links</span>
+            </div>
+            <div style="background: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.25); padding: 0.65rem 0.85rem; border-radius: 6px; font-size: 0.76rem; color: #fde047; margin-bottom: 0.75rem;">
+              ⚠️ ACTION REQUIRED: Owner must complete Lemon Squeezy store onboarding &amp; identity verification.
+            </div>
+            <button class="btn btn-secondary btn-sm" style="width: 100%; font-size: 0.76rem;" onclick="viewLemonSqueezySpec()">View Lemon Squeezy Spec</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PANEL 4: DEVELOPER DISCOVERY & OUTREACH -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid #10b981;">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h3 style="font-size: 1.1rem; color: #34d399; margin: 0;">💬 DEVELOPER DISCOVERY & OUTREACH ENGINE</h3>
+            <span style="font-size: 0.76rem; color: var(--text-muted);">Educational Technical Answers • Strictly No Spam • Owner Approval Required</span>
+          </div>
+          <div class="badge" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; font-weight: 700;">HUMAN-IN-THE-LOOP GATE</div>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div id="acqOpportunitiesList" style="display: flex; flex-direction: column; gap: 1rem;">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 5: TECHNICAL SEO CONTENT ENGINE -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid #06b6d4;">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h3 style="font-size: 1.1rem; color: #22d3ee; margin: 0;">📑 TECHNICAL SEO & CONTENT ENGINE</h3>
+            <span style="font-size: 0.76rem; color: var(--text-muted);">In-Depth Developer Guides • Natural Problem-Solving Links • Accurate Technical Claims</span>
+          </div>
+          <span class="badge" style="background: rgba(6, 182, 212, 0.2); color: #67e8f9; font-weight: 700;">9 ACTIVE GUIDES</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div style="overflow-x: auto;">
+            <table class="table" style="width: 100%; font-size: 0.82rem;">
+              <thead>
+                <tr>
+                  <th>Topic / Title</th>
+                  <th>Target Problem Solved</th>
+                  <th>Primary Keyword</th>
+                  <th>Status</th>
+                  <th>Next Action</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="acqSEOTableBody">
+                <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1rem;">Loading SEO content guides...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 6: OWNER ACTION CENTER & PRODUCT EXPANSION -->
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+        
+        <!-- Owner Action Center -->
+        <div class="panel glass" style="border-top: 3px solid #ef4444;">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1.05rem; color: #f87171; margin: 0;">👤 OWNER ACTION CENTER</h3>
+            <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; font-weight: 700;">HUMAN GATES ONLY</span>
+          </div>
+          <div style="padding: 1.25rem;">
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 0.85rem;">
+              Actions that strictly require the human owner's authorization or external identity verification. The AI never fakes these.
+            </p>
+            <div id="acqOwnerActionsList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <!-- Rendered by app.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Expansion Queue -->
+        <div class="panel glass" style="border-top: 3px solid #a855f7;">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1.05rem; color: #c084fc; margin: 0;">🚀 PRODUCT EXPANSION QUEUE</h3>
+            <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #d8b4fe; font-weight: 700;">EVIDENCE-RANKED</span>
+          </div>
+          <div style="padding: 1.25rem;">
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 0.85rem;">
+              Candidate digital products ranked by documented developer pain points, search volume, and feasibility.
+            </p>
+            <div id="acqProductExpansionList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <!-- Rendered by app.js -->
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </section>

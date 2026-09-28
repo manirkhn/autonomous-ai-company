@@ -47,3 +47,9 @@ desktop.ini
 # IDE files
 .vscode/
 .idea/
+
+# Generated test artifacts & reports
+data/deliveries_v4/ORD-*.zip
+data/outbox/*.json
+reports/daily/*-ceo-report.*
+products/PRD-*

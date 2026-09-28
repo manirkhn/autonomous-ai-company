@@ -1033,6 +1033,11 @@ class CheckoutRequest(BaseModel):
     mode: str = "TEST"
     product_id: str = PRIMARY_PRODUCT_ID
     provider_name: Optional[str] = None
+    utm_source: Optional[str] = None
+    utm_medium: Optional[str] = None
+    utm_campaign: Optional[str] = None
+    utm_content: Optional[str] = None
+    utm_term: Optional[str] = None
 
 class ProfileUpdateRequest(BaseModel):
     country: Optional[str] = None
@@ -1112,13 +1117,30 @@ def create_customer_checkout(req: CheckoutRequest):
     """
     Creates a new checkout session.
     """
-    return CheckoutManager.create_checkout(
+    session = CheckoutManager.create_checkout(
         customer_email=req.customer_email,
         currency=req.currency,
         product_id=req.product_id,
         mode=req.mode,
         provider_name=req.provider_name
     )
+    try:
+        from acquisition.attribution import AttributionEngine
+        AttributionEngine.record_touchpoint(
+            source=req.utm_source or "direct",
+            landing_page="/store",
+            medium=req.utm_medium or "",
+            campaign=req.utm_campaign or "",
+            content=req.utm_content or "",
+            term=req.utm_term or "",
+            product_page_visited=1,
+            checkout_started=1,
+            order_id=session.get("order_id"),
+            mode=req.mode.upper()
+        )
+    except Exception as e:
+        logger.error(f"Attribution tracking error: {e}")
+    return session
 
 @app.post("/api/payments/webhook")
 async def handle_payment_webhook(request: Request):
@@ -1572,6 +1594,154 @@ def start_checkout_session(
         product_id=product_id,
         mode=mode
     )
+
+# ==================== Phase 5H: Multi-Channel Customer Acquisition Routes ====================
+
+from acquisition.channels import ChannelRegistry
+from acquisition.etsy import EtsyMarketplaceEngine
+from acquisition.gumroad import GumroadMarketplaceEngine
+from acquisition.lemonsqueezy import LemonSqueezyMarketplaceEngine
+from acquisition.discovery import DeveloperDiscoveryEngine
+from acquisition.seo_content import SEOContentEngine
+from acquisition.attribution import AttributionEngine
+from acquisition.funnel import MultiChannelFunnelEngine
+from acquisition.expansion import ProductExpansionQueue
+from acquisition.owner_actions import OwnerActionCenter
+from acquisition.automation import AcquisitionAutomationEngine
+
+@app.get("/api/acquisition/channels")
+def get_acquisition_channels():
+    """Returns the persistent acquisition channel registry (Phase 5H, Section 1)."""
+    return {
+        "channels": ChannelRegistry.list_channels(),
+        "total_channels": len(ChannelRegistry.list_channels())
+    }
+
+@app.get("/api/acquisition/performance")
+def get_channel_performance(mode: str = Query("PRODUCTION")):
+    """Returns Channel Performance view: CHANNEL | VISITORS | PRODUCT VIEWS | CHECKOUTS | SALES | REVENUE (Phase 5H, Section 9)."""
+    return {
+        "mode": mode.upper(),
+        "performance": ChannelRegistry.get_channel_performance(mode=mode.upper())
+    }
+
+@app.get("/api/acquisition/funnel")
+def get_acquisition_funnel(mode: str = Query("PRODUCTION")):
+    """Returns the 7-stage business conversion funnel (Phase 5H, Section 10)."""
+    return MultiChannelFunnelEngine.get_funnel(mode=mode.upper())
+
+@app.get("/api/acquisition/opportunities")
+def list_acquisition_opportunities(status: Optional[str] = None):
+    """Returns public developer discussions and outreach opportunities (Phase 5H, Sections 5 & 6)."""
+    return {
+        "opportunities": DeveloperDiscoveryEngine.list_opportunities(status=status)
+    }
+
+@app.post("/api/acquisition/opportunities/{opportunity_id}/approve")
+def approve_outreach_opportunity(opportunity_id: str):
+    """Owner Approval: Approves an outreach response for publication."""
+    return DeveloperDiscoveryEngine.approve_opportunity(opportunity_id=opportunity_id)
+
+@app.post("/api/acquisition/opportunities/{opportunity_id}/reject")
+def reject_outreach_opportunity(opportunity_id: str):
+    """Owner Rejection: Rejects an outreach response."""
+    return DeveloperDiscoveryEngine.reject_opportunity(opportunity_id=opportunity_id)
+
+@app.get("/api/acquisition/content")
+def list_seo_content(status: Optional[str] = None):
+    """Returns technical problem-solving SEO articles and developer guides (Phase 5H, Section 7)."""
+    return {
+        "articles": SEOContentEngine.list_articles(status=status)
+    }
+
+@app.post("/api/acquisition/content/{article_id}/approve")
+def approve_seo_article(article_id: str):
+    """Owner Approval: Approves an SEO article for publication."""
+    return SEOContentEngine.approve_article(article_id=article_id)
+
+@app.get("/api/acquisition/etsy-audit")
+def get_etsy_audit():
+    """Returns the Etsy marketplace audit and compliance assessment (Phase 5H, Section 2)."""
+    return {
+        "audit": EtsyMarketplaceEngine.get_audit_report(),
+        "listing_package": EtsyMarketplaceEngine.get_compliant_listing_package()
+    }
+
+@app.get("/api/acquisition/etsy")
+def get_etsy_direct():
+    """Direct Etsy audit compliance report endpoint."""
+    return EtsyMarketplaceEngine.audit_compliance()
+
+@app.get("/api/acquisition/gumroad-spec")
+def get_gumroad_spec():
+    """Returns Gumroad listing package, ecosystem connections, and metrics (Phase 5H, Section 3)."""
+    return {
+        "listing": GumroadMarketplaceEngine.get_listing_specification(),
+        "metrics": GumroadMarketplaceEngine.get_channel_metrics()
+    }
+
+@app.get("/api/acquisition/gumroad")
+def get_gumroad_direct():
+    """Direct Gumroad listing package endpoint."""
+    return GumroadMarketplaceEngine.get_listing_package()
+
+@app.get("/api/acquisition/lemonsqueezy-spec")
+def get_lemonsqueezy_spec():
+    """Returns Lemon Squeezy specification, KYC onboarding state, and metrics (Phase 5H, Section 4)."""
+    return {
+        "specification": LemonSqueezyMarketplaceEngine.get_channel_specification(),
+        "metrics": LemonSqueezyMarketplaceEngine.get_channel_metrics()
+    }
+
+@app.get("/api/acquisition/lemonsqueezy")
+def get_lemonsqueezy_direct():
+    """Direct Lemon Squeezy status endpoint."""
+    return LemonSqueezyMarketplaceEngine.get_channel_status()
+
+@app.get("/api/acquisition/owner-actions")
+def list_owner_actions(status: Optional[str] = None):
+    """Returns the explicit list of pending Owner Action items (Phase 5H, Section 14)."""
+    return {
+        "actions": OwnerActionCenter.list_actions(status=status)
+    }
+
+@app.post("/api/acquisition/owner-actions/{action_id}/resolve")
+def resolve_owner_action(action_id: str):
+    """Marks an owner action as completed."""
+    return OwnerActionCenter.resolve_action(action_id=action_id)
+
+@app.post("/api/acquisition/owner-actions/{action_id}/complete")
+def complete_owner_action(action_id: str):
+    """Marks an owner action as completed."""
+    return OwnerActionCenter.complete_action(action_id=action_id)
+
+@app.get("/api/acquisition/expansion-queue")
+def list_product_expansion_queue():
+    """Returns evidence-ranked future digital product opportunities (Phase 5H, Section 11)."""
+    return {
+        "expansion_queue": ProductExpansionQueue.list_queue(),
+        "queue": ProductExpansionQueue.get_ranked_queue()
+    }
+
+@app.get("/api/acquisition/expansion")
+def list_product_expansion_direct():
+    """Returns evidence-ranked future digital product opportunities."""
+    return {
+        "queue": ProductExpansionQueue.get_ranked_queue(),
+        "expansion_queue": ProductExpansionQueue.list_queue()
+    }
+
+@app.post("/api/acquisition/automation/pulse")
+def trigger_acquisition_pulse():
+    """Triggers autonomous acquisition routines."""
+    hourly = AcquisitionAutomationEngine.run_hourly_routine()
+    four_hour = AcquisitionAutomationEngine.run_4hour_routine()
+    daily = AcquisitionAutomationEngine.run_daily_routine()
+    return {
+        "hourly": hourly,
+        "four_hour": four_hour,
+        "daily": daily
+    }
 
 @app.get("/", response_class=HTMLResponse)
 def serve_index():

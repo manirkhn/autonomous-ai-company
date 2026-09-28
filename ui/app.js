@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchMarketplace();
   fetchCapabilityGaps();
   fetchPhase4Dashboard();
+  fetchAcquisitionData();
   initEventStream();
 
   // Restore active tab from URL hash (e.g. #tab-governance, #governance, #ai-office)
@@ -85,6 +86,7 @@ function switchTab(tabId) {
   }
 
   // 4. Trigger section-specific data loaders
+  if (tabId === "acquisition-channels") fetchAcquisitionData();
   if (tabId === "marketing-command-center") { fetchMarketingCommandCenter(); fetchCloudRuntimeStatus(); }
   if (tabId === "governance") { fetchGovernanceData(); fetchCloudRuntimeStatus(); fetchStatus(); }
   if (tabId === "ai-office") fetchOfficeState();
@@ -2746,3 +2748,393 @@ async function saveFirewallSettings() {
     alert("Error saving firewall settings: " + err.message);
   }
 }
+
+// ==========================================
+// PHASE 5H: MULTI-CHANNEL CUSTOMER ACQUISITION CONTROLLER
+// ==========================================
+
+let currentAcquisitionMode = 'PRODUCTION';
+
+function setAcquisitionMode(mode) {
+  currentAcquisitionMode = mode;
+  const prodBtn = document.getElementById("btnAcqModeProd");
+  const testBtn = document.getElementById("btnAcqModeTest");
+  const sandBtn = document.getElementById("btnAcqModeSandbox");
+  const badge = document.getElementById("acqActiveModeBadge");
+
+  if (prodBtn) {
+    prodBtn.style.background = mode === 'PRODUCTION' ? '#3b82f6' : 'transparent';
+    prodBtn.style.color = mode === 'PRODUCTION' ? '#fff' : 'var(--text-secondary)';
+  }
+  if (testBtn) {
+    testBtn.style.background = mode === 'TEST' ? '#8b5cf6' : 'transparent';
+    testBtn.style.color = mode === 'TEST' ? '#fff' : 'var(--text-secondary)';
+  }
+  if (sandBtn) {
+    sandBtn.style.background = mode === 'SANDBOX' ? '#f59e0b' : 'transparent';
+    sandBtn.style.color = mode === 'SANDBOX' ? '#fff' : 'var(--text-secondary)';
+  }
+
+  if (badge) {
+    badge.innerText = `MODE: ${mode}`;
+    badge.style.color = mode === 'PRODUCTION' ? '#93c5fd' : (mode === 'TEST' ? '#c4b5fd' : '#fde68a');
+    badge.style.background = mode === 'PRODUCTION' ? 'rgba(59, 130, 246, 0.2)' : (mode === 'TEST' ? 'rgba(139, 92, 246, 0.2)' : 'rgba(245, 158, 11, 0.2)');
+  }
+
+  fetchAcquisitionData();
+}
+
+async function fetchAcquisitionData() {
+  try {
+    const [perfRes, funnelRes, oppsRes, seoRes, actionsRes, expRes] = await Promise.all([
+      fetch(`/api/acquisition/performance?mode=${currentAcquisitionMode}`),
+      fetch(`/api/acquisition/funnel?mode=${currentAcquisitionMode}`),
+      fetch("/api/acquisition/opportunities"),
+      fetch("/api/acquisition/content"),
+      fetch("/api/acquisition/owner-actions"),
+      fetch("/api/acquisition/expansion")
+    ]);
+
+    if (perfRes.ok) {
+      const perfData = await perfRes.json();
+      renderAcquisitionChannels(perfData.channels || []);
+    }
+    if (funnelRes.ok) {
+      const funnelData = await funnelRes.json();
+      renderAcquisitionFunnel(funnelData);
+    }
+    if (oppsRes.ok) {
+      const oppsData = await oppsRes.json();
+      renderAcquisitionOpportunities(oppsData.opportunities || []);
+    }
+    if (seoRes.ok) {
+      const seoData = await seoRes.json();
+      renderAcquisitionContent(seoData.articles || []);
+    }
+    if (actionsRes.ok) {
+      const actData = await actionsRes.json();
+      renderAcquisitionOwnerActions(actData.actions || []);
+    }
+    if (expRes.ok) {
+      const expData = await expRes.json();
+      renderAcquisitionExpansion(expData.queue || []);
+    }
+  } catch (err) {
+    console.error("Error loading acquisition data:", err);
+  }
+}
+
+function renderAcquisitionChannels(channels) {
+  const tbody = document.getElementById("acqChannelsTableBody");
+  if (!tbody) return;
+
+  if (!channels || channels.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; color: var(--text-muted); padding: 1.5rem;">No channels registered.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = channels.map(c => {
+    let revColor = "#9ca3af";
+    if (c.revenue !== "0.00 USD" && c.revenue !== "0 USD" && c.revenue !== "N/A" && c.revenue !== "Unknown") {
+      revColor = "#10b981";
+    }
+
+    let statusBadgeColor = "rgba(107, 114, 128, 0.2)";
+    let statusTextColor = "#9ca3af";
+    if (c.listing_status.includes("ACTIVE") || c.listing_status.includes("DISCOVERY")) {
+      statusBadgeColor = "rgba(16, 185, 129, 0.2)";
+      statusTextColor = "#34d399";
+    } else if (c.listing_status.includes("AWAITING") || c.listing_status.includes("CONFIGURED")) {
+      statusBadgeColor = "rgba(245, 158, 11, 0.2)";
+      statusTextColor = "#fbbf24";
+    } else if (c.listing_status.includes("NOT_RECOMMENDED")) {
+      statusBadgeColor = "rgba(239, 68, 68, 0.2)";
+      statusTextColor = "#f87171";
+    }
+
+    return `
+      <tr>
+        <td>
+          <div style="font-weight: 700; color: #f3f4f6;">${escapeHtml(c.channel_name)}</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">${escapeHtml(c.url || "")}</div>
+        </td>
+        <td><span class="badge" style="background: rgba(59, 130, 246, 0.15); color: #93c5fd; font-size: 0.72rem;">${escapeHtml(c.channel_type)}</span></td>
+        <td style="max-width: 180px; font-size: 0.75rem; color: var(--text-secondary);">${escapeHtml(c.audience)}</td>
+        <td>
+          <span class="badge" style="background: ${statusBadgeColor}; color: ${statusTextColor}; font-size: 0.72rem; font-weight: 700;">
+            ${escapeHtml(c.listing_status)}
+          </span>
+        </td>
+        <td style="text-align: right; font-family: monospace;">${escapeHtml(String(c.visitors))}</td>
+        <td style="text-align: right; font-family: monospace;">${escapeHtml(String(c.product_views))}</td>
+        <td style="text-align: right; font-family: monospace;">${escapeHtml(String(c.checkouts))}</td>
+        <td style="text-align: right; font-family: monospace;">${escapeHtml(String(c.sales))}</td>
+        <td style="text-align: right; font-family: monospace; font-weight: 700; color: ${revColor};">${escapeHtml(String(c.revenue))}</td>
+        <td style="font-size: 0.75rem; color: var(--text-secondary);">${escapeHtml(c.policy_status || "COMPLIANT")}</td>
+        <td style="font-size: 0.75rem; color: #93c5fd; max-width: 170px;">${escapeHtml(c.next_action || "Maintain discovery")}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function renderAcquisitionFunnel(funnel) {
+  const container = document.getElementById("acqFunnelContainer");
+  const insight = document.getElementById("acqFunnelInsight");
+  if (!container) return;
+
+  const stages = funnel.stages || [];
+  if (stages.length === 0) {
+    container.innerHTML = `<div style="color: var(--text-muted); padding: 1rem;">No funnel data available.</div>`;
+    return;
+  }
+
+  container.innerHTML = stages.map((s, idx) => {
+    return `
+      <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; text-align: center; position: relative;">
+        <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">STEP ${idx + 1}</div>
+        <div style="font-size: 0.85rem; font-weight: 800; color: #e2e8f0; margin: 0.25rem 0;">${escapeHtml(s.stage)}</div>
+        <div style="font-size: 1.4rem; font-weight: 900; color: #38bdf8; font-family: monospace;">${escapeHtml(String(s.count))}</div>
+        <div style="font-size: 0.72rem; color: #a78bfa; margin-top: 0.2rem; font-weight: 600;">Conv: ${escapeHtml(s.conversion_rate)}</div>
+      </div>
+    `;
+  }).join("");
+
+  if (insight) {
+    insight.innerHTML = `
+      <strong>Funnel Diagnosis:</strong> ${escapeHtml(funnel.funnel_insight || "Awaiting real traffic")}
+      ${funnel.data_status ? ` <span class="badge" style="margin-left: 0.5rem; background: rgba(59, 130, 246, 0.2); color: #93c5fd; font-size: 0.7rem;">${escapeHtml(funnel.data_status)}</span>` : ""}
+    `;
+  }
+}
+
+function renderAcquisitionOpportunities(opportunities) {
+  const container = document.getElementById("acqOpportunitiesList");
+  if (!container) return;
+
+  if (!opportunities || opportunities.length === 0) {
+    container.innerHTML = `<div style="color: var(--text-muted); padding: 1rem; text-align: center;">No qualified developer opportunities discovered yet.</div>`;
+    return;
+  }
+
+  container.innerHTML = opportunities.map(opp => {
+    let badgeColor = "rgba(245, 158, 11, 0.2)";
+    let badgeText = "#fbbf24";
+    if (opp.approval_status === "APPROVED") {
+      badgeColor = "rgba(16, 185, 129, 0.2)";
+      badgeText = "#34d399";
+    } else if (opp.approval_status === "REJECTED") {
+      badgeColor = "rgba(239, 68, 68, 0.2)";
+      badgeText = "#f87171";
+    }
+
+    return `
+      <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1rem 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+          <div>
+            <span class="badge" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd; font-weight: 700; font-size: 0.72rem; margin-right: 0.5rem;">${escapeHtml(opp.source)}</span>
+            <span style="font-weight: 700; color: #f3f4f6; font-size: 0.88rem;">${escapeHtml(opp.customer_problem)}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="badge" style="background: ${badgeColor}; color: ${badgeText}; font-weight: 700; font-size: 0.72rem;">${escapeHtml(opp.approval_status)}</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted);">${escapeHtml(opp.date || "")}</span>
+          </div>
+        </div>
+
+        <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+          <strong>Target Discussion:</strong> <a href="${escapeHtml(opp.url)}" target="_blank" style="color: #38bdf8; text-decoration: underline;">${escapeHtml(opp.url)}</a>
+          <span style="margin-left: 1rem; color: #a78bfa;">Relevance: ${escapeHtml(opp.relevance)}</span>
+        </div>
+
+        <div style="background: rgba(30, 41, 59, 0.6); border-left: 3px solid #10b981; padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.8rem; color: #e2e8f0; margin-bottom: 0.75rem; white-space: pre-wrap;">
+${escapeHtml(opp.recommended_response)}
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="font-size: 0.74rem; color: var(--text-muted);">
+            Links to: <span style="font-family: monospace; color: #93c5fd;">${escapeHtml(opp.nexora_product_url)}</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            ${opp.approval_status === "PENDING_APPROVAL" ? `
+              <button class="btn btn-sm" style="background: #10b981; color: #fff; font-weight: 700; padding: 0.25rem 0.75rem;" onclick="approveOpportunity('${escapeHtml(opp.opportunity_id)}')">✅ Approve for Owner Posting</button>
+              <button class="btn btn-sm" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; font-weight: 700; padding: 0.25rem 0.75rem;" onclick="rejectOpportunity('${escapeHtml(opp.opportunity_id)}')">❌ Reject</button>
+            ` : `<span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">Reviewed by Owner</span>`}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function approveOpportunity(oppId) {
+  try {
+    const res = await fetch(`/api/acquisition/opportunities/${oppId}/approve`, { method: "POST" });
+    const data = await res.json();
+    alert(`Opportunity Approved!\n\nOwner Action: You may now review and post the technical response on the destination platform manually. Nexora never spams.`);
+    fetchAcquisitionData();
+  } catch (err) {
+    alert("Error approving opportunity: " + err.message);
+  }
+}
+
+async function rejectOpportunity(oppId) {
+  try {
+    const res = await fetch(`/api/acquisition/opportunities/${oppId}/reject`, { method: "POST" });
+    const data = await res.json();
+    fetchAcquisitionData();
+  } catch (err) {
+    alert("Error rejecting opportunity: " + err.message);
+  }
+}
+
+function renderAcquisitionContent(articles) {
+  const tbody = document.getElementById("acqSEOTableBody");
+  if (!tbody) return;
+
+  if (!articles || articles.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.2rem;">No SEO articles available.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = articles.map(art => {
+    let statusColor = "rgba(245, 158, 11, 0.2)";
+    let statusText = "#fbbf24";
+    if (art.status === "APPROVED" || art.status === "PUBLISHED") {
+      statusColor = "rgba(16, 185, 129, 0.2)";
+      statusText = "#34d399";
+    }
+
+    return `
+      <tr>
+        <td>
+          <div style="font-weight: 700; color: #f3f4f6;">${escapeHtml(art.title)}</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace;">/${escapeHtml(art.slug)}</div>
+        </td>
+        <td style="font-size: 0.78rem; color: var(--text-secondary); max-width: 220px;">${escapeHtml(art.problem_solved)}</td>
+        <td style="font-size: 0.78rem; color: #93c5fd; font-family: monospace;">${escapeHtml(art.target_keyword)}</td>
+        <td>
+          <span class="badge" style="background: ${statusColor}; color: ${statusText}; font-size: 0.72rem; font-weight: 700;">
+            ${escapeHtml(art.status)}
+          </span>
+        </td>
+        <td style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(art.next_action)}</td>
+        <td style="text-align: right;">
+          ${art.status === "DRAFT" ? `
+            <button class="btn btn-sm" style="background: #3b82f6; color: #fff; font-weight: 700; padding: 0.2rem 0.6rem; font-size: 0.72rem;" onclick="approveSEOArticle('${escapeHtml(art.slug)}')">Approve Draft</button>
+          ` : `<span style="font-size: 0.72rem; color: #34d399; font-weight: 700;">Approved</span>`}
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function approveSEOArticle(slug) {
+  try {
+    const res = await fetch(`/api/acquisition/content/${slug}/approve`, { method: "POST" });
+    const data = await res.json();
+    alert(`Article '${slug}' approved for publication.`);
+    fetchAcquisitionData();
+  } catch (err) {
+    alert("Error approving SEO article: " + err.message);
+  }
+}
+
+function renderAcquisitionOwnerActions(actions) {
+  const container = document.getElementById("acqOwnerActionsList");
+  if (!container) return;
+
+  if (!actions || actions.length === 0) {
+    container.innerHTML = `<div style="color: var(--text-muted); padding: 0.75rem; text-align: center;">No pending owner actions.</div>`;
+    return;
+  }
+
+  container.innerHTML = actions.map(act => {
+    let pColor = "#f59e0b";
+    if (act.priority === "HIGH") pColor = "#ef4444";
+    if (act.priority === "MEDIUM") pColor = "#3b82f6";
+
+    return `
+      <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid ${pColor};">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem;">
+          <div style="font-weight: 700; font-size: 0.82rem; color: #f8fafc;">
+            ${escapeHtml(act.title)}
+          </div>
+          <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; font-size: 0.68rem; font-weight: 700;">
+            ${escapeHtml(act.status)}
+          </span>
+        </div>
+        <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0 0.5rem 0;">
+          ${escapeHtml(act.description)}
+        </p>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 0.7rem; color: var(--text-muted);">Deadline: ${escapeHtml(act.deadline || "ASAP")}</span>
+          <button class="btn btn-sm btn-secondary" style="font-size: 0.7rem; padding: 0.15rem 0.5rem;" onclick="completeOwnerAction('${escapeHtml(act.action_id)}')">Mark Done</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function completeOwnerAction(actionId) {
+  try {
+    const res = await fetch(`/api/acquisition/owner-actions/${actionId}/complete`, { method: "POST" });
+    const data = await res.json();
+    fetchAcquisitionData();
+  } catch (err) {
+    alert("Error updating owner action: " + err.message);
+  }
+}
+
+function renderAcquisitionExpansion(queue) {
+  const container = document.getElementById("acqProductExpansionList");
+  if (!container) return;
+
+  if (!queue || queue.length === 0) {
+    container.innerHTML = `<div style="color: var(--text-muted); padding: 0.75rem; text-align: center;">No expansion candidates in queue.</div>`;
+    return;
+  }
+
+  container.innerHTML = queue.map(item => {
+    return `
+      <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #a855f7;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem;">
+          <div style="font-weight: 700; font-size: 0.82rem; color: #f8fafc;">
+            #${escapeHtml(String(item.rank))} • ${escapeHtml(item.product_family)}
+          </div>
+          <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #d8b4fe; font-size: 0.68rem; font-weight: 700;">
+            Score: ${escapeHtml(String(item.composite_score))}
+          </span>
+        </div>
+        <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0 0.35rem 0;">
+          <strong>Problem:</strong> ${escapeHtml(item.observed_problem)}
+        </p>
+        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted);">
+          <span>Demand: ${escapeHtml(item.search_demand)}</span>
+          <span>Effort: ${escapeHtml(item.development_effort)}</span>
+          <span style="color: #fbbf24;">Status: ${escapeHtml(item.approval_status)}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function viewGumroadSpec() {
+  alert(
+    "GUMROAD LISTING SPECIFICATION:\n\n" +
+    "Product: Local LLM Offline Evaluation & Prompt Regression Benchmark Suite\n" +
+    "Price: $29 USD (One-Time)\n" +
+    "Files Included: Python benchmark suite (.tar.gz/.zip), 100+ baseline prompts, JSON schema regression validator, Latency harness, Quickstart PDF.\n" +
+    "Guarantee: 30-Day Money-Back Guarantee.\n\n" +
+    "Status: Awaiting Owner Account Creation. Once account is created, paste the Gumroad product URL to activate webhook transaction verification."
+  );
+}
+
+function viewLemonSqueezySpec() {
+  alert(
+    "LEMON SQUEEZY SPECIFICATION:\n\n" +
+    "Model: Merchant of Record (MoR) with global tax/VAT remittance.\n" +
+    "Price: $29 USD\n" +
+    "Checkout Modes: Hosted checkout link and website overlay modal.\n\n" +
+    "Status: Awaiting Owner KYB/Identity Verification. Once approved, API webhooks will automatically verify payments against the database revenue ledger."
+  );
+}
+

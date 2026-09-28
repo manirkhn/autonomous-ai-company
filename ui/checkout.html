@@ -316,13 +316,19 @@ Delivery Status: VERIFIED &amp; READY FOR DOWNLOAD
       btn.innerHTML = "⏳ Processing Secure Order...";
 
       try {
+        const urlParams = new URLSearchParams(window.location.search);
         const res = await fetch("/api/payments/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             customer_email: email,
             currency: "USD",
-            mode: "TEST"
+            mode: "TEST",
+            utm_source: urlParams.get("utm_source") || "direct",
+            utm_medium: urlParams.get("utm_medium") || "",
+            utm_campaign: urlParams.get("utm_campaign") || "",
+            utm_content: urlParams.get("utm_content") || "",
+            utm_term: urlParams.get("utm_term") || ""
           })
         });
         const data = await res.json();
