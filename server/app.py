@@ -1745,6 +1745,91 @@ def trigger_acquisition_pulse():
         "daily": daily
     }
 
+# ----------------- Phase 5I: Universal Autonomous Business Operator -----------------
+
+from business.autonomous_operator import AutonomousBusinessOperator
+from business.ceo_metrics import CEOMetricsEngine
+from integrations.platform_registry import PlatformRegistry
+from support.autonomous_support import AutonomousSupportEngine
+from acquisition.autonomous_distribution import AutonomousDistributionEngine
+
+@app.get("/api/operator/status")
+def get_operator_status():
+    """Returns the high-level operating status of the business."""
+    return AutonomousBusinessOperator.get_operator_status()
+
+@app.post("/api/operator/pulse")
+def trigger_operator_pulse():
+    """Triggers one complete 12-step autonomous business cycle."""
+    return AutonomousBusinessOperator.execute_cycle()
+
+@app.get("/api/integrations/platforms")
+def list_platforms(classification: Optional[str] = None):
+    """Returns platform integrations registry and summary."""
+    return {
+        "summary": PlatformRegistry.get_summary(),
+        "platforms": PlatformRegistry.list_platforms(classification=classification)
+    }
+
+@app.post("/api/integrations/platforms/{platform}/status")
+async def update_platform_status(platform: str, request: Request):
+    """Updates connection status of an external platform."""
+    body = await request.json()
+    status = body.get("status", "CONNECTED")
+    notes = body.get("notes", "")
+    return PlatformRegistry.update_connection_status(platform, status=status, notes=notes)
+
+@app.get("/api/business/ceo-metrics")
+def get_ceo_metrics():
+    """Returns real, unmanipulated business KPIs (revenue, visitors, checkouts, bottleneck)."""
+    return CEOMetricsEngine.compute_ceo_metrics()
+
+@app.post("/api/business/ceo-report/send")
+def trigger_daily_ceo_report():
+    """Compiles and dispatches the daily CEO executive summary to manirkhn@gmail.com."""
+    return CEOMetricsEngine.generate_daily_ceo_report()
+
+@app.get("/api/support/tickets")
+def list_support_tickets(status: Optional[str] = None):
+    """Returns customer support tickets."""
+    return {
+        "tickets": AutonomousSupportEngine.list_tickets(status=status),
+        "open_tickets": AutonomousSupportEngine.get_open_tickets()
+    }
+
+@app.post("/api/support/submit")
+async def submit_support_question(request: Request):
+    """Customer submits a question, answered autonomously or escalated to owner."""
+    body = await request.json()
+    email = body.get("customer_email", "customer@example.com")
+    question = body.get("question", "")
+    product_id = body.get("product_id", "PROD-OPP-P4-001")
+    if not question:
+        raise HTTPException(status_code=400, detail="Question cannot be empty.")
+    return AutonomousSupportEngine.handle_customer_inquiry(
+        customer_email=email,
+        product_id=product_id,
+        question=question
+    )
+
+@app.post("/api/support/resolve")
+async def resolve_support_ticket(request: Request):
+    """Resolves an open support ticket."""
+    body = await request.json()
+    ticket_id = body.get("ticket_id")
+    resolution = body.get("resolution", "Resolved")
+    if not ticket_id:
+        raise HTTPException(status_code=400, detail="ticket_id required")
+    return AutonomousSupportEngine.resolve_ticket(ticket_id=ticket_id, resolution=resolution)
+
+@app.get("/api/acquisition/opportunities")
+def list_acquisition_opportunities():
+    """Returns discovered customer demand opportunities."""
+    return {
+        "stats": AutonomousDistributionEngine.get_acquisition_stats(),
+        "opportunities": AutonomousDistributionEngine.list_opportunities()
+    }
+
 @app.get("/", response_class=HTMLResponse)
 def serve_index():
     index_path = os.path.join(UI_DIR, "index.html")

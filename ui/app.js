@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchCapabilityGaps();
   fetchPhase4Dashboard();
   fetchAcquisitionData();
+  fetchOperatorCockpit();
   initEventStream();
 
   // Restore active tab from URL hash (e.g. #tab-governance, #governance, #ai-office)
@@ -39,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (newHash) switchTab(newHash);
   });
 
+  setInterval(fetchOperatorCockpit, 8000);
   setInterval(fetchMarketingCommandCenter, 8000);
   setInterval(fetchCloudRuntimeStatus, 10000);
   setInterval(fetchGovernanceData, 12000);
@@ -3137,4 +3139,334 @@ function viewLemonSqueezySpec() {
     "Status: Awaiting Owner KYB/Identity Verification. Once approved, API webhooks will automatically verify payments against the database revenue ledger."
   );
 }
+
+// ----------------- PHASE 5I: UNIVERSAL AUTONOMOUS BUSINESS OPERATOR -----------------
+
+async function fetchOperatorCockpit() {
+  try {
+    const [metricsRes, opRes, platRes, suppRes, actRes] = await Promise.all([
+      fetch("/api/business/ceo-metrics"),
+      fetch("/api/operator/status"),
+      fetch("/api/integrations/platforms"),
+      fetch("/api/support/tickets"),
+      fetch("/api/acquisition/owner-actions")
+    ]);
+
+    if (metricsRes.ok) {
+      const metrics = await metricsRes.json();
+      renderCockpitKpis(metrics);
+    }
+
+    if (opRes.ok) {
+      const op = await opRes.json();
+      renderCockpitStatus(op);
+    }
+
+    if (platRes.ok) {
+      const platData = await platRes.json();
+      renderCockpitPlatforms(platData);
+    }
+
+    if (suppRes.ok) {
+      const suppData = await suppRes.json();
+      renderCockpitSupport(suppData);
+    }
+
+    if (actRes.ok) {
+      const actData = await actRes.json();
+      renderCockpitOwnerActions(actData.actions || []);
+    }
+  } catch (err) {
+    console.error("Error fetching Operator Cockpit telemetry:", err);
+  }
+}
+
+function renderCockpitStatus(op) {
+  const stateBadge = document.getElementById("cockpitOperatorState");
+  if (stateBadge) {
+    if (op.operator_state === "ACTIVE_RUNNING") {
+      stateBadge.innerHTML = "🟢 AUTONOMOUS OPERATOR ACTIVE";
+      stateBadge.style.color = "#10b981";
+    } else {
+      stateBadge.innerHTML = "🟡 RUNNING";
+      stateBadge.style.color = "#fbbf24";
+    }
+  }
+
+  const cycleTime = document.getElementById("cockpitLastCycleTime");
+  if (cycleTime) {
+    cycleTime.textContent = new Date().toLocaleTimeString();
+  }
+}
+
+function renderCockpitKpis(m) {
+  const rev = document.getElementById("kpiRealRevenue");
+  if (rev && m.real_revenue) {
+    rev.textContent = `$${m.real_revenue.total_verified_usd.toFixed(2)} USD`;
+  }
+
+  const cust = document.getElementById("kpiRealCustomers");
+  if (cust) cust.textContent = m.real_customers;
+
+  const vis = document.getElementById("kpiTodayVisitors");
+  if (vis) vis.textContent = m.today_visitors;
+
+  const chk = document.getElementById("kpiCheckouts");
+  if (chk) chk.textContent = m.real_checkouts;
+
+  const chn = document.getElementById("kpiActiveChannels");
+  if (chn && m.active_channels) {
+    chn.textContent = `${m.active_channels.operating_channels} / ${m.active_channels.total}`;
+  }
+
+  const prod = document.getElementById("kpiActiveProducts");
+  if (prod && m.active_products) {
+    prod.textContent = m.active_products.count;
+  }
+
+  const act = document.getElementById("kpiOwnerActions");
+  if (act && m.pending_owner_actions) {
+    act.textContent = m.pending_owner_actions.count;
+  }
+
+  const bot = document.getElementById("kpiCurrentBottleneck");
+  if (bot && m.current_bottleneck) {
+    bot.textContent = m.current_bottleneck;
+  }
+}
+
+function renderCockpitOwnerActions(actions) {
+  const container = document.getElementById("cockpitOwnerActionList");
+  const badge = document.getElementById("cockpitOwnerActionBadge");
+  if (!container) return;
+
+  const pending = actions.filter(a => a.status === "ACTION_REQUIRED");
+  if (badge) {
+    badge.textContent = `${pending.length} ACTIONS PENDING`;
+  }
+
+  if (pending.length === 0) {
+    container.innerHTML = `
+      <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-sm); padding: 1.25rem; text-align: center;">
+        <span style="font-size: 1.5rem;">🎉</span>
+        <div style="font-weight: 700; color: #34d399; margin: 0.35rem 0;">Zero Pending Owner Actions</div>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Antigravity is operating all channels autonomously without technical or legal blockers.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = pending.map(a => {
+    const urgencyColor = a.urgency === "HIGH" ? "#ef4444" : "#f59e0b";
+    return `
+      <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 1.25rem; border-left: 4px solid ${urgencyColor};">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; font-weight: 800; font-size: 0.72rem; margin-right: 0.5rem;">
+              ${escapeHtml(a.platform || a.channel || 'EXTERNAL')}
+            </span>
+            <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: ${urgencyColor}; font-weight: 800; font-size: 0.72rem;">
+              URGENCY: ${escapeHtml(a.urgency)}
+            </span>
+            <h3 style="font-size: 1.05rem; color: #fff; margin: 0.4rem 0 0.2rem 0;">
+              ${escapeHtml(a.title)}
+            </h3>
+          </div>
+          <button class="btn btn-primary" onclick="resolveOwnerAction5i('${escapeHtml(a.action_id)}')" style="font-size: 0.78rem; padding: 0.4rem 0.85rem; background: #10b981; color: #000; font-weight: 800;">
+            ✓ Mark Completed
+          </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 6px; font-size: 0.78rem; margin-bottom: 0.75rem;">
+          <div>
+            <strong style="color: #fbbf24;">WHY REQUIRED:</strong>
+            <p style="color: var(--text-primary); margin: 0.2rem 0 0 0;">${escapeHtml(a.why || a.description || 'External legal requirement')}</p>
+          </div>
+          <div>
+            <strong style="color: #f87171;">WHAT IS BLOCKED:</strong>
+            <p style="color: var(--text-primary); margin: 0.2rem 0 0 0;">${escapeHtml(a.what_is_blocked || 'Channel activation')}</p>
+          </div>
+          <div>
+            <strong style="color: #38bdf8;">EXACT OWNER ACTION:</strong>
+            <p style="color: #e0f2fe; margin: 0.2rem 0 0 0; font-weight: 600;">${escapeHtml(a.exact_action || a.description)}</p>
+          </div>
+          <div>
+            <strong style="color: #a78bfa;">ESTIMATED TIME:</strong>
+            <p style="color: var(--text-primary); margin: 0.2rem 0 0 0;">⏱️ ${escapeHtml(a.estimated_time || '3-5 minutes')}</p>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); flex-wrap: wrap; gap: 0.5rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.5rem;">
+          <div>
+            <strong style="color: #34d399;">🛡️ SECURITY IMPACT:</strong> ${escapeHtml(a.security_impact || 'Zero financial risk. Antigravity never accesses bank passwords, credentials, or OTPs.')}
+          </div>
+          <div>
+            <strong style="color: #60a5fa;">⚡ WHAT ANTIGRAVITY WILL DO AFTER:</strong> ${escapeHtml(a.what_antigravity_will_do_after_completion || 'Automates all product listings, sales sync, and delivery')}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderCockpitPlatforms(platData) {
+  const tbody = document.getElementById("cockpitPlatformTableBody");
+  const statsText = document.getElementById("cockpitPlatformStatsText");
+  if (!tbody) return;
+
+  const platforms = platData.platforms || [];
+  if (statsText && platData.summary) {
+    statsText.textContent = `${platData.summary.operating_channels} Operating / ${platData.summary.total_platforms} Registered`;
+  }
+
+  if (platforms.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No platform integrations.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = platforms.map(p => {
+    let classBadge = `<span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">🟢 AUTONOMOUS</span>`;
+    if (p.classification === "PARTIALLY_AUTONOMOUS") {
+      classBadge = `<span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">🟡 PARTIAL</span>`;
+    } else if (p.classification === "OWNER_ACTION_REQUIRED") {
+      classBadge = `<span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">🟡 OWNER REQ</span>`;
+    } else if (p.classification === "NOT_RECOMMENDED") {
+      classBadge = `<span class="badge" style="background: rgba(100, 116, 139, 0.2); color: #94a3b8;">🔴 NOT RECOMMENDED</span>`;
+    }
+
+    let connBadge = `<span style="color: #34d399;">● CONNECTED</span>`;
+    if (p.connection_status.includes("AWAITING")) {
+      connBadge = `<span style="color: #fbbf24;">⏳ AWAITING OWNER</span>`;
+    } else if (p.connection_status === "NOT_RECOMMENDED") {
+      connBadge = `<span style="color: #64748b;">⚪ SKIPPED</span>`;
+    }
+
+    return `
+      <tr>
+        <td style="font-weight: 700; color: #fff;">
+          ${escapeHtml(p.platform)}
+          <a href="${escapeHtml(p.official_url)}" target="_blank" style="color: var(--accent-cyan); font-size: 0.72rem; margin-left: 0.35rem; text-decoration: none;">↗</a>
+        </td>
+        <td>${classBadge}</td>
+        <td style="font-size: 0.74rem;">${connBadge}</td>
+        <td style="font-family: monospace; font-size: 0.72rem; color: #cbd5e1;">${escapeHtml(p.integration_method)}</td>
+        <td style="font-size: 0.74rem; color: #94a3b8;">${escapeHtml(p.compliance_status)}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function renderCockpitSupport(suppData) {
+  const container = document.getElementById("cockpitSupportTicketsList");
+  if (!container) return;
+
+  const tickets = suppData.tickets || [];
+  if (tickets.length === 0) {
+    container.innerHTML = `<div style="color: var(--text-muted); font-size: 0.78rem; padding: 0.5rem; text-align: center;">No support tickets recorded yet.</div>`;
+    return;
+  }
+
+  container.innerHTML = tickets.slice(0, 5).map(t => {
+    const isResolved = t.status === "RESOLVED";
+    const statusColor = isResolved ? "#10b981" : "#f59e0b";
+    return `
+      <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 0.65rem;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.74rem; margin-bottom: 0.25rem;">
+          <strong style="color: #fff;">${escapeHtml(t.customer_email)}</strong>
+          <span style="color: ${statusColor}; font-weight: 700;">● ${escapeHtml(t.status)} (Conf: ${(t.confidence * 100).toFixed(0)}%)</span>
+        </div>
+        <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.2rem 0;">Q: ${escapeHtml(t.question)}</p>
+        <p style="font-size: 0.74rem; color: #cbd5e1; margin: 0.2rem 0; background: rgba(0,0,0,0.25); padding: 0.4rem; border-radius: 4px;">
+          <strong>A:</strong> ${escapeHtml(t.answer || 'Awaiting manual review')}
+        </p>
+      </div>
+    `;
+  }).join("");
+}
+
+async function triggerOperatorPulse() {
+  try {
+    const btn = event?.target;
+    if (btn) btn.disabled = true;
+    const res = await fetch("/api/operator/pulse", { method: "POST" });
+    const data = await res.json();
+    alert("⚡ 12-Step Autonomous Business Loop executed successfully!\nDuration: " + data.cycle_duration_seconds + "s\nStatus: " + data.status);
+    fetchOperatorCockpit();
+  } catch (err) {
+    alert("Error executing autonomous cycle: " + err.message);
+  } finally {
+    if (event?.target) event.target.disabled = false;
+  }
+}
+
+async function sendDailyCeoReport() {
+  try {
+    const res = await fetch("/api/business/ceo-report/send", { method: "POST" });
+    const data = await res.json();
+    alert("📧 Daily CEO Executive Report compiled and dispatched!\nRecipient: " + data.recipient + "\nStatus: " + data.delivery.status);
+    fetchOperatorCockpit();
+  } catch (err) {
+    alert("Error sending daily CEO report: " + err.message);
+  }
+}
+
+async function resolveOwnerAction5i(actionId) {
+  try {
+    const res = await fetch(`/api/acquisition/owner-actions/${encodeURIComponent(actionId)}/resolve`, { method: "POST" });
+    const data = await res.json();
+    fetchOperatorCockpit();
+  } catch (err) {
+    alert("Error completing owner action: " + err.message);
+  }
+}
+
+async function submitSupportQuestion5i() {
+  const emailInput = document.getElementById("supTestEmail");
+  const questionInput = document.getElementById("supTestQuestion");
+  const resultDiv = document.getElementById("supAnswerResult");
+
+  const email = emailInput?.value.trim() || "developer@example.com";
+  const question = questionInput?.value.trim();
+
+  if (!question) {
+    alert("Please enter a question.");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/support/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        customer_email: email,
+        question: question,
+        product_id: "PROD-OPP-P4-001"
+      })
+    });
+    const data = await res.json();
+    if (resultDiv) {
+      resultDiv.style.display = "block";
+      if (data.status === "RESOLVED") {
+        resultDiv.style.background = "rgba(16, 185, 129, 0.15)";
+        resultDiv.style.border = "1px solid #10b981";
+        resultDiv.innerHTML = `
+          <strong style="color: #34d399;">🟢 Autonomous Resolution (Confidence: ${(data.confidence * 100).toFixed(0)}%):</strong>
+          <p style="margin: 0.3rem 0 0 0; color: #fff;">${escapeHtml(data.answer)}</p>
+        `;
+      } else {
+        resultDiv.style.background = "rgba(245, 158, 11, 0.15)";
+        resultDiv.style.border = "1px solid #f59e0b";
+        resultDiv.innerHTML = `
+          <strong style="color: #fbbf24;">🟡 Escalated to Owner (Confidence: ${(data.confidence * 100).toFixed(0)}%):</strong>
+          <p style="margin: 0.3rem 0 0 0; color: #fff;">${escapeHtml(data.answer)}</p>
+          <span style="font-size: 0.72rem; color: var(--text-muted);">Ticket ID: ${escapeHtml(data.ticket_id)}</span>
+        `;
+      }
+    }
+    fetchOperatorCockpit();
+  } catch (err) {
+    alert("Error submitting support question: " + err.message);
+  }
+}
+
 

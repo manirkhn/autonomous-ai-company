@@ -1,0 +1,31 @@
+{
+  "product_title": "Local LLM Offline Evaluation & Prompt Regression Benchmark Suite",
+  "brand": "Nexora AI Labs",
+  "category": "Developer Tools / Testing Software",
+  "model": "Merchant of Record (MoR)",
+  "price_usd": 29.00,
+  "currency": "USD",
+  "tax_handling": "Automated worldwide VAT/sales tax compliance & remittance handled by Lemon Squeezy",
+  "description_markdown": "### Local LLM Offline Evaluation & Prompt Regression Benchmark Suite\n\nDeterministic offline prompt regression benchmarking harness for Ollama, vLLM, and llama.cpp. Zero cloud API dependencies — operates 100% locally on your VPC or machine.\n\nIncludes 100+ prompt regression vectors, latency TTFT profiler, strict schema drift scorecards, and lifetime updates.",
+  "files_included": [
+    {
+      "filename": "nexora-llm-benchmark-suite-v1.zip",
+      "description": "Python CLI benchmark harness and test suites"
+    }
+  ],
+  "why_owner_action_required": "Lemon Squeezy acts as the legal Merchant of Record. Financial compliance laws require the legal business owner to submit government identity verification (KYC/KYB) and banking payout coordinates.",
+  "owner_action_steps": [
+    "1. Visit LemonSqueezy.com and complete store registration for 'Nexora AI Labs'.",
+    "2. Submit owner identity / business KYB verification details.",
+    "3. Go to Settings -> API Keys and generate a new API key.",
+    "4. Add the API key as LEMON_SQUEEZY_API_KEY in Render environment variables or enter it in the Owner Action Center."
+  ],
+  "what_antigravity_does_after_completion": [
+    "Programmatic product & variant creation via REST API v1",
+    "Automated hosted checkout URL generation and embed link setup",
+    "Real-time webhook ingestion for all order and refund events",
+    "Immediate automated digital delivery and customer email dispatch",
+    "Real revenue ledger reconciliation (net of MoR processing fees)",
+    "24/7 autonomous monitoring without owner intervention"
+  ]
+}

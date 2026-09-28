@@ -14,7 +14,12 @@ DB_PATH = os.path.join(os.path.dirname(DB_DIR), "data", "company.db")
 
 def get_connection() -> sqlite3.Connection:
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+    conn = sqlite3.connect(DB_PATH, timeout=60.0, check_same_thread=False)
+    try:
+        conn.execute("PRAGMA journal_mode=WAL;")
+        conn.execute("PRAGMA busy_timeout=60000;")
+    except Exception:
+        pass
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -925,7 +930,102 @@ def init_db():
     );
     """)
 
+    # 45. Platform Integrations Registry (Phase 5I)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS platform_integrations (
+        platform TEXT PRIMARY KEY,
+        category TEXT NOT NULL,
+        official_url TEXT NOT NULL,
+        api_available INTEGER NOT NULL DEFAULT 0,
+        oauth_available INTEGER NOT NULL DEFAULT 0,
+        automation_allowed INTEGER NOT NULL DEFAULT 0,
+        product_creation_supported INTEGER NOT NULL DEFAULT 0,
+        listing_creation_supported INTEGER NOT NULL DEFAULT 0,
+        publishing_supported INTEGER NOT NULL DEFAULT 0,
+        sales_data_supported INTEGER NOT NULL DEFAULT 0,
+        customer_data_supported INTEGER NOT NULL DEFAULT 0,
+        delivery_supported INTEGER NOT NULL DEFAULT 0,
+        requires_owner_action INTEGER NOT NULL DEFAULT 0,
+        owner_action_reason TEXT DEFAULT '',
+        connection_status TEXT NOT NULL DEFAULT 'NOT_CONNECTED',
+        classification TEXT NOT NULL DEFAULT 'PARTIALLY_AUTONOMOUS',
+        last_verified TEXT NOT NULL,
+        integration_method TEXT NOT NULL,
+        compliance_status TEXT NOT NULL DEFAULT 'COMPLIANT',
+        evidence_notes TEXT DEFAULT ''
+    );
+    """)
+
+    # 46. Autonomous Customer Support Tickets (Phase 5I)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS support_tickets (
+        ticket_id TEXT PRIMARY KEY,
+        customer_email TEXT NOT NULL,
+        product_id TEXT NOT NULL,
+        question TEXT NOT NULL,
+        answer TEXT DEFAULT '',
+        confidence REAL DEFAULT 0.0,
+        status TEXT NOT NULL DEFAULT 'OPEN',
+        resolution TEXT DEFAULT '',
+        source TEXT DEFAULT 'WEB_FORM',
+        created_at TEXT NOT NULL,
+        resolved_at TEXT
+    );
+    """)
+
+    # 47. Verified Digital Products Registry (Phase 5I Product Factory)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS products_v5 (
+        product_id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        price REAL NOT NULL,
+        currency TEXT NOT NULL DEFAULT 'USD',
+        files TEXT NOT NULL,
+        license TEXT NOT NULL,
+        delivery_method TEXT NOT NULL,
+        target_customer TEXT NOT NULL,
+        source_of_demand TEXT NOT NULL,
+        creation_status TEXT NOT NULL,
+        publication_status TEXT NOT NULL,
+        sales_status TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    """)
+
+    # 48. Discovered Commercial Opportunities (Phase 5I Customer Acquisition)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS discovered_opportunities (
+        opportunity_id TEXT PRIMARY KEY,
+        source TEXT NOT NULL,
+        url TEXT NOT NULL,
+        problem TEXT NOT NULL,
+        customer_type TEXT NOT NULL,
+        intent_level TEXT NOT NULL,
+        product_fit TEXT NOT NULL,
+        recommended_action TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'DISCOVERED',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+    """)
+
     # Column migrations if table existed previously without new columns
+    for col in [
+        ("owner_actions", "why", "TEXT DEFAULT ''"),
+        ("owner_actions", "what_is_blocked", "TEXT DEFAULT ''"),
+        ("owner_actions", "exact_action", "TEXT DEFAULT ''"),
+        ("owner_actions", "estimated_time", "TEXT DEFAULT '5 mins'"),
+        ("owner_actions", "platform", "TEXT DEFAULT ''"),
+        ("owner_actions", "security_impact", "TEXT DEFAULT 'Zero financial risk'"),
+        ("owner_actions", "what_antigravity_will_do_after_completion", "TEXT DEFAULT ''")
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE {col[0]} ADD COLUMN {col[1]} {col[2]}")
+        except Exception:
+            pass
+
     try:
         cursor.execute("ALTER TABLE product_improvement_proposals ADD COLUMN actual_outcome TEXT")
     except Exception:

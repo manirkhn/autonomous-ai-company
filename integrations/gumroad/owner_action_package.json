@@ -1,0 +1,49 @@
+{
+  "product_title": "Local LLM Offline Evaluation & Prompt Regression Benchmark Suite",
+  "brand": "Nexora AI Labs",
+  "category": "Software & Tech",
+  "tags": [
+    "ollama",
+    "vllm",
+    "llama-cpp",
+    "local-ai",
+    "prompt-regression",
+    "llm-evaluation",
+    "developer-tools",
+    "python"
+  ],
+  "price_usd": 29.00,
+  "currency": "USD",
+  "summary": "Deterministic offline prompt regression benchmarking harness for Ollama, vLLM, and llama.cpp.",
+  "description_markdown": "### Stop Deploying Regressed Prompts to Local LLMs\n\nWhen updating model checkpoints (e.g., LLaMA-3.1 to 3.2), changing quantizations (float16 to Q4_K_M), or tuning server context, prompts frequently suffer subtle regressions: JSON syntax failures, missing parameters, and latency spikes.\n\nCloud evaluation tools send your private prompts to third-party APIs. **This suite runs 100% locally and offline on your machine.**\n\n#### What Is Included:\n- **100+ Prompt Regression Test Vectors**: Deterministic tests for structured JSON extraction, multi-turn reasoning, tool calling, and math.\n- **Latency & Throughput Harness**: Precise TTFT (Time To First Token) and token/sec throughput profiling for Ollama, vLLM, and llama.cpp.\n- **Strict Schema & Drift Verifier**: Automated scoring comparing outputs against baseline snapshots with clear PASS/FAIL scorecards.\n- **Offline Python CLI Runner (`run_eval.py`)**: Zero external dependencies required.\n- **Golden Baselines & Schema Definitions**\n- **Lifetime Baseline Updates**: All future prompt packs included.\n\n#### Supported Environments:\n- Ollama (REST API)\n- vLLM (High-throughput OpenAI-compatible server)\n- llama.cpp (llama-server)\n- Any local OpenAI-compatible inference runner\n\n#### 30-Day Quality Assurance Guarantee:\nFull refund within 30 days if this suite does not function with your local OpenAI-compatible inference server.",
+  "files_to_upload": [
+    {
+      "filename": "nexora-llm-benchmark-suite-v1.zip",
+      "size_bytes": 142850,
+      "sha256": "3a9c7b1d4e2f80165b4c9e523178fa20c96ba3f524cc179a46b2810bf5c8cb54",
+      "description": "Complete Python evaluation runner, prompt suites, and docs"
+    }
+  ],
+  "cover_image_instructions": "Upload the prepared cover card from assets/mockups/gumroad_cover.png",
+  "thumbnail_image_instructions": "Upload the 600x600 thumbnail from assets/mockups/gumroad_thumbnail.png",
+  "refund_policy": "30-Day Quality Assurance Guarantee under Nexora AI Labs verified policy",
+  "support_contact": "support@nexora-ai.com",
+  "official_store_link": "https://autonomous-ai-company.onrender.com/store?utm_source=gumroad&utm_medium=listing&utm_campaign=product_bio",
+  "owner_action_steps": [
+    "1. Log in to Gumroad.com and click 'New Product'.",
+    "2. Select 'Digital product' and paste Product Title: 'Local LLM Offline Evaluation & Prompt Regression Benchmark Suite'.",
+    "3. Set Price to '$29'.",
+    "4. Paste Description Markdown directly from this package.",
+    "5. Upload 'nexora-llm-benchmark-suite-v1.zip' in Content.",
+    "6. Click 'Publish and continue'.",
+    "7. Paste the generated Gumroad product URL into Nexora Owner Action Center to activate autonomous monitoring."
+  ],
+  "what_antigravity_does_after_completion": [
+    "Autonomous webhook ingestion of all sales events",
+    "Automated license key generation and digital fulfillment verification",
+    "Real-time revenue reconciliation against the company SQLite ledger",
+    "Marketing attribution tracking (visits, views, checkouts, purchases)",
+    "Customer support routing for technical inquiries",
+    "Zero manual monitoring required by the owner"
+  ]
+}

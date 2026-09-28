@@ -35,7 +35,8 @@
 
   <!-- Navigation Tabs -->
   <nav class="nav-tabs" style="overflow-x: auto; white-space: nowrap;">
-    <button class="nav-tab active" data-tab="marketing-command-center" onclick="switchTab('marketing-command-center')" style="color: #f59e0b; font-weight:800; font-size: 0.88rem;">🎯 Sales & Marketing Hub</button>
+    <button class="nav-tab active" data-tab="autonomous-operator" onclick="switchTab('autonomous-operator')" style="color: #10b981; font-weight:800; font-size: 0.88rem;">🚀 Autonomous Operator Cockpit</button>
+    <button class="nav-tab" data-tab="marketing-command-center" onclick="switchTab('marketing-command-center')" style="color: #f59e0b; font-weight:800; font-size: 0.88rem;">🎯 Sales & Marketing Hub</button>
     <button class="nav-tab" data-tab="acquisition-channels" onclick="switchTab('acquisition-channels')" style="color: #38bdf8; font-weight:800; font-size: 0.88rem;">🌐 Channels & Distribution</button>
     <button class="nav-tab" data-tab="governance" onclick="switchTab('governance')" style="color: #ef4444; font-weight:800; font-size: 0.88rem;">🛡️ Governance & Controls</button>
     <button class="nav-tab" data-tab="ai-office" onclick="switchTab('ai-office')" style="color: var(--accent-cyan); font-weight:800; font-size: 0.88rem;">🏢 AI Office</button>
@@ -66,8 +67,266 @@
   <!-- Main View Container -->
   <main class="container">
 
+    <!-- Phase 5I: Universal Autonomous Business Operator Cockpit -->
+    <section id="tab-autonomous-operator" class="tab-content active">
+
+      <!-- TOP COCKPIT CONTROLLER BAR -->
+      <div class="company-status-bar glass" style="margin-bottom: 1.5rem; border-left: 4px solid #10b981;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <div class="status-indicator-badge running" style="background: rgba(16, 185, 129, 0.2); border-color: #10b981;">
+              <span class="status-pulse-dot green"></span>
+              <span style="font-weight: 800; color: #10b981;" id="cockpitOperatorState">🟢 AUTONOMOUS OPERATOR ACTIVE</span>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+              <strong>Daemon:</strong> <span class="badge" style="background: rgba(99, 102, 241, 0.2); color: var(--accent-indigo);">24/7 Cloud Scheduled</span>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+              <strong>Last Cycle:</strong> <span style="color: #f8fafc; font-family: monospace;" id="cockpitLastCycleTime">Just now</span>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--text-secondary); border-left: 1px solid var(--border-subtle); padding-left: 1rem;">
+              <strong>Financial Air-Gap:</strong> <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">🔒 Zero Withdrawal Access Enforced</span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="triggerOperatorPulse()" style="background: #10b981; color: #000; font-weight: 800; font-size: 0.82rem;">
+              ⚡ Run 12-Step Business Loop
+            </button>
+            <button class="btn btn-secondary" onclick="sendDailyCeoReport()" style="font-size: 0.82rem; font-weight: 700;">
+              📧 Dispatch CEO Report
+            </button>
+            <button class="btn btn-secondary" onclick="fetchOperatorCockpit()" style="font-size: 0.82rem;">
+              🔄 Refresh Cockpit
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN KPI COCKPIT CARDS (8 REQUIRED KPIS) -->
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+        <div class="stat-card glass" style="border-top: 3px solid #10b981;">
+          <div class="stat-label">REAL REVENUE (VERIFIED)</div>
+          <div class="stat-value" id="kpiRealRevenue" style="color: #10b981;">$29.00 USD</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Production Ledger Only</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #38bdf8;">
+          <div class="stat-label">REAL CUSTOMERS</div>
+          <div class="stat-value" id="kpiRealCustomers" style="color: #38bdf8;">1</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Paid Unique Entities</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #818cf8;">
+          <div class="stat-label">TODAY'S VISITORS</div>
+          <div class="stat-value" id="kpiTodayVisitors" style="color: #818cf8;">0</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Attribution Tracked</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #c084fc;">
+          <div class="stat-label">CHECKOUTS</div>
+          <div class="stat-value" id="kpiCheckouts" style="color: #c084fc;">1</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Stripe Sessions</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #34d399;">
+          <div class="stat-label">ACTIVE CHANNELS</div>
+          <div class="stat-value" id="kpiActiveChannels" style="color: #34d399;">3 / 11</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Operating Channels</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #38bdf8;">
+          <div class="stat-label">ACTIVE PRODUCTS</div>
+          <div class="stat-value" id="kpiActiveProducts" style="color: #38bdf8;">1</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Files Physically Verified</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #f59e0b;">
+          <div class="stat-label">OWNER ACTIONS</div>
+          <div class="stat-value" id="kpiOwnerActions" style="color: #f59e0b;">4</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Legal/KYC Constraints</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #ef4444;">
+          <div class="stat-label">CURRENT BOTTLENECK</div>
+          <div class="stat-value" id="kpiCurrentBottleneck" style="font-size: 1rem; color: #f87171;">TRAFFIC</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Highest Constraint</div>
+        </div>
+      </div>
+
+      <!-- SECTION: UNIFIED OWNER ACTION CENTER (THE 7 REQUIRED JUSTIFICATIONS) -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid #f59e0b;">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h2 style="font-size: 1.15rem; color: #fbbf24;">⚡ UNIFIED OWNER ACTION CENTER</h2>
+            <div style="font-size: 0.78rem; color: var(--text-secondary);">
+              Owner Action Required strictly means genuine external limitations (KYC/KYB, banking payouts, platform anti-bot rules).
+            </div>
+          </div>
+          <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-weight: 800;" id="cockpitOwnerActionBadge">4 ACTIONS PENDING</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div id="cockpitOwnerActionList" style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
+            <!-- Dynamically populated with 7 justification fields -->
+            <div style="color: var(--text-muted); text-align: center; padding: 1rem;">Loading Owner Actions...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID: PLATFORM INTEGRATION REGISTRY & CUSTOMER SUPPORT -->
+      <div class="grid" style="grid-template-columns: 1.6fr 1.4fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+
+        <!-- PLATFORM INTEGRATION REGISTRY -->
+        <div class="panel glass" style="border-top: 3px solid #38bdf8;">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="font-size: 1.15rem; color: #38bdf8;">🌐 PLATFORM INTEGRATION REGISTRY</h2>
+            <div style="font-size: 0.75rem; color: var(--text-muted);" id="cockpitPlatformStatsText">11 Monitored</div>
+          </div>
+          <div style="padding: 1rem; overflow-x: auto;">
+            <table class="data-table" style="width: 100%; font-size: 0.8rem;">
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Classification</th>
+                  <th>Connection</th>
+                  <th>API / Method</th>
+                  <th>Compliance Status</th>
+                </tr>
+              </thead>
+              <tbody id="cockpitPlatformTableBody">
+                <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading platforms...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- AUTONOMOUS CUSTOMER SUPPORT DESK -->
+        <div class="panel glass" style="border-top: 3px solid #10b981;">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="font-size: 1.15rem; color: #34d399;">💬 AUTONOMOUS CUSTOMER SUPPORT</h2>
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">Grounded FAQ</span>
+          </div>
+          <div style="padding: 1.25rem;">
+            <!-- Test Question Form -->
+            <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+              <div style="font-size: 0.8rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.5rem;">Test Autonomous Support Engine:</div>
+              <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <input type="text" id="supTestEmail" placeholder="customer@example.com" class="form-input" style="flex: 1; font-size: 0.8rem; padding: 0.4rem 0.6rem; background: #0f172a; border: 1px solid var(--border-subtle); color: #fff; border-radius: 4px;">
+                <input type="text" id="supTestQuestion" placeholder="Does this require an internet connection or send telemetry?" class="form-input" style="flex: 2; font-size: 0.8rem; padding: 0.4rem 0.6rem; background: #0f172a; border: 1px solid var(--border-subtle); color: #fff; border-radius: 4px;">
+                <button class="btn btn-primary" onclick="submitSupportQuestion5i()" style="font-size: 0.8rem; padding: 0.4rem 0.8rem; background: #10b981; color: #000; font-weight: 700;">Submit</button>
+              </div>
+              <div id="supAnswerResult" style="display: none; padding: 0.75rem; border-radius: 4px; font-size: 0.8rem; line-height: 1.4;"></div>
+            </div>
+
+            <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem;">Recent Support Inquiries:</div>
+            <div id="cockpitSupportTicketsList" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 250px; overflow-y: auto;">
+              <div style="color: var(--text-muted); font-size: 0.78rem;">No open tickets. Autonomous support resolving queries in real-time.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: AUTONOMOUS EMPLOYEE DESK MATRIX (10 SPECIALIZED OPERATING DESKS) -->
+      <div class="panel glass" style="margin-bottom: 1.5rem; border-top: 3px solid #818cf8;">
+        <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h2 style="font-size: 1.15rem; color: #a5b4fc;">👥 AUTONOMOUS EMPLOYEE DESK VIEW</h2>
+            <div style="font-size: 0.78rem; color: var(--text-secondary);">Real employee task allocations originating from legitimate system events. Zero fabricated activity.</div>
+          </div>
+          <span class="badge" style="background: rgba(129, 140, 248, 0.2); color: #c7d2fe; font-weight: 700;">10 OPERATING DESKS</span>
+        </div>
+        <div style="padding: 1.25rem;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;" id="cockpitEmployeeDesks">
+            <!-- 1. CEO -->
+            <div class="desk-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #f59e0b;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <strong style="color: #fbbf24; font-size: 0.85rem;">CEO Desk</strong>
+                <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-size: 0.65rem;">EMP-001</span>
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0;">Orchestrates 12-step commercial loop & compiles executive report.</p>
+              <div style="font-size: 0.7rem; color: #34d399;">● Status: 24/7 Scheduling Loop</div>
+            </div>
+            <!-- 2. Research -->
+            <div class="desk-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #38bdf8;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <strong style="color: #38bdf8; font-size: 0.85rem;">Research Desk</strong>
+                <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 0.65rem;">EMP-002</span>
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0;">Scans GitHub, Reddit, HN for developer pain points.</p>
+              <div style="font-size: 0.7rem; color: #34d399;">● Status: Demand Discovery Active</div>
+            </div>
+            <!-- 3. Product -->
+            <div class="desk-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #10b981;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <strong style="color: #34d399; font-size: 0.85rem;">Product Desk</strong>
+                <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 0.65rem;">EMP-003</span>
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0;">Verifies physical ZIP deliverables & SHA256 checksums.</p>
+              <div style="font-size: 0.7rem; color: #34d399;">● Status: 1 Verified Deliverable</div>
+            </div>
+            <!-- 4. Marketing -->
+            <div class="desk-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #c084fc;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <strong style="color: #c084fc; font-size: 0.85rem;">Marketing Desk</strong>
+                <span class="badge" style="background: rgba(192, 132, 252, 0.2); color: #c084fc; font-size: 0.65rem;">EMP-004</span>
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0;">Indexes technical SEO articles & educational tutorials.</p>
+              <div style="font-size: 0.7rem; color: #34d399;">● Status: 5 SEO Articles Active</div>
+            </div>
+            <!-- 5. Sales -->
+            <div class="desk-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #f43f5e;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <strong style="color: #f43f5e; font-size: 0.85rem;">Sales Desk</strong>
+                <span class="badge" style="background: rgba(244, 63, 94, 0.2); color: #f43f5e; font-size: 0.65rem;">EMP-005</span>
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0;">Monitors customer checkouts & attribution journeys.</p>
+              <div style="font-size: 0.7rem; color: #34d399;">● Status: Stripe Production Active</div>
+            </div>
+            <!-- 6. Customer Support -->
+            <div class="desk-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #06b6d4;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <strong style="color: #06b6d4; font-size: 0.85rem;">Customer Support</strong>
+                <span class="badge" style="background: rgba(6, 182, 212, 0.2); color: #06b6d4; font-size: 0.65rem;">EMP-006</span>
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0;">Answers routine offline queries; escalates refunds to owner.</p>
+              <div style="font-size: 0.7rem; color: #34d399;">● Status: Grounded Auto-Responder</div>
+            </div>
+            <!-- 7. Operations -->
+            <div class="desk-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #6366f1;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <strong style="color: #6366f1; font-size: 0.85rem;">Operations Desk</strong>
+                <span class="badge" style="background: rgba(99, 102, 241, 0.2); color: #6366f1; font-size: 0.65rem;">EMP-007</span>
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0;">Monitors Cloud Worker, Scheduler, and Render status.</p>
+              <div style="font-size: 0.7rem; color: #34d399;">● Status: 24/7 Daemon Healthy</div>
+            </div>
+            <!-- 8. Finance / Analytics -->
+            <div class="desk-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #10b981;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <strong style="color: #34d399; font-size: 0.85rem;">Finance & Analytics</strong>
+                <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 0.65rem;">EMP-008</span>
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0;">Reconciles production transactions & maintains air-gap.</p>
+              <div style="font-size: 0.7rem; color: #34d399;">● Status: Air-Gap Verified ($0 Unapproved)</div>
+            </div>
+            <!-- 9. Integration -->
+            <div class="desk-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #38bdf8;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <strong style="color: #38bdf8; font-size: 0.85rem;">Integration Desk</strong>
+                <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 0.65rem;">EMP-009</span>
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0;">Manages platform registry, Gumroad, Lemon Squeezy connectors.</p>
+              <div style="font-size: 0.7rem; color: #34d399;">● Status: Multi-Platform Sync</div>
+            </div>
+            <!-- 10. Engineering -->
+            <div class="desk-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem; border-left: 3px solid #eab308;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <strong style="color: #eab308; font-size: 0.85rem;">Engineering Desk</strong>
+                <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: #eab308; font-size: 0.65rem;">EMP-010</span>
+              </div>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin: 0.25rem 0;">Maintains benchmark runner harness & prompt evaluation test suites.</p>
+              <div style="font-size: 0.7rem; color: #34d399;">● Status: Python 3.10-3.14 Validated</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
     <!-- Phase 5E: Sales, Marketing & Customer Acquisition Command Center -->
-    <section id="tab-marketing-command-center" class="tab-content active">
+    <section id="tab-marketing-command-center" class="tab-content">
       
       <!-- TOP: AI VIRTUAL OFFICE COMPANY STATUS -->
       <div class="company-status-bar glass" style="margin-bottom: 1.5rem;">

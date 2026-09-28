@@ -96,6 +96,12 @@ class CloudScheduler:
         
         try:
             report_result = DailyCEOReportGenerator.generate_and_send(target_date_str=date_str)
+            try:
+                from business.ceo_metrics import CEOMetricsEngine
+                CEOMetricsEngine.generate_daily_ceo_report()
+            except Exception as e_ceo:
+                logger.warning(f"Error in CEOMetricsEngine daily report dispatch: {e_ceo}")
+
             self.last_run_date = date_str
             self.last_run_timestamp = datetime.now(timezone.utc).isoformat()
             self.last_run_status = "SUCCESS"

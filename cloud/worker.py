@@ -105,3 +105,13 @@ class CloudWorker:
                     break
         else:
             self.last_action_desc = f"Monitoring {len(active_tasks)} active operational tasks"
+
+        # Phase 5I: Periodic Autonomous Business Operator Pulse
+        self._operator_pulse_counter = getattr(self, "_operator_pulse_counter", 0) + 1
+        if self._operator_pulse_counter >= 30:
+            self._operator_pulse_counter = 0
+            try:
+                from business.autonomous_operator import AutonomousBusinessOperator
+                AutonomousBusinessOperator.execute_cycle()
+            except Exception as e:
+                logger.warning(f"Error running autonomous operator pulse in worker: {e}")
