@@ -1830,6 +1830,102 @@ def list_acquisition_opportunities():
         "opportunities": AutonomousDistributionEngine.list_opportunities()
     }
 
+@app.get("/api/acquisition/qualification/funnel")
+def get_qualification_funnel(timeframe: str = "ALL_TIME"):
+    """Returns the 6-stage qualification pipeline counts (Phase 5J)."""
+    from acquisition.qualification import CustomerQualificationEngine
+    return CustomerQualificationEngine.get_pipeline_counts(timeframe=timeframe)
+
+@app.post("/api/acquisition/qualification/record")
+async def record_qualification_event(request: Request):
+    """Records a prospect qualification touchpoint (Phase 5J)."""
+    from acquisition.qualification import CustomerQualificationEngine
+    body = await request.json()
+    visitor_id = body.get("visitor_id")
+    stage = body.get("stage")
+    if not visitor_id or not stage:
+        raise HTTPException(status_code=400, detail="visitor_id and stage required")
+    return CustomerQualificationEngine.record_qualification_event(
+        visitor_id=visitor_id,
+        stage=stage,
+        source=body.get("source", "DIRECT"),
+        product_id=body.get("product_id", "PROD-OPP-P4-001"),
+        evidence=body.get("evidence", ""),
+        metadata=body.get("metadata", {})
+    )
+
+@app.get("/api/acquisition/seo-articles")
+def list_seo_articles(status: Optional[str] = None):
+    """Returns technical SEO guides and developer checklists."""
+    from acquisition.seo_content import SEOContentEngine
+    return {
+        "articles": SEOContentEngine.list_articles(status=status)
+    }
+
+@app.get("/api/acquisition/seo-articles/{slug_or_id}")
+def get_seo_article(slug_or_id: str):
+    """Returns a single technical SEO guide."""
+    from acquisition.seo_content import SEOContentEngine
+    art = SEOContentEngine.get_article(slug_or_id)
+    if not art:
+        raise HTTPException(status_code=404, detail="Article not found")
+    return art
+
+@app.get("/blog/{slug}", response_class=HTMLResponse)
+def serve_blog_article(slug: str):
+    """Serves technical SEO guide to external searchers and developers."""
+    from acquisition.seo_content import SEOContentEngine
+    from acquisition.attribution import AttributionEngine
+    art = SEOContentEngine.get_article(slug)
+    if not art:
+        raise HTTPException(status_code=404, detail="Guide not found")
+    
+    # Record attribution visit
+    AttributionEngine.record_visit(
+        source="google_seo",
+        medium="organic_guide",
+        campaign=slug,
+        landing_page=f"/blog/{slug}"
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{art['title']} | Nexora AI Labs</title>
+  <meta name="description" content="{art['problem_solved']}">
+  <meta name="keywords" content="{art['target_keywords']}">
+  <link rel="canonical" href="{art['canonical_url']}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; line-height: 1.6; padding: 2rem; margin: 0; }}
+    .container {{ max-width: 780px; margin: 0 auto; background: #1e293b; padding: 2.5rem; border-radius: 12px; border: 1px solid #334155; }}
+    h1 {{ color: #38bdf8; font-size: 1.8rem; line-height: 1.3; }}
+    h2 {{ color: #93c5fd; margin-top: 1.5rem; }}
+    a {{ color: #38bdf8; text-decoration: underline; }}
+    pre, code {{ background: #0b1120; color: #a5f3fc; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; }}
+    pre {{ padding: 1rem; overflow-x: auto; }}
+    .cta-box {{ background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 8px; padding: 1.25rem; margin-top: 2rem; }}
+    .cta-btn {{ display: inline-block; background: #10b981; color: #000; font-weight: 700; padding: 0.6rem 1.25rem; border-radius: 6px; text-decoration: none; margin-top: 0.5rem; }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem;">
+      <a href="/store" style="color: #94a3b8; text-decoration: none;">← Back to Nexora AI Labs Store</a>
+    </div>
+    <h1>{art['title']}</h1>
+    <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 1.5rem;">Published by {art['author']} • Topic: {art['topic']}</div>
+    <div class="content" style="white-space: pre-wrap;">{art['content_md']}</div>
+    <div class="cta-box">
+      <h3 style="color: #34d399; margin-top: 0;">Need turnkey offline prompt regression testing?</h3>
+      <p style="margin: 0.4rem 0; font-size: 0.9rem; color: #cbd5e1;">Get the Local LLM Offline Evaluation & Prompt Regression Benchmark Suite for Ollama, vLLM, and llama.cpp with 100+ prompt test vectors.</p>
+      <a href="/store?utm_source=seo&utm_medium=blog&utm_campaign={slug}" class="cta-btn">View Benchmark Suite ($29 USD) →</a>
+    </div>
+  </div>
+</body>
+</html>"""
+
 @app.get("/", response_class=HTMLResponse)
 def serve_index():
     index_path = os.path.join(UI_DIR, "index.html")

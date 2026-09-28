@@ -3199,20 +3199,72 @@ function renderCockpitStatus(op) {
   }
 }
 
-function renderCockpitKpis(m) {
+let currentCockpitMetrics = null;
+let activeCockpitTimeframe = "all_time";
+
+function switchCockpitTimeframe(tfKey) {
+  activeCockpitTimeframe = tfKey;
+  ["btnTfAllTime", "btnTfToday", "btnTf7Days", "btnTf30Days"].forEach(id => {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    const isTarget = (id === "btnTfAllTime" && tfKey === "all_time") ||
+                     (id === "btnTfToday" && tfKey === "today") ||
+                     (id === "btnTf7Days" && tfKey === "last_7_days") ||
+                     (id === "btnTf30Days" && tfKey === "last_30_days");
+    btn.style.background = isTarget ? "#38bdf8" : "transparent";
+    btn.style.color = isTarget ? "#000" : "var(--text-secondary)";
+    btn.style.fontWeight = isTarget ? "700" : "400";
+  });
+
+  if (currentCockpitMetrics) {
+    applyCockpitKpis(currentCockpitMetrics, tfKey);
+  }
+}
+
+function applyCockpitKpis(m, tfKey = "all_time") {
+  const tf = (m.timeframes && m.timeframes[tfKey]) ? m.timeframes[tfKey] : {};
+
   const rev = document.getElementById("kpiRealRevenue");
-  if (rev && m.real_revenue) {
-    rev.textContent = `$${m.real_revenue.total_verified_usd.toFixed(2)} USD`;
+  if (rev) {
+    const revVal = tf.revenue_usd !== undefined ? tf.revenue_usd : (m.real_revenue?.total_verified_usd || 0.0);
+    rev.textContent = `$${revVal.toFixed(2)} USD`;
   }
 
   const cust = document.getElementById("kpiRealCustomers");
-  if (cust) cust.textContent = m.real_customers;
+  if (cust) {
+    cust.textContent = tf.customers !== undefined ? tf.customers : (m.real_customers || 0);
+  }
 
-  const vis = document.getElementById("kpiTodayVisitors");
-  if (vis) vis.textContent = m.today_visitors;
+  const vis = document.getElementById("kpiRealVisitors");
+  if (vis) {
+    vis.textContent = tf.visitors !== undefined ? tf.visitors : (m.real_visitors || 0);
+  }
+
+  const qualVis = document.getElementById("kpiQualifiedVisitors");
+  if (qualVis) {
+    qualVis.textContent = m.qualified_visitors !== undefined ? m.qualified_visitors : (m.real_visitors || 0);
+  }
+
+  const leads = document.getElementById("kpiLeads");
+  if (leads) {
+    leads.textContent = m.leads !== undefined ? m.leads : 0;
+  }
 
   const chk = document.getElementById("kpiCheckouts");
-  if (chk) chk.textContent = m.real_checkouts;
+  if (chk) {
+    chk.textContent = tf.checkout_starts !== undefined ? tf.checkout_starts : (m.real_checkouts || 0);
+  }
+
+  const succ = document.getElementById("kpiSuccessfulCheckouts");
+  if (succ) {
+    succ.textContent = tf.successful_checkouts !== undefined ? tf.successful_checkouts : (m.successful_checkouts || m.real_customers || 0);
+  }
+
+  const conv = document.getElementById("kpiConversionRate");
+  if (conv) {
+    const rate = tf.conversion_pct !== undefined ? tf.conversion_pct : (m.real_conversion_pct || 0.0);
+    conv.textContent = `${rate}%`;
+  }
 
   const chn = document.getElementById("kpiActiveChannels");
   if (chn && m.active_channels) {
@@ -3233,6 +3285,18 @@ function renderCockpitKpis(m) {
   if (bot && m.current_bottleneck) {
     bot.textContent = m.current_bottleneck;
   }
+
+  const sampleBadge = document.getElementById("cockpitSampleStatusBadge");
+  if (sampleBadge && m.sample_size_status) {
+    sampleBadge.textContent = m.sample_size_status === "INSUFFICIENT SAMPLE SIZE"
+      ? `⚠️ INSUFFICIENT SAMPLE SIZE (n=${m.real_visitors || 0}) — Statistical conclusions require ≥100 visitors`
+      : `✅ STATISTICALLY SUFFICIENT (n=${m.real_visitors || 0})`;
+  }
+}
+
+function renderCockpitKpis(m) {
+  currentCockpitMetrics = m;
+  applyCockpitKpis(m, activeCockpitTimeframe);
 }
 
 function renderCockpitOwnerActions(actions) {

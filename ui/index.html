@@ -102,47 +102,81 @@
         </div>
       </div>
 
-      <!-- MAIN KPI COCKPIT CARDS (8 REQUIRED KPIS) -->
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+      <!-- TIMEFRAME BREAKDOWN & SAMPLE SIZE BANNER (PHASE 5J) -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div style="display: flex; gap: 0.4rem; background: rgba(15, 23, 42, 0.7); padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+          <span style="font-size: 0.75rem; color: var(--text-muted); align-self: center; margin-right: 0.25rem;">TIMEFRAME:</span>
+          <button class="btn btn-sm" id="btnTfAllTime" onclick="switchCockpitTimeframe('all_time')" style="font-size: 0.72rem; padding: 0.2rem 0.6rem; background: #38bdf8; color: #000; font-weight: 700;">ALL TIME</button>
+          <button class="btn btn-sm" id="btnTfToday" onclick="switchCockpitTimeframe('today')" style="font-size: 0.72rem; padding: 0.2rem 0.6rem; background: transparent; color: var(--text-secondary);">TODAY</button>
+          <button class="btn btn-sm" id="btnTf7Days" onclick="switchCockpitTimeframe('last_7_days')" style="font-size: 0.72rem; padding: 0.2rem 0.6rem; background: transparent; color: var(--text-secondary);">7 DAYS</button>
+          <button class="btn btn-sm" id="btnTf30Days" onclick="switchCockpitTimeframe('last_30_days')" style="font-size: 0.72rem; padding: 0.2rem 0.6rem; background: transparent; color: var(--text-secondary);">30 DAYS</button>
+        </div>
+        <div id="cockpitSampleStatusBadge" style="font-size: 0.75rem; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; padding: 0.3rem 0.75rem; border-radius: var(--radius-sm);">
+          ⚠️ INSUFFICIENT SAMPLE SIZE (n=11) — Statistical conclusions require ≥100 visitors
+        </div>
+      </div>
+
+      <!-- MAIN KPI COCKPIT CARDS (12 GROUNDED FUNNEL KPIS) -->
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.85rem; margin-bottom: 1.5rem;">
         <div class="stat-card glass" style="border-top: 3px solid #10b981;">
-          <div class="stat-label">REAL REVENUE (VERIFIED)</div>
-          <div class="stat-value" id="kpiRealRevenue" style="color: #10b981;">$29.00 USD</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Production Ledger Only</div>
+          <div class="stat-label">REAL REVENUE</div>
+          <div class="stat-value" id="kpiRealRevenue" style="color: #10b981; font-size: 1.25rem;">$29.00 USD</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Verified Production</div>
         </div>
         <div class="stat-card glass" style="border-top: 3px solid #38bdf8;">
           <div class="stat-label">REAL CUSTOMERS</div>
-          <div class="stat-value" id="kpiRealCustomers" style="color: #38bdf8;">1</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Paid Unique Entities</div>
+          <div class="stat-value" id="kpiRealCustomers" style="color: #38bdf8; font-size: 1.25rem;">1</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Paid Unique Entities</div>
         </div>
         <div class="stat-card glass" style="border-top: 3px solid #818cf8;">
-          <div class="stat-label">TODAY'S VISITORS</div>
-          <div class="stat-value" id="kpiTodayVisitors" style="color: #818cf8;">0</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Attribution Tracked</div>
+          <div class="stat-label">REAL VISITORS</div>
+          <div class="stat-value" id="kpiRealVisitors" style="color: #818cf8; font-size: 1.25rem;">11</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Attribution Tracked</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #60a5fa;">
+          <div class="stat-label">QUALIFIED VISITORS</div>
+          <div class="stat-value" id="kpiQualifiedVisitors" style="color: #60a5fa; font-size: 1.25rem;">11</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Product Page Engaged</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #a78bfa;">
+          <div class="stat-label">LEADS</div>
+          <div class="stat-value" id="kpiLeads" style="color: #a78bfa; font-size: 1.25rem;">5</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Guides & Docs Readers</div>
         </div>
         <div class="stat-card glass" style="border-top: 3px solid #c084fc;">
-          <div class="stat-label">CHECKOUTS</div>
-          <div class="stat-value" id="kpiCheckouts" style="color: #c084fc;">1</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Stripe Sessions</div>
+          <div class="stat-label">CHECKOUT STARTS</div>
+          <div class="stat-value" id="kpiCheckouts" style="color: #c084fc; font-size: 1.25rem;">5</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Reconciled Sessions</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #10b981;">
+          <div class="stat-label">SUCCESSFUL PURCHASES</div>
+          <div class="stat-value" id="kpiSuccessfulCheckouts" style="color: #34d399; font-size: 1.25rem;">1</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Completed Orders</div>
+        </div>
+        <div class="stat-card glass" style="border-top: 3px solid #2dd4bf;">
+          <div class="stat-label">CONVERSION</div>
+          <div class="stat-value" id="kpiConversionRate" style="color: #2dd4bf; font-size: 1.25rem;">9.09%</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Visitor to Paid</div>
         </div>
         <div class="stat-card glass" style="border-top: 3px solid #34d399;">
           <div class="stat-label">ACTIVE CHANNELS</div>
-          <div class="stat-value" id="kpiActiveChannels" style="color: #34d399;">3 / 11</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Operating Channels</div>
+          <div class="stat-value" id="kpiActiveChannels" style="color: #34d399; font-size: 1.25rem;">1 / 14</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">5 Autonomous</div>
         </div>
         <div class="stat-card glass" style="border-top: 3px solid #38bdf8;">
           <div class="stat-label">ACTIVE PRODUCTS</div>
-          <div class="stat-value" id="kpiActiveProducts" style="color: #38bdf8;">1</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Files Physically Verified</div>
+          <div class="stat-value" id="kpiActiveProducts" style="color: #38bdf8; font-size: 1.25rem;">1</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Files Verified</div>
         </div>
         <div class="stat-card glass" style="border-top: 3px solid #f59e0b;">
           <div class="stat-label">OWNER ACTIONS</div>
-          <div class="stat-value" id="kpiOwnerActions" style="color: #f59e0b;">4</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Legal/KYC Constraints</div>
+          <div class="stat-value" id="kpiOwnerActions" style="color: #f59e0b; font-size: 1.25rem;">8</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Legal/KYC Bounds</div>
         </div>
         <div class="stat-card glass" style="border-top: 3px solid #ef4444;">
-          <div class="stat-label">CURRENT BOTTLENECK</div>
-          <div class="stat-value" id="kpiCurrentBottleneck" style="font-size: 1rem; color: #f87171;">TRAFFIC</div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Highest Constraint</div>
+          <div class="stat-label">BOTTLENECK</div>
+          <div class="stat-value" id="kpiCurrentBottleneck" style="font-size: 0.95rem; color: #f87171;">QUALIFICATION</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Primary Constraint</div>
         </div>
       </div>
 

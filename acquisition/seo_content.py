@@ -198,6 +198,58 @@ Learn about our offline evaluation toolkit at [Nexora AI Labs](https://autonomou
             "canonical_url": "https://autonomous-ai-company.onrender.com/blog/local-llm-evaluation-without-cloud-apis",
             "nexora_product_link": "https://autonomous-ai-company.onrender.com/store?utm_source=seo&utm_medium=blog&utm_campaign=airgapped_evaluation",
             "status": "APPROVED"
+        },
+        {
+            "article_id": "ART-010-PROMPT-REGRESSION-CHECKLIST",
+            "slug": "prompt-regression-testing-checklist",
+            "title": "The Production Prompt Regression Testing Checklist for Local LLMs",
+            "topic": "Prompt regression checklist",
+            "problem_solved": "A 10-point actionable pre-flight checklist for engineering teams updating local LLM prompts or models.",
+            "target_keywords": "prompt regression checklist, llm test checklist, local ai deployment checklist, prompt drift prevention",
+            "content_md": """# The Production Prompt Regression Testing Checklist for Local LLMs
+
+Before merging prompt modifications or bumping model weights in local AI systems, verify every item on this pre-flight checklist:
+
+1. [ ] **Deterministic Temperature Baseline**: Clamped sampling to `temperature=0.0` and fixed seed parameters during verification.
+2. [ ] **Exact Schema Conformance**: JSON response conforms 100% to mandatory Pydantic schema contracts without markdown backticks.
+3. [ ] **Key Presence Verification**: All required root-level JSON keys exist in every completion across 20 iterations.
+4. [ ] **Fencing & Formatting Invariance**: Model does not add conversational greetings or trailing disclaimer text when structured outputs are expected.
+5. [ ] **Context Window Boundary Test**: Validated prompt completion behavior at 50%, 80%, and 95% of maximum context limit.
+6. [ ] **Time-to-First-Token (TTFT) Threshold**: Confirmed TTFT remains within acceptable SLA (e.g. < 450ms) on target hardware.
+7. [ ] **Tokens/Second Throughput Baseline**: Measured token generation velocity against baseline reference run.
+8. [ ] **Edge-Case Parameter Fuzzing**: Tested handling of empty inputs, unicode characters, and excessively nested input structures.
+9. [ ] **Zero Cloud Leakage**: Verified network air-gap; harness makes zero outbound requests to external APIs.
+10. [ ] **Automated Scorecard Artifact**: Complete markdown/JSON test report archived in version control.
+
+Accelerate your pipeline with our turnkey offline test runner: [Nexora AI Labs Local LLM Evaluation Suite](https://autonomous-ai-company.onrender.com/store?utm_source=seo&utm_medium=checklist&utm_campaign=prompt_regression_checklist).
+""",
+            "canonical_url": "https://autonomous-ai-company.onrender.com/blog/prompt-regression-testing-checklist",
+            "nexora_product_link": "https://autonomous-ai-company.onrender.com/store?utm_source=seo&utm_medium=checklist&utm_campaign=prompt_regression_checklist",
+            "status": "APPROVED"
+        },
+        {
+            "article_id": "ART-011-OFFLINE-EVALUATION-CHECKLIST",
+            "slug": "offline-ai-evaluation-architecture-checklist",
+            "title": "Offline AI Evaluation Architecture Checklist: Airgapped LLM Benchmarking",
+            "topic": "Offline AI evaluation checklist",
+            "problem_solved": "Complete architectural guide for establishing secure, on-premise model verification test harnesses.",
+            "target_keywords": "offline ai evaluation checklist, airgapped llm benchmarking, on-premise ai testing, private llm test suite",
+            "content_md": """# Offline AI Evaluation Architecture Checklist: Airgapped LLM Benchmarking
+
+Deploying local AI in sensitive or regulated environments requires an evaluation harness that operates with complete data sovereignty:
+
+1. [ ] **Local Inference Protocol**: Standardized on OpenAI-compatible HTTP local endpoints (Ollama `:11434`, vLLM `:8000`, llama.cpp `:8080`).
+2. [ ] **Zero Telemetry Harness**: All test execution scripts operate with zero telemetry, zero analytics tracking, and no external calls.
+3. [ ] **Isolated Test Vector Library**: Golden test prompts stored locally in versioned JSON/YAML datasets.
+4. [ ] **Automated Scorecard Evaluation**: Script automatically compares actual vs expected schema structures.
+5. [ ] **Hardware Metric Collection**: Logs GPU VRAM usage and CPU overhead alongside model latency.
+6. [ ] **Repeatable Version Locking**: Model weights, quantization format (e.g. Q4_K_M vs Q8_0), and runner version recorded per benchmark run.
+
+Download our ready-to-run offline benchmark package: [Nexora AI Labs Local LLM Offline Evaluation Suite](https://autonomous-ai-company.onrender.com/store?utm_source=seo&utm_medium=checklist&utm_campaign=offline_evaluation_checklist).
+""",
+            "canonical_url": "https://autonomous-ai-company.onrender.com/blog/offline-ai-evaluation-architecture-checklist",
+            "nexora_product_link": "https://autonomous-ai-company.onrender.com/store?utm_source=seo&utm_medium=checklist&utm_campaign=offline_evaluation_checklist",
+            "status": "APPROVED"
         }
     ]
 

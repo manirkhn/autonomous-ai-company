@@ -121,13 +121,13 @@ class IncomeGenerationAnalytics:
         cursor.execute("SELECT COUNT(*) as cnt FROM payment_transactions")
         checkout_starts = cursor.fetchone()["cnt"]
 
-        cursor.execute("SELECT COUNT(*) as cnt FROM payment_transactions WHERE payment_status = 'PAYMENT_VERIFIED'")
+        cursor.execute("SELECT COUNT(*) as cnt FROM payment_transactions WHERE payment_status IN ('PAYMENT_VERIFIED', 'SUCCEEDED')")
         verified_payments = cursor.fetchone()["cnt"]
 
-        cursor.execute("SELECT COUNT(*) as cnt FROM payment_transactions WHERE mode = 'PRODUCTION' AND payment_status = 'PAYMENT_VERIFIED'")
+        cursor.execute("SELECT COUNT(*) as cnt FROM payment_transactions WHERE mode = 'PRODUCTION' AND payment_status IN ('PAYMENT_VERIFIED', 'SUCCEEDED')")
         prod_payments = cursor.fetchone()["cnt"]
 
-        cursor.execute("SELECT COUNT(*) as cnt FROM deliveries WHERE status = 'DELIVERED'")
+        cursor.execute("SELECT COUNT(*) as cnt FROM deliveries WHERE status IN ('DELIVERED', 'VERIFIED_DELIVERED')")
         deliveries = cursor.fetchone()["cnt"]
 
         conn.close()
@@ -146,7 +146,7 @@ class IncomeGenerationAnalytics:
         elif checkout_starts > 0 and verified_payments == 0:
             current_status = "READY — CUSTOMER ACQUISITION ACTIVE"
             badge = "🟡 READY — CHECKOUT FUNNEL ACTIVE"
-            bottleneck = "PAYMENT CONVERSION"
+            bottleneck = "PAYMENT"
             guidance = "Checkouts are occurring; focus on prospect qualification and value clarity."
         elif opp_count > 0:
             current_status = "READY — CUSTOMER ACQUISITION ACTIVE"

@@ -61,7 +61,7 @@ class CEOMetricsEngine:
         cursor.execute("""
         SELECT COUNT(DISTINCT customer_email) as cust_cnt
         FROM payment_transactions
-        WHERE payment_status = 'SUCCEEDED' AND mode = 'PRODUCTION'
+        WHERE payment_status IN ('SUCCEEDED', 'PAYMENT_VERIFIED') AND mode = 'PRODUCTION'
         """)
         cust_row = cursor.fetchone()
         real_customers_count = cust_row["cust_cnt"] if cust_row else 0
@@ -76,7 +76,7 @@ class CEOMetricsEngine:
         if rev_cust_row and rev_cust_row["cust_cnt"] > real_customers_count:
             real_customers_count = rev_cust_row["cust_cnt"]
 
-        # 3. Real Visitors
+        # 3. Real Visitors & Qualified Pipeline
         cursor.execute("SELECT COUNT(*) as vis_cnt FROM acquisition_attribution")
         vis_row = cursor.fetchone()
         real_visitors_count = vis_row["vis_cnt"] if vis_row else 0
@@ -87,29 +87,82 @@ class CEOMetricsEngine:
         vis_today_row = cursor.fetchone()
         today_visitors_count = vis_today_row["vis_today"] if vis_today_row else 0
 
-        # 4. Real Checkouts
+        # 4. Reconciled Checkout Starts & Successful Checkouts (Phase 5J Reconciled Funnel)
         cursor.execute("SELECT COUNT(*) as chk_cnt FROM payment_transactions WHERE mode = 'PRODUCTION'")
-        chk_row = cursor.fetchone()
-        real_checkouts_count = chk_row["chk_cnt"] if chk_row else 0
+        pt_chk = cursor.fetchone()["chk_cnt"]
+        cursor.execute("SELECT SUM(checkout_started) as attr_chk FROM acquisition_attribution WHERE mode = 'PRODUCTION'")
+        attr_chk_row = cursor.fetchone()
+        attr_chk = attr_chk_row["attr_chk"] if attr_chk_row and attr_chk_row["attr_chk"] else 0
+        real_checkouts_count = max(pt_chk, attr_chk, real_customers_count)
 
-        # 5. Conversion Rate
+        cursor.execute("SELECT COUNT(*) as succ_cnt FROM payment_transactions WHERE mode = 'PRODUCTION' AND payment_status IN ('SUCCEEDED', 'PAYMENT_VERIFIED')")
+        pt_succ = cursor.fetchone()["succ_cnt"]
+        cursor.execute("SELECT COUNT(*) as succ_cnt FROM revenue_ledger WHERE payment_status = 'VERIFIED'")
+        rev_succ = cursor.fetchone()["succ_cnt"]
+        successful_checkouts_count = max(pt_succ, rev_succ, real_customers_count)
+
+        # 5. Customer Qualification Pipeline
+        from acquisition.qualification import CustomerQualificationEngine
+        qualification_data = CustomerQualificationEngine.get_pipeline_counts("ALL_TIME")
+        pipeline = qualification_data["pipeline"]
+        qualified_visitors_count = pipeline["qualified_visitors"]
+        leads_count = pipeline["leads"]
+        high_intent_leads_count = pipeline["high_intent_leads"]
+
+        # 6. Conversion Rate & Statistical Significance
         real_conversion = (
             round((real_customers_count / real_visitors_count) * 100, 2)
             if real_visitors_count > 0 else 0.0
         )
+        sample_status = "INSUFFICIENT SAMPLE SIZE" if real_visitors_count < 100 else "STATISTICALLY_SUFFICIENT"
 
-        # 6. Active Products
+        # 7. Timeframe Breakdown (Today, 7 Days, 30 Days, All Time)
+        now_dt = datetime.now(timezone.utc)
+        timeframes = {}
+        for tf_key, days_back in [("today", 0), ("last_7_days", 7), ("last_30_days", 30), ("all_time", None)]:
+            if days_back == 0:
+                dt_cutoff = now_dt.strftime("%Y-%m-%d") + "T00:00:00"
+            elif days_back:
+                dt_cutoff = (now_dt - timedelta(days=days_back)).isoformat()
+            else:
+                dt_cutoff = None
+
+            if dt_cutoff:
+                cursor.execute("SELECT COUNT(*) as cnt FROM acquisition_attribution WHERE timestamp >= ?", (dt_cutoff,))
+                tf_vis = cursor.fetchone()["cnt"] or 0
+                cursor.execute("SELECT COUNT(*) as cnt FROM payment_transactions WHERE mode = 'PRODUCTION' AND created_at >= ?", (dt_cutoff,))
+                tf_chk = cursor.fetchone()["cnt"] or 0
+                cursor.execute("SELECT COUNT(*) as cnt FROM revenue_ledger WHERE payment_status = 'VERIFIED' AND date >= ?", (dt_cutoff,))
+                tf_cust = cursor.fetchone()["cnt"] or 0
+                cursor.execute("SELECT SUM(amount) as amt FROM revenue_ledger WHERE payment_status = 'VERIFIED' AND date >= ?", (dt_cutoff,))
+                tf_rev = cursor.fetchone()["amt"] or 0.0
+            else:
+                tf_vis = real_visitors_count
+                tf_chk = real_checkouts_count
+                tf_cust = real_customers_count
+                tf_rev = verified_all_time
+
+            timeframes[tf_key] = {
+                "revenue_usd": float(tf_rev),
+                "customers": tf_cust,
+                "visitors": tf_vis,
+                "checkout_starts": max(tf_chk, tf_cust),
+                "successful_checkouts": tf_cust,
+                "conversion_pct": round((tf_cust / tf_vis * 100), 2) if tf_vis > 0 else 0.0
+            }
+
+        # 8. Active Products
         cursor.execute("SELECT product_id, name, price, sales_status FROM products_v5")
         products = [dict(r) for r in cursor.fetchall()]
         active_products_count = len(products)
 
-        # 7. Active Channels
+        # 9. Active Channels
         platforms_summary = PlatformRegistry.get_summary()
 
-        # 8. Pending Owner Actions
+        # 10. Pending Owner Actions
         pending_actions = OwnerActionCenter.get_pending_actions()
 
-        # 9. Top Traffic Sources
+        # 11. Top Traffic Sources
         cursor.execute("""
         SELECT source, COUNT(*) as count
         FROM acquisition_attribution
@@ -119,7 +172,7 @@ class CEOMetricsEngine:
         """)
         top_traffic = [dict(r) for r in cursor.fetchall()]
 
-        # 10. Top Customer Problems (from support tickets + discovered opportunities)
+        # 12. Top Customer Problems (from support tickets + discovered opportunities)
         cursor.execute("""
         SELECT question as problem, count(*) as frequency
         FROM support_tickets
@@ -139,10 +192,10 @@ class CEOMetricsEngine:
             """)
             support_problems = [dict(r) for r in cursor.fetchall()]
 
-        # 11. Current Bottleneck
+        # 13. Current Bottleneck
         bottlenecks = RevenueBottleneckEngine.analyze_bottlenecks()
 
-        # 12. Current Experiment
+        # 14. Current Experiment
         cursor.execute("""
         SELECT experiment_id, hypothesis, channel, status
         FROM marketing_experiments
@@ -177,8 +230,15 @@ class CEOMetricsEngine:
             "real_customers": real_customers_count,
             "real_visitors": real_visitors_count,
             "today_visitors": today_visitors_count,
+            "qualified_visitors": qualified_visitors_count,
+            "leads": leads_count,
+            "high_intent_leads": high_intent_leads_count,
             "real_checkouts": real_checkouts_count,
+            "checkout_starts": real_checkouts_count,
+            "successful_checkouts": successful_checkouts_count,
             "real_conversion_pct": real_conversion,
+            "sample_size_status": sample_status,
+            "timeframes": timeframes,
             "active_products": {
                 "count": active_products_count,
                 "items": products
@@ -222,26 +282,55 @@ class CEOMetricsEngine:
         now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
         # Build Plain Text Report
+        tf = metrics.get("timeframes", {})
+        all_time_tf = tf.get("all_time", {})
+        today_tf = tf.get("today", {})
+        week_tf = tf.get("last_7_days", {})
+        month_tf = tf.get("last_30_days", {})
+
         text_lines = [
-            "=" * 60,
+            "=" * 65,
             f"NEXORA AI LABS - DAILY CEO EXECUTIVE REPORT",
             f"Report ID: {report_id} | Date: {now_str}",
-            "=" * 60,
+            "=" * 65,
             "",
-            "1. REVENUE OVERVIEW (STRICT FINANCIAL TRUTH - PRODUCTION ONLY)",
-            f"  - Revenue Today:        ${metrics['real_revenue']['today_usd']:.2f} USD",
-            f"  - Revenue This Week:     ${metrics['real_revenue']['this_week_usd']:.2f} USD",
-            f"  - Total Verified Revenue:${metrics['real_revenue']['total_verified_usd']:.2f} USD",
-            f"  - Pending Revenue:       ${metrics['real_revenue']['pending_usd']:.2f} USD",
-            f"  - Verified Customers:    {metrics['real_customers']}",
+            "==================================================",
+            "SECTION I: REAL COMMERCIAL RESULTS (UNMANIPULATED FINANCIAL TRUTH)",
+            "==================================================",
+            f"  - Verified Revenue (All Time):   ${metrics['real_revenue']['total_verified_usd']:.2f} USD",
+            f"  - Verified Revenue (Today):      ${metrics['real_revenue']['today_usd']:.2f} USD",
+            f"  - Verified Revenue (Last 7 Days):${metrics['real_revenue']['this_week_usd']:.2f} USD",
+            f"  - Pending Revenue:               ${metrics['real_revenue']['pending_usd']:.2f} USD",
+            f"  - Verified Production Customers: {metrics['real_customers']}",
             "",
-            "2. CUSTOMER ACQUISITION & TRAFFIC",
-            f"  - Total Visitors:        {metrics['real_visitors']}",
-            f"  - Today's Visitors:      {metrics['today_visitors']}",
-            f"  - Checkout Attempts:     {metrics['real_checkouts']}",
-            f"  - Conversion Rate:       {metrics['real_conversion_pct']}%",
-            "  - Top Acquisition Channels:",
+            "  CUSTOMER CONVERSION FUNNEL:",
+            f"    [1] Total Storefront Visitors: {metrics['real_visitors']} ({metrics.get('sample_size_status', '')})",
+            f"    [2] Qualified Visitors:        {metrics.get('qualified_visitors', 0)}",
+            f"    [3] Leads (Docs/Guide readers):{metrics.get('leads', 0)}",
+            f"    [4] High-Intent Leads (CTA):   {metrics.get('high_intent_leads', 0)}",
+            f"    [5] Checkout Starts:           {metrics['real_checkouts']}",
+            f"    [6] Successful Purchases:      {metrics.get('successful_checkouts', metrics['real_customers'])}",
+            f"    Overall Visitor Conversion:    {metrics['real_conversion_pct']}%",
+            "",
+            "  TIMEFRAME BREAKDOWNS:",
+            f"    * Today:       Visitors: {today_tf.get('visitors', 0)} | Checkouts: {today_tf.get('checkout_starts', 0)} | Revenue: ${today_tf.get('revenue_usd', 0.0):.2f}",
+            f"    * Last 7 Days: Visitors: {week_tf.get('visitors', 0)} | Checkouts: {week_tf.get('checkout_starts', 0)} | Revenue: ${week_tf.get('revenue_usd', 0.0):.2f}",
+            f"    * Last 30 Days:Visitors: {month_tf.get('visitors', 0)} | Checkouts: {month_tf.get('checkout_starts', 0)} | Revenue: ${month_tf.get('revenue_usd', 0.0):.2f}",
+            f"    * All-Time:    Visitors: {all_time_tf.get('visitors', metrics['real_visitors'])} | Checkouts: {all_time_tf.get('checkout_starts', metrics['real_checkouts'])} | Revenue: ${all_time_tf.get('revenue_usd', metrics['real_revenue']['total_verified_usd']):.2f}",
+            "",
+            "==================================================",
+            "SECTION II: AUTONOMOUS SYSTEM & OPERATIONAL ACTIVITY",
+            "==================================================",
+            f"  - Active Commercial Channels:    {metrics['active_channels']['total']} total ({metrics['active_channels']['autonomous']} autonomous, {metrics['active_channels']['operating_channels']} actively operating)",
+            f"  - Active Physical Products:      {metrics['active_products']['count']}",
         ]
+        for p in metrics["active_products"]["items"]:
+            text_lines.append(f"      * {p['name']} (${p['price']} {p.get('currency', 'USD')}) - {p['sales_status']}")
+
+        text_lines.extend([
+            "",
+            "  - Top Traffic Sources:",
+        ])
         for src in metrics["top_traffic_sources"]:
             text_lines.append(f"      * {src['source']}: {src['count']} visits")
         if not metrics["top_traffic_sources"]:
@@ -249,23 +338,22 @@ class CEOMetricsEngine:
 
         text_lines.extend([
             "",
-            "3. PRODUCTS & OPERATING CHANNELS",
-            f"  - Active Products:       {metrics['active_products']['count']}",
+            "  - Top Customer Technical Problems & Support Topics:",
         ])
-        for p in metrics["active_products"]["items"]:
-            text_lines.append(f"      * {p['name']} (${p['price']} {p.get('currency', 'USD')}) - {p['sales_status']}")
+        for prob in metrics.get("top_customer_problems", []):
+            text_lines.append(f"      * [{prob.get('frequency', 1)}x] {prob.get('problem', '')}")
 
         text_lines.extend([
-            f"  - Operating Channels:    {metrics['active_channels']['operating_channels']}/{metrics['active_channels']['total']}",
-            f"  - Fully Autonomous:      {metrics['active_channels']['autonomous']}",
             "",
-            "4. CURRENT BOTTLENECK & EXPERIMENT",
-            f"  - Bottleneck:            {metrics['current_bottleneck']}",
-            f"  - Recommended Action:    {metrics['current_bottleneck_action']}",
-            f"  - Current Experiment:    {metrics['current_experiment']['hypothesis']} (Status: {metrics['current_experiment']['status']})",
+            "  - Operational Bottleneck Analysis:",
+            f"      * Current Bottleneck:        {metrics['current_bottleneck']}",
+            f"      * Autonomous Action Plan:    {metrics['current_bottleneck_action']}",
+            f"      * Running Experiment:        {metrics['current_experiment']['hypothesis']} (Status: {metrics['current_experiment']['status']})",
             "",
-            "5. PENDING OWNER ACTIONS (LEGAL/KYC RESTRICTIONS)",
-            f"  - Pending Actions Count: {metrics['pending_owner_actions']['count']}",
+            "==================================================",
+            "SECTION III: ACTIONABLE OWNER CONSTRAINTS & NEXT STEPS",
+            "==================================================",
+            f"  - Pending Owner Actions Count:   {metrics['pending_owner_actions']['count']} (Unavoidable legal/KYC requirements)",
         ])
         for act in metrics["pending_owner_actions"]["items"]:
             text_lines.append(f"      * [{act['urgency']}] {act['platform']}: {act['title']} (Est: {act['estimated_time']})")
@@ -273,13 +361,13 @@ class CEOMetricsEngine:
 
         text_lines.extend([
             "",
-            "6. NEXT AUTONOMOUS ACTIONS",
-            f"  - {metrics['next_autonomous_action']}",
+            "  - Next Autonomous System Execution:",
+            f"      * {metrics['next_autonomous_action']}",
             "",
             "SECURITY & GOVERNANCE:",
             "  - Financial Air-Gap: ENFORCED (Zero withdrawal/card credentials accessible).",
             "  - Operating Mode: 24/7 Autonomous Cloud Daemon.",
-            "=" * 60
+            "=" * 65
         ])
         body_text = "\n".join(text_lines)
 
@@ -292,25 +380,35 @@ class CEOMetricsEngine:
                 <p style="color: #94a3b8; font-size: 13px;">Report ID: <code>{report_id}</code> | {now_str}</p>
                 <hr style="border: 0; border-top: 1px solid #334155; margin: 20px 0;">
 
-                <h3 style="color: #10b981;">1. Revenue Overview (Production Truth)</h3>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 14px;">
-                    <tr><td style="padding: 6px 0; color: #94a3b8;">Revenue Today:</td><td style="font-weight: bold; color: #f8fafc;">${metrics['real_revenue']['today_usd']:.2f} USD</td></tr>
-                    <tr><td style="padding: 6px 0; color: #94a3b8;">Revenue This Week:</td><td style="font-weight: bold; color: #f8fafc;">${metrics['real_revenue']['this_week_usd']:.2f} USD</td></tr>
-                    <tr><td style="padding: 6px 0; color: #94a3b8;">Total Verified Revenue:</td><td style="font-weight: bold; color: #10b981;">${metrics['real_revenue']['total_verified_usd']:.2f} USD</td></tr>
-                    <tr><td style="padding: 6px 0; color: #94a3b8;">Verified Customers:</td><td style="font-weight: bold; color: #f8fafc;">{metrics['real_customers']}</td></tr>
-                </table>
+                <div style="background: rgba(16, 185, 129, 0.08); border-left: 4px solid #10b981; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
+                    <h3 style="color: #10b981; margin: 0 0 8px 0; font-size: 16px;">SECTION I: REAL COMMERCIAL RESULTS</h3>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <tr><td style="padding: 4px 0; color: #94a3b8;">Verified Revenue (All Time):</td><td style="font-weight: bold; color: #10b981;">${metrics['real_revenue']['total_verified_usd']:.2f} USD</td></tr>
+                        <tr><td style="padding: 4px 0; color: #94a3b8;">Revenue Today:</td><td style="font-weight: bold; color: #f8fafc;">${metrics['real_revenue']['today_usd']:.2f} USD</td></tr>
+                        <tr><td style="padding: 4px 0; color: #94a3b8;">Revenue Last 7 Days:</td><td style="font-weight: bold; color: #f8fafc;">${metrics['real_revenue']['this_week_usd']:.2f} USD</td></tr>
+                        <tr><td style="padding: 4px 0; color: #94a3b8;">Verified Production Customers:</td><td style="font-weight: bold; color: #f8fafc;">{metrics['real_customers']}</td></tr>
+                        <tr><td style="padding: 4px 0; color: #94a3b8;">Storefront Visitors:</td><td style="font-weight: bold; color: #f8fafc;">{metrics['real_visitors']} ({metrics.get('sample_size_status', '')})</td></tr>
+                        <tr><td style="padding: 4px 0; color: #94a3b8;">Qualified Visitors:</td><td style="font-weight: bold; color: #f8fafc;">{metrics.get('qualified_visitors', 0)}</td></tr>
+                        <tr><td style="padding: 4px 0; color: #94a3b8;">Checkout Starts:</td><td style="font-weight: bold; color: #f8fafc;">{metrics['real_checkouts']}</td></tr>
+                        <tr><td style="padding: 4px 0; color: #94a3b8;">Successful Purchases:</td><td style="font-weight: bold; color: #f8fafc;">{metrics.get('successful_checkouts', metrics['real_customers'])}</td></tr>
+                        <tr><td style="padding: 4px 0; color: #94a3b8;">Conversion Rate:</td><td style="font-weight: bold; color: #38bdf8;">{metrics['real_conversion_pct']}%</td></tr>
+                    </table>
+                </div>
 
-                <h3 style="color: #38bdf8;">2. Customer Acquisition</h3>
-                <p style="font-size: 14px; margin: 4px 0;">Visitors: <b>{metrics['real_visitors']}</b> | Checkouts: <b>{metrics['real_checkouts']}</b> | Conversion: <b>{metrics['real_conversion_pct']}%</b></p>
+                <div style="background: rgba(56, 189, 248, 0.08); border-left: 4px solid #38bdf8; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
+                    <h3 style="color: #38bdf8; margin: 0 0 8px 0; font-size: 16px;">SECTION II: SYSTEM & OPERATIONAL ACTIVITY</h3>
+                    <p style="font-size: 13px; color: #cbd5e1; margin: 4px 0;">Commercial Channels: <b>{metrics['active_channels']['total']}</b> ({metrics['active_channels']['autonomous']} autonomous)</p>
+                    <p style="font-size: 13px; color: #cbd5e1; margin: 4px 0;">Active Products: <b>{metrics['active_products']['count']}</b> (Files physically verified)</p>
+                    <p style="font-size: 13px; color: #cbd5e1; margin: 4px 0;">Bottleneck Constraint: <b>{metrics['current_bottleneck']}</b></p>
+                    <p style="font-size: 13px; color: #94a3b8; margin: 4px 0;">Experiment: {metrics['current_experiment']['hypothesis']}</p>
+                </div>
 
-                <h3 style="color: #f59e0b;">3. Current Bottleneck</h3>
-                <p style="font-size: 14px; margin: 4px 0; color: #fde68a;">Constraint: <b>{metrics['current_bottleneck']}</b></p>
-                <p style="font-size: 13px; color: #94a3b8; margin: 4px 0;">Action: {metrics['current_bottleneck_action']}</p>
-
-                <h3 style="color: #ef4444;">4. Pending Owner Actions ({metrics['pending_owner_actions']['count']})</h3>
-                <ul style="font-size: 13px; color: #cbd5e1; padding-left: 20px;">
-                    {"".join(f"<li><b>[{a['platform']}]</b> {a['title']} (Est: {a['estimated_time']})</li>" for a in metrics['pending_owner_actions']['items'])}
-                </ul>
+                <div style="background: rgba(239, 68, 68, 0.08); border-left: 4px solid #ef4444; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
+                    <h3 style="color: #ef4444; margin: 0 0 8px 0; font-size: 16px;">SECTION III: PENDING OWNER ACTIONS ({metrics['pending_owner_actions']['count']})</h3>
+                    <ul style="font-size: 13px; color: #cbd5e1; padding-left: 20px; margin: 0;">
+                        {"".join(f"<li style='margin-bottom: 6px;'><b>[{a['platform']}]</b> {a['title']}<br><span style='color: #94a3b8;'>Why: {a['why']}</span> (Est: {a['estimated_time']})</li>" for a in metrics['pending_owner_actions']['items'])}
+                    </ul>
+                </div>
 
                 <hr style="border: 0; border-top: 1px solid #334155; margin: 20px 0;">
                 <p style="font-size: 12px; color: #64748b; margin: 0;">
@@ -334,5 +432,7 @@ class CEOMetricsEngine:
             "generated_at": now_str,
             "recipient": cls.TARGET_CEO_EMAIL,
             "delivery": delivery_result.to_dict(),
-            "metrics": metrics
+            "metrics": metrics,
+            "text_report": body_text,
+            "html_report": body_html
         }
