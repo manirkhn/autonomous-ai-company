@@ -49,6 +49,10 @@ CapabilityMarketplaceCatalog.initialize_marketplace()
 
 app = FastAPI(title="Autonomous AI Enterprise Gateway", version="1.0.0")
 
+# Own WhatsApp line (Meta Cloud API direct, no Kapso)
+from integrations.whatsapp.router import router as whatsapp_router
+app.include_router(whatsapp_router)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
