@@ -10,6 +10,7 @@ Safety first (lessons from the Kapso bot loop):
 """
 
 import re
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
 from providers.llm import LLMManager
@@ -44,6 +45,24 @@ PERSONAS: Dict[str, Dict[str, str]] = {
         "fallback": "Thank you for your message. Please share your name, city and project details, "
                     "and our team will get back to you.",
     },
+    "layla_dts": {
+        "name": "Layla",
+        "system": (
+            "You are Layla, front desk of Designrite Technical Services LLC, Dubai (fit-out estimation, "
+            "BOQ and tender pricing in AED, quantity take-off, joinery shop drawings, Revit/BIM modelling "
+            "for contractors and joinery firms in the UAE and GCC). Talk like a friendly, professional person; "
+            "only if someone asks whether you are a bot or AI, say yes, you are the AI assistant. "
+            "Collect: name, company, project/location, what they need (estimate, BOQ, shop drawings, BIM), "
+            "drawings or tender documents, and deadline. Say the team will review and come back with scope, "
+            "fee and timeline. Never quote fees or prices, never commit dates, never give structural, legal or "
+            "payment answers: say the team will reply. For carpentry or material supply questions, take the "
+            "details (item, size, quantity, site) and say the team will share a quote. Reply in the sender's "
+            "language (English, Arabic, Hindi/Urdu), short, max 4 lines. Missed call? Say: sorry we missed your "
+            "call, how can we help?"
+        ),
+        "fallback": "Thank you for contacting Designrite Technical Services. Please share your name, company, "
+                    "project and what you need, and our team will get back to you.",
+    },
 }
 
 AUTOMATED_HINTS = re.compile(
@@ -73,7 +92,38 @@ def _owner_command(cfg: WhatsAppConfig, contact: str, text: str) -> Optional[str
         paused = store.get_state("paused", "0") == "1"
         open_reqs = len(store.list_requests("new"))
         return f"Bot {'paused' if paused else 'running'} ({cfg.persona}). Open requests: {open_reqs}."
+    if cmd.startswith("SKIP ") or cmd.startswith("UNSKIP "):
+        verb, _, num = cmd.partition(" ")
+        num = num.strip().lstrip("+").replace(" ", "")
+        if not num.isdigit():
+            return "Send SKIP or UNSKIP followed by the number, e.g. SKIP 971501234567."
+        if verb == "SKIP":
+            store.add_skip(num, "owner")
+            return f"{num} will not get auto-replies."
+        store.remove_skip(num)
+        return f"{num} removed from the skip list."
     return None
+
+
+def _is_old_contact(cfg: WhatsAppConfig, contact: str) -> bool:
+    if contact in cfg.skip_numbers or store.is_skipped(contact):
+        return True
+    if cfg.new_contacts_only and cfg.live_since:
+        first = store.first_message_at(contact)
+        if first and first < cfg.live_since:
+            return True
+    return False
+
+
+def _human_active(cfg: WhatsAppConfig, contact: str) -> bool:
+    last = store.get_state(f"human:{contact}")
+    if not last:
+        return False
+    try:
+        since = datetime.fromisoformat(last)
+    except ValueError:
+        return False
+    return datetime.now(timezone.utc) - since < timedelta(hours=cfg.human_pause_hours)
 
 
 def classify(msg_type: str, text: str) -> Optional[str]:
@@ -102,6 +152,10 @@ def decide_reply(cfg: WhatsAppConfig, inbound: Dict[str, Any]) -> Dict[str, Any]
         return {"reply": None, "reason": "paused", "request_id": None}
     if cfg.allowed_numbers and contact not in cfg.allowed_numbers and contact not in cfg.owner_numbers:
         return {"reply": None, "reason": "not_allowed", "request_id": None}
+    if _is_old_contact(cfg, contact):
+        return {"reply": None, "reason": "old_contact", "request_id": None}
+    if _human_active(cfg, contact):
+        return {"reply": None, "reason": "human_active", "request_id": None}
     if text and AUTOMATED_HINTS.search(text):
         return {"reply": None, "reason": "looks_automated", "request_id": None}
     last_out = store.last_outbound_body(contact)

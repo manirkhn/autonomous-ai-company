@@ -37,6 +37,11 @@ def init_whatsapp_tables() -> None:
         status TEXT NOT NULL DEFAULT 'new',-- new | quoting | awaiting_approval | approved | closed
         created_at TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS wa_skip (
+        contact TEXT PRIMARY KEY,
+        reason TEXT,
+        created_at TEXT NOT NULL
+    );
     CREATE TABLE IF NOT EXISTS wa_state (
         key TEXT PRIMARY KEY,
         value TEXT
@@ -135,3 +140,32 @@ def set_state(key: str, value: str) -> None:
                  (key, value))
     conn.commit()
     conn.close()
+
+
+def add_skip(contact: str, reason: str = "owner") -> None:
+    conn = get_connection()
+    conn.execute("INSERT OR IGNORE INTO wa_skip (contact, reason, created_at) VALUES (?,?,?)",
+                 (contact, reason, _now()))
+    conn.commit()
+    conn.close()
+
+
+def remove_skip(contact: str) -> None:
+    conn = get_connection()
+    conn.execute("DELETE FROM wa_skip WHERE contact=?", (contact,))
+    conn.commit()
+    conn.close()
+
+
+def is_skipped(contact: str) -> bool:
+    conn = get_connection()
+    row = conn.execute("SELECT 1 FROM wa_skip WHERE contact=?", (contact,)).fetchone()
+    conn.close()
+    return bool(row)
+
+
+def first_message_at(contact: str) -> Optional[str]:
+    conn = get_connection()
+    row = conn.execute("SELECT MIN(created_at) FROM wa_messages WHERE contact=?", (contact,)).fetchone()
+    conn.close()
+    return row[0] if row else None

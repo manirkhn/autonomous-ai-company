@@ -16,12 +16,21 @@ class WhatsAppConfig:
     app_secret: str = field(default_factory=lambda: os.getenv("WA_APP_SECRET", ""))
     verify_token: str = field(default_factory=lambda: os.getenv("WA_VERIFY_TOKEN", ""))
     api_version: str = field(default_factory=lambda: os.getenv("WA_API_VERSION", "v21.0"))
-    # Which AI employee answers: "saira_procurement" or "designrite_aanya"
+    # Which AI employee answers: "saira_procurement", "designrite_aanya" or "layla_dts"
     persona: str = field(default_factory=lambda: os.getenv("WA_PERSONA", "saira_procurement"))
     # Owner numbers (international format, no +). Owner can send STOP BOT / START BOT.
     owner_numbers: List[str] = field(default_factory=lambda: _numbers(os.getenv("WA_OWNER_NUMBERS", "")))
     # If set, the bot only answers these numbers (e.g. Saira staff). Empty = answer anyone.
     allowed_numbers: List[str] = field(default_factory=lambda: _numbers(os.getenv("WA_ALLOWED_NUMBERS", "")))
+    # Old contacts are never auto-replied: numbers listed here, numbers added with SKIP,
+    # contacts synced from the WhatsApp Business app history, and (if NEW_CONTACTS_ONLY)
+    # anyone whose first stored message is older than WA_LIVE_SINCE.
+    skip_numbers: List[str] = field(default_factory=lambda: _numbers(os.getenv("WA_SKIP_NUMBERS", "")))
+    new_contacts_only: bool = field(default_factory=lambda: os.getenv("WA_NEW_CONTACTS_ONLY", "off").lower() == "on")
+    live_since: str = field(default_factory=lambda: os.getenv("WA_LIVE_SINCE", ""))
+    # If a person replies from the WhatsApp Business app (coexistence), the bot stays quiet
+    # for that contact for this many hours.
+    human_pause_hours: int = field(default_factory=lambda: int(os.getenv("WA_HUMAN_PAUSE_HOURS", "12")))
     # Master switch. "off" = log messages but never auto-reply.
     autoreply: bool = field(default_factory=lambda: os.getenv("WA_AUTOREPLY", "on").lower() != "off")
     # Loop guard: max bot replies to one contact inside the window.
