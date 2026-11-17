@@ -112,6 +112,38 @@ class TestWhatsApp(unittest.TestCase):
         decide_reply(cfg, {"contact": "971500000001", "text": "START BOT"})
         self.assertNotEqual(decide_reply(_cfg(autoreply=False), {"contact": self.contact, "text": "hi"})["reason"], "paused")
 
+    def test_old_contacts_skipped(self):
+        cfg = _cfg(persona="layla_dts")
+        old = "9715" + uuid.uuid4().hex[:8].translate(str.maketrans("abcdef", "123456"))
+        r = decide_reply(cfg, {"contact": "971500000001", "text": f"SKIP {old}"})
+        self.assertIn("will not get auto-replies", r["reply"])
+        self.assertEqual(decide_reply(cfg, {"contact": old, "text": "hi"})["reason"], "old_contact")
+        decide_reply(cfg, {"contact": "971500000001", "text": f"UNSKIP {old}"})
+        self.assertNotEqual(decide_reply(cfg, {"contact": old, "text": "hi"})["reason"], "old_contact")
+        self.assertEqual(decide_reply(_cfg(skip_numbers=[old]), {"contact": old, "text": "hi"})["reason"], "old_contact")
+
+    def test_new_contacts_only_by_date(self):
+        c = "9716" + uuid.uuid4().hex[:8].translate(str.maketrans("abcdef", "123456"))
+        store.save_message("in", c, "old chat", "text", f"wamid.{uuid.uuid4().hex}")
+        cfg = _cfg(new_contacts_only=True, live_since="2999-01-01T00:00:00+00:00")
+        self.assertEqual(decide_reply(cfg, {"contact": c, "text": "hi"})["reason"], "old_contact")
+
+    def test_history_and_human_echo(self):
+        c = "9717" + uuid.uuid4().hex[:8].translate(str.maketrans("abcdef", "123456"))
+        payload = {"entry": [{"changes": [{"value": {"history": [{"threads": [{"id": c}]}]}}]}]}
+        fc = FakeClient()
+        for m in extract_messages(payload):
+            process_inbound(m, _cfg(), fc)
+        self.assertTrue(store.is_skipped(c))
+        h = "9718" + uuid.uuid4().hex[:8].translate(str.maketrans("abcdef", "123456"))
+        echo = {"entry": [{"changes": [{"value": {"message_echoes": [
+            {"from": "971555472571", "to": h, "id": f"wamid.{uuid.uuid4().hex}", "type": "text",
+             "text": {"body": "I will call you"}}]}}]}]}
+        for m in extract_messages(echo):
+            self.assertEqual(process_inbound(m, _cfg(), fc)["reason"], "human_reply_logged")
+        self.assertEqual(decide_reply(_cfg(), {"contact": h, "text": "ok"})["reason"], "human_active")
+        self.assertEqual(fc.sent, [])
+
     def test_webhook_endpoints(self):
         os.environ.update({"WA_VERIFY_TOKEN": "vt", "WA_APP_SECRET": "secret", "WA_AUTOREPLY": "off"})
         client = TestClient(app)

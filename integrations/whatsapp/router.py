@@ -3,6 +3,7 @@
 import hashlib
 import hmac
 import json
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, Request
@@ -41,6 +42,17 @@ def extract_messages(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
         for change in entry.get("changes", []):
             value = change.get("value", {})
             names = {c.get("wa_id"): c.get("profile", {}).get("name") for c in value.get("contacts", [])}
+            # Coexistence: replies sent by a person from the WhatsApp Business app.
+            for e in value.get("message_echoes", []):
+                if e.get("to"):
+                    out.append({"echo": True, "id": e.get("id"), "contact": e.get("to"),
+                                "type": e.get("type", "text"),
+                                "text": (e.get("text") or {}).get("body", ""), "raw": e})
+            # Coexistence: chats synced from the app's history are existing contacts.
+            for h in value.get("history", []):
+                for t in h.get("threads", []):
+                    if t.get("id"):
+                        out.append({"history": True, "contact": t.get("id")})
             for m in value.get("messages", []):
                 mtype = m.get("type", "text")
                 text, media_id = "", None
@@ -64,6 +76,13 @@ def extract_messages(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
 
 def process_inbound(msg: Dict[str, Any], cfg: WhatsAppConfig, client: WhatsAppClient) -> Dict[str, Any]:
     _ensure_tables()
+    if msg.get("history"):
+        store.add_skip(msg["contact"], "history")
+        return {"reason": "history_contact", "reply": None}
+    if msg.get("echo"):
+        store.save_message("out", msg["contact"], msg.get("text"), "human", msg.get("id"), raw=msg.get("raw"))
+        store.set_state(f"human:{msg['contact']}", datetime.now(timezone.utc).isoformat())
+        return {"reason": "human_reply_logged", "reply": None}
     is_new = store.save_message("in", msg["contact"], msg.get("text"), msg.get("type", "text"),
                                 msg.get("id"), msg.get("name"), msg.get("media_id"), msg.get("raw"))
     if not is_new:
